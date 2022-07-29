@@ -16,6 +16,7 @@ minichess
 */
 
 #include "commandline.h"
+#include "board.h"
 
 using namespace minichess_AI;
 
