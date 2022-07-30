@@ -19,9 +19,12 @@ namespace minichess_AI
     public:
         MCError() : status(0), message(""){};
         MCError(int s, std::string m) : status(s), message(m){};
-
-        // constant
-
-        static MCError NoErr;
     };
+
+    // error types (constances)
+
+    namespace MCETypes
+    {
+        const MCError NoErr;
+    }
 }
