@@ -7,36 +7,10 @@ Class "Board" and its method are defined.
 */
 
 #include "util/error.h"
+#include "piece.h"
 
 namespace minichess_AI
 {
-    // pieces definition
-    enum
-    {
-        WKING = 0b0000,
-        WPAWN,
-        WQUEEN,
-        WROOK,
-        WKNIGHT,
-        WBISHOP,
-        BKING = 0b1000,
-        BPAWN,
-        BQUEEN,
-        BROOK,
-        BKNIGHT,
-        BBISHOP,
-    };
-
-    enum
-    {
-        RANK1 = 0b1,
-        RANK2 = 0b10000,
-        RANK3 = 0b100000000,
-        RANK4 = 0b1000000000000,
-        RANK5 = 0b10000000000000000,
-        RANK6 = 0b100000000000000000000,
-    };
-
     class Board
     {
     private:
@@ -59,6 +33,8 @@ namespace minichess_AI
 
     public:
         MCError InitBoard();
+        int *GetBoard();
+        int GetSquare(int, int);
     };
 
     // definitions
@@ -73,5 +49,27 @@ namespace minichess_AI
         column[0] = WROOK * RANK1 + WPAWN * RANK2 + BPAWN * RANK5 + BKING * RANK6;
 
         return MCError::NoErr;
+    }
+
+    // get board infomation
+    int *Board::GetBoard()
+    {
+        // to avoid returning "column".
+        int *c = new int[5];
+
+        for (int i = 0; i < 5; i++)
+        {
+            c[i] = column[i];
+        }
+
+        return c;
+    }
+
+    // get square's piece (file: A-file = 0, ..., E-file = 4)
+    int Board::GetSquare(int rank, int file)
+    {
+        int c = this->column[file];
+        int r = convRank(rank);
+        return ((c / r) - ((c * 0b10000) / r) / 0b10000);
     }
 }
