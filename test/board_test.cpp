@@ -21,7 +21,9 @@ bool TestGetSquare()
 {
     Board b;
 
-    if (b.GetSquare(0, 0) != WKING)
+    if (b.GetSquare(1, 0) != WKING)
+        return false;
+    if (b.GetSquare(2, 0) != WPAWN)
         return false;
 
     return true;
