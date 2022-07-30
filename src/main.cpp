@@ -15,8 +15,7 @@ minichess
 (1, 2 rank: white, 5, 6 rank: black)
 */
 
-#include "commandline.h"
-#include "board.h"
+#include "collection.h"
 
 using namespace minichess_AI;
 
