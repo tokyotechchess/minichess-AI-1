@@ -21,13 +21,14 @@ namespace minichess_AI
             (0-indexed)
 
             Numbers to identify the type of piece:
+                0000: Empty
                 if white, * = 0, else, * = 1;
-                *000: King
-                *001: Pawn
-                *010: Queen
-                *011: Rook
-                *100: Knight
-                *101: Bishop
+                *001: King
+                *010: Pawn
+                *011: Queen
+                *100: Rook
+                *101: Knight
+                *110: Bishop
         */
         int column[5];
 
