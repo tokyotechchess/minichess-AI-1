@@ -32,6 +32,8 @@ namespace minichess_AI
         int column[5];
 
     public:
+        Board() { InitBoard(); }
+
         MCError InitBoard();
         int *GetBoard();
         int GetSquare(int, int);
@@ -46,7 +48,7 @@ namespace minichess_AI
         column[1] = WQUEEN * RANK1 + WPAWN * RANK2 + BPAWN * RANK5 + BKNIGHT * RANK6;
         column[2] = WBISHOP * RANK1 + WPAWN * RANK2 + BPAWN * RANK5 + BBISHOP * RANK6;
         column[3] = WKNIGHT * RANK1 + WPAWN * RANK2 + BPAWN * RANK5 + BQUEEN * RANK6;
-        column[0] = WROOK * RANK1 + WPAWN * RANK2 + BPAWN * RANK5 + BKING * RANK6;
+        column[4] = WROOK * RANK1 + WPAWN * RANK2 + BPAWN * RANK5 + BKING * RANK6;
 
         return MCETypes::NoErr;
     }
@@ -68,8 +70,11 @@ namespace minichess_AI
     // get square's piece (file: A-file = 0, ..., E-file = 4)
     int Board::GetSquare(int rank, int file)
     {
+        if ((rank < 1) || (6 < rank) || (file < 0) || (file > 4))
+            return EMPTYSQ;
+
         int c = this->column[file];
         int r = convRank(rank);
-        return ((c / r) - ((c * 0b10000) / r) / 0b10000);
+        return ((c / r) - (c / (r * 0b10000)) * 0b10000);
     }
 }

@@ -11,13 +11,14 @@ namespace minichess_AI
     // pieces definition
     enum
     {
-        WKING = 0b0000,
+        EMPTYSQ = 0b0000,
+        WKING = 0b0001,
         WPAWN,
         WQUEEN,
         WROOK,
         WKNIGHT,
         WBISHOP,
-        BKING = 0b1000,
+        BKING = 0b1001,
         BPAWN,
         BQUEEN,
         BROOK,
