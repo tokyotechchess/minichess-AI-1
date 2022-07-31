@@ -76,6 +76,6 @@ namespace minichess_AI
 
         int c = this->column[file];
         int r = convRank(rank);
-        return ((c / r) - (c / (r * 0b10000)) * 0b10000);
+        return (c & (0b1111 * r)) / r;
     }
 }
