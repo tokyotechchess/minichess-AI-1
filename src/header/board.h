@@ -42,7 +42,7 @@ namespace minichess_AI
         MCError InitBoard();
         int *GetBoard();
         int GetSquare(int, int);
-        MCError Move(int, int, int, int);
+        MCError Move(int, int, int, int, int);
     };
 
     // definitions
@@ -86,7 +86,7 @@ namespace minichess_AI
 
     // move piece
     // ex) white rook a2 -> a3 : Move(0, WROOK * RANK2, 0, WROOK * RANK3)
-    MCError Board::Move(int From_file, int From_piece, int To_file, int To_piece)
+    MCError Board::Move(int piece, int from_file, int from_rank, int to_file, int to_rank)
     {
         return mcet::NoErr;
     }
