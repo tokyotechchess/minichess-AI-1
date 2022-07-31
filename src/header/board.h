@@ -51,7 +51,7 @@ namespace minichess_AI
         column[3] = WKNIGHT * RANK1 + WPAWN * RANK2 + BPAWN * RANK5 + BQUEEN * RANK6;
         column[4] = WROOK * RANK1 + WPAWN * RANK2 + BPAWN * RANK5 + BKING * RANK6;
 
-        return MCETypes::NoErr;
+        return mcet::NoErr;
     }
 
     // get board infomation

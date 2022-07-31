@@ -19,12 +19,58 @@ namespace minichess_AI
     public:
         MCError() : status(0), message(""){};
         MCError(int s, std::string m) : status(s), message(m){};
+
+        // manipulate variables
+
+        std::string GetMessage()
+        {
+            return message;
+        }
+
+        // operator
+
+        // assignment operator
+        MCError operator=(const MCError &mce)
+        {
+            status = mce.status;
+            message = mce.message;
+            return *this;
+        }
+
+        // same status
+        bool operator==(const MCError &mce)
+        {
+            if (status == mce.status)
+                return true;
+            else
+                return false;
+        }
+
+        // not same status
+        bool operator!=(const MCError &mce)
+        {
+            if (status != mce.status)
+                return true;
+            else
+                return false;
+        }
     };
 
-    // error types (constances)
+    // error types
 
-    namespace MCETypes
+    namespace mcet
     {
+        // Error Generator
+
+        // test error
+        MCError genTestErr(std::string mes)
+        {
+            return MCError(10000, mes);
+        }
+
+        // if there is no error, status should be 0
         const MCError NoErr;
+        const MCError TestErr = genTestErr("");
+
     }
 }
