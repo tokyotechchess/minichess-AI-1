@@ -33,11 +33,16 @@ namespace minichess_AI
         int column[5];
 
     public:
+        // Constructor
+
         Board() { InitBoard(); }
+
+        // methods
 
         MCError InitBoard();
         int *GetBoard();
         int GetSquare(int, int);
+        MCError Move(int, int, int, int);
     };
 
     // definitions
@@ -77,5 +82,12 @@ namespace minichess_AI
         int c = this->column[file];
         int r = convRank(rank);
         return (c & (0b1111 * r)) / r;
+    }
+
+    // move piece
+    // ex) white rook a2 -> a3 : Move(0, WROOK * RANK2, 0, WROOK * RANK3)
+    MCError Board::Move(int To_file, int To_piece, int From_file, int From_piece)
+    {
+        return mcet::NoErr;
     }
 }
