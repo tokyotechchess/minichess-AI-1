@@ -85,7 +85,7 @@ namespace minichess_AI
     }
 
     // move piece
-    // ex) white rook a2 -> a3 : Move(0, WROOK * RANK2, 0, WROOK * RANK3)
+    // ex) white rook a2 -> a3 : Move(WROOK, 0, 2, 0, 3)
     MCError Board::Move(int piece, int from_file, int from_rank, int to_file, int to_rank)
     {
         return mcet::NoErr;
