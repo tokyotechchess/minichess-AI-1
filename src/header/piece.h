@@ -36,6 +36,14 @@ namespace minichess_AI
         RANK6 = 0b100000000000000000000,
     };
 
+    // Color
+    // ToDo: piece.h に宣言するのは変かもしれないので, もう少し良いヘッダがあったらそこに移す
+    enum Color
+    {
+        cWhite,
+        cBlack,
+    };
+
     // get RANK(r)
     // if 1 <= r <= 6, return RANK(r), else, return 0
     int convRank(int rank)
