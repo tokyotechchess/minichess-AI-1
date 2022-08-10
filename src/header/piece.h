@@ -5,6 +5,13 @@ piece.h
 Piece definitions.
 */
 
+// macro to enable increments
+#define ENABLE_INCR_OPERATORS_ON(T)                               \
+    inline T &operator++(T &d, int) { return d = T(int(d) + 1); } \
+    inline T &operator++(T &d) { return d = T(int(d) + 1); }      \
+    inline T &operator--(T &d, int) { return d = T(int(d) - 1); } \
+    inline T &operator--(T &d) { return d = T(int(d) - 1); }
+
 namespace minichess_AI
 {
     // pieces definition
@@ -35,7 +42,7 @@ namespace minichess_AI
         RANK6W = 0b100000000000000000000,
     };
 
-    enum Rank
+    enum Rank : int
     {
         RANK1 = 0,
         RANK2,
@@ -46,7 +53,7 @@ namespace minichess_AI
 
     };
 
-    enum File
+    enum File : int
     {
         AFILE = 0,
         BFILE,
@@ -54,6 +61,10 @@ namespace minichess_AI
         DFILE,
         EFILE,
     };
+
+    // enable increment
+    ENABLE_INCR_OPERATORS_ON(Rank);
+    ENABLE_INCR_OPERATORS_ON(File);
 
     // get RANK(r)
     // if 1 <= r <= 6, return RANK(r), else, return 0
