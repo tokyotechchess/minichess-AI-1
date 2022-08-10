@@ -89,7 +89,7 @@ namespace minichess_AI
     // check that color's king is checked (Color: cWhite, cBlack)
     bool Board::IsChecked(Color color)
     {
-        int square[6][5];
+        int square[5][6];
 
         // searched pieces
         int mk, ok, p, q, r, n, b;
@@ -115,13 +115,14 @@ namespace minichess_AI
         }
 
         // search the position of color's king
-        int kfile = -1, krank;
-        for (int f = 0; f < 5; f++)
+        Rank krank = RANKERR;
+        File kfile = FILEERR;
+        for (File f = AFILE; f <= EFILE; f++)
         {
-            for (int r = 1; r <= 6; r++)
+            for (Rank r = RANK1; r <= RANK6; r++)
             {
-                square[r - 1][f] = GetSquare(r, f);
-                if (square[r - 1][f] == mk)
+                square[f][r] = GetSquare(f, r);
+                if (square[f][r] == mk)
                 {
                     kfile = f;
                     krank = r;
@@ -129,14 +130,15 @@ namespace minichess_AI
             }
         }
 
-        // color's king are not in the board
-        if (kfile == -1)
+        // color's king is not in the board
+        if (kfile == FILEERR)
             return false;
 
         int i, j, k;
 
         // knight
-        int nfile, nrank;
+        File nfile;
+        Rank nrank;
         for (i = 0; i <= 1; i++)
         {
             for (j = 0; j <= 1; j++)
@@ -145,7 +147,7 @@ namespace minichess_AI
                 {
                     nfile = kfile + (1 + i) * (2 * j - 1);
                     nrank = krank + (2 - i) * (2 * k - 1);
-                    if (GetSquare(nrank, nfile) == n)
+                    if (GetSquare(nfile, nrank) == n)
                     {
                         return true;
                     }
@@ -218,7 +220,11 @@ namespace minichess_AI
         i = (color == cWhite) ? 1 : -1;
         for (j = -1; j <= 1; j += 2)
         {
-            if (GetSquare(krank + i, kfile + j) == p)
+            if ((int)kfile + i < AFILE || EFILE < (int)kfile + i || (int)krank + 1 < RANK1 || RANK6 < (int)krank + 1)
+            {
+                continue;
+            }
+            if (square[kfile + i][krank + j] == p)
             {
                 return true;
             }
