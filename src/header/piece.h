@@ -2,7 +2,6 @@
 
 /*
 piece.h
-
 Piece definitions.
 */
 
@@ -26,39 +25,59 @@ namespace minichess_AI
         BBISHOP,
     };
 
-    enum
+    enum RankWeight
     {
-        RANK1 = 0b1,
-        RANK2 = 0b10000,
-        RANK3 = 0b100000000,
-        RANK4 = 0b1000000000000,
-        RANK5 = 0b10000000000000000,
-        RANK6 = 0b100000000000000000000,
+        RANK1W = 0b1,
+        RANK2W = 0b10000,
+        RANK3W = 0b100000000,
+        RANK4W = 0b1000000000000,
+        RANK5W = 0b10000000000000000,
+        RANK6W = 0b100000000000000000000,
+    };
+
+    enum Rank
+    {
+        RANK1 = 0,
+        RANK2,
+        RANK3,
+        RANK4,
+        RANK5,
+        RANK6,
+
+    };
+
+    enum File
+    {
+        AFILE = 0,
+        BFILE,
+        CFILE,
+        DFILE,
+        EFILE,
     };
 
     // get RANK(r)
     // if 1 <= r <= 6, return RANK(r), else, return 0
-    int convRank(int rank)
+    int ConvRankToWeight(int rank)
     {
         switch (rank)
         {
-        case 1:
-            return RANK1;
+        case RANK1:
+            return RANK1W;
             break;
-        case 2:
-            return RANK2;
+        case RANK2:
+            return RANK2W;
             break;
-        case 3:
-            return RANK3;
+        case RANK3:
+            return RANK3W;
             break;
-        case 4:
-            return RANK4;
+        case RANK4:
+            return RANK4W;
             break;
-        case 5:
-            return RANK5;
+        case RANK5:
+            return RANK5W;
             break;
-        case 6:
-            return RANK6;
+        case RANK6:
+            return RANK6W;
             break;
         default:
             return 0;
