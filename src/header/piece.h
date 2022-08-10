@@ -68,30 +68,33 @@ namespace minichess_AI
 
     // get RANK(r)
     // if 1 <= r <= 6, return RANK(r), else, return 0
-    int ConvRankToWeight(int rank)
+    int ConvRankToWeight(Rank rank)
     {
+        RankWeight rw;
         switch (rank)
         {
         case RANK1:
-            return RANK1W;
+            rw = RANK1W;
             break;
         case RANK2:
-            return RANK2W;
+            rw = RANK2W;
             break;
         case RANK3:
-            return RANK3W;
+            rw = RANK3W;
             break;
         case RANK4:
-            return RANK4W;
+            rw = RANK4W;
             break;
         case RANK5:
-            return RANK5W;
+            rw = RANK5W;
             break;
         case RANK6:
-            return RANK6W;
+            rw = RANK6W;
             break;
         default:
             return 0;
         }
+
+        return static_cast<int>(rw);
     }
 }
