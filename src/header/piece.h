@@ -44,6 +44,7 @@ namespace minichess_AI
 
     enum Rank : int
     {
+        RANKERR = -1,
         RANK1 = 0,
         RANK2,
         RANK3,
@@ -55,6 +56,7 @@ namespace minichess_AI
 
     enum File : int
     {
+        FILEERR = -1,
         AFILE = 0,
         BFILE,
         CFILE,
