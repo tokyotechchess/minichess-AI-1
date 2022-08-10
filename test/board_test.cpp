@@ -29,47 +29,43 @@ MCError TestGetSquare()
 {
     Board b;
 
-    if (b.GetSquare(1, 0) != WKING)
-        return mcet::genTestErr("GetSquare(1, 0) is wrong");
-    if (b.GetSquare(1, 1) != WQUEEN)
-        return mcet::genTestErr("GetSquare(1, 1) is wrong");
-    if (b.GetSquare(1, 2) != WBISHOP)
-        return mcet::genTestErr("GetSquare(1, 2) is wrong");
-    if (b.GetSquare(1, 3) != WKNIGHT)
-        return mcet::genTestErr("GetSquare(1, 3) is wrong");
-    if (b.GetSquare(1, 4) != WROOK)
-        return mcet::genTestErr("GetSquare(1, 4) is wrong");
-    for (int i = 0; i < 5; i++)
+    if (b.GetSquare(AFILE, RANK1) != WKING)
+        return mcet::genTestErr("GetSquare(AFILE, RANK1) is wrong");
+    if (b.GetSquare(BFILE, RANK1) != WQUEEN)
+        return mcet::genTestErr("GetSquare(BFILE, RANK1) is wrong");
+    if (b.GetSquare(CFILE, RANK1) != WBISHOP)
+        return mcet::genTestErr("GetSquare(CFILE, RANK1) is wrong");
+    if (b.GetSquare(DFILE, RANK1) != WKNIGHT)
+        return mcet::genTestErr("GetSquare(DFILE, RANK1) is wrong");
+    if (b.GetSquare(EFILE, RANK1) != WROOK)
+        return mcet::genTestErr("GetSquare(EFILE, RANK1) is wrong");
+    for (File i = AFILE; i < EFILE; i++)
     {
-        if (b.GetSquare(2, i) != WPAWN)
-            return mcet::genTestErr("GetSquare(2, " + std::to_string(i) + ") is wrong");
+        if (b.GetSquare(i, RANK2) != WPAWN)
+            return mcet::genTestErr("GetSquare(" + std::to_string(static_cast<int>(i)) + ", RANK2) is wrong");
     }
-    for (int i = 0; i < 5; i++)
+    for (File i = AFILE; i < EFILE; i++)
     {
-        if (b.GetSquare(3, i) != EMPTYSQ)
-            return mcet::genTestErr("GetSquare(3, " + std::to_string(i) + ") is wrong");
-        if (b.GetSquare(4, i) != EMPTYSQ)
-            return mcet::genTestErr("GetSquare(4, " + std::to_string(i) + ") is wrong");
+        if (b.GetSquare(i, RANK3) != EMPTYSQ)
+            return mcet::genTestErr("GetSquare(" + std::to_string(static_cast<int>(i)) + ", RANK3) is wrong");
+        if (b.GetSquare(i, RANK4) != EMPTYSQ)
+            return mcet::genTestErr("GetSquare(" + std::to_string(static_cast<int>(i)) + ", RANK4) is wrong");
     }
-    for (int i = 0; i < 5; i++)
+    for (File i = AFILE; i < EFILE; i++)
     {
-        if (b.GetSquare(5, i) != BPAWN)
-            return mcet::genTestErr("GetSquare(5, " + std::to_string(i) + ") is wrong");
+        if (b.GetSquare(i, RANK5) != BPAWN)
+            return mcet::genTestErr("GetSquare(" + std::to_string(static_cast<int>(i)) + ", RANK5) is wrong");
     }
-    if (b.GetSquare(6, 0) != BROOK)
+    if (b.GetSquare(AFILE, RANK6) != BROOK)
         return mcet::genTestErr("GetSquare(6, 0) is wrong");
-    if (b.GetSquare(6, 1) != BKNIGHT)
+    if (b.GetSquare(BFILE, RANK6) != BKNIGHT)
         return mcet::genTestErr("GetSquare(6, 1) is wrong");
-    if (b.GetSquare(6, 2) != BBISHOP)
+    if (b.GetSquare(CFILE, RANK6) != BBISHOP)
         return mcet::genTestErr("GetSquare(6, 2) is wrong");
-    if (b.GetSquare(6, 3) != BQUEEN)
+    if (b.GetSquare(DFILE, RANK6) != BQUEEN)
         return mcet::genTestErr("GetSquare(6, 3) is wrong");
-    if (b.GetSquare(6, 4) != BKING)
+    if (b.GetSquare(EFILE, RANK6) != BKING)
         return mcet::genTestErr("GetSquare(6, 4) is wrong");
-    if (b.GetSquare(7, 3) != EMPTYSQ)
-        return mcet::genTestErr("GetSquare(7, 3) is wrong");
-    if (b.GetSquare(3, 5) != EMPTYSQ)
-        return mcet::genTestErr("GetSquare(3, 5) is wrong");
 
     return mcet::NoErr;
 }

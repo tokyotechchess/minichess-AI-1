@@ -15,7 +15,7 @@ namespace minichess_AI
     {
     private:
         /*
-            Pieces being in a k-th collumn are stored in column[k].
+            Pieces being in a k-th collumn are stored in files[k].
             (0-indexed: A-file: 0 ... E-file: 4)
             And, 4k-th ~ (4k + 3)-th bit is used for a (k + 1)-rank piece.
             (0-indexed)
@@ -30,7 +30,7 @@ namespace minichess_AI
                 *101: Knight
                 *110: Bishop
         */
-        int column[5];
+        int files[5];
 
     public:
         // Constructor
@@ -41,8 +41,8 @@ namespace minichess_AI
 
         MCError InitBoard();
         int *GetBoard();
-        int GetSquare(int, int);
-        MCError Move(int, int, int, int, int);
+        int GetSquare(File, Rank);
+        MCError Move(File, Rank, File, Rank);
     };
 
     // definitions
@@ -50,11 +50,11 @@ namespace minichess_AI
     // initilize board
     MCError Board::InitBoard()
     {
-        column[0] = WKING * RANK1 + WPAWN * RANK2 + BPAWN * RANK5 + BROOK * RANK6;
-        column[1] = WQUEEN * RANK1 + WPAWN * RANK2 + BPAWN * RANK5 + BKNIGHT * RANK6;
-        column[2] = WBISHOP * RANK1 + WPAWN * RANK2 + BPAWN * RANK5 + BBISHOP * RANK6;
-        column[3] = WKNIGHT * RANK1 + WPAWN * RANK2 + BPAWN * RANK5 + BQUEEN * RANK6;
-        column[4] = WROOK * RANK1 + WPAWN * RANK2 + BPAWN * RANK5 + BKING * RANK6;
+        files[0] = WKING * RANK1W + WPAWN * RANK2W + BPAWN * RANK5W + BROOK * RANK6W;
+        files[1] = WQUEEN * RANK1W + WPAWN * RANK2W + BPAWN * RANK5W + BKNIGHT * RANK6W;
+        files[2] = WBISHOP * RANK1W + WPAWN * RANK2W + BPAWN * RANK5W + BBISHOP * RANK6W;
+        files[3] = WKNIGHT * RANK1W + WPAWN * RANK2W + BPAWN * RANK5W + BQUEEN * RANK6W;
+        files[4] = WROOK * RANK1W + WPAWN * RANK2W + BPAWN * RANK5W + BKING * RANK6W;
 
         return mcet::NoErr;
     }
@@ -62,31 +62,31 @@ namespace minichess_AI
     // get board infomation
     int *Board::GetBoard()
     {
-        // to avoid returning "column".
-        int *c = new int[5];
+        // to avoid returning "files".
+        int *f = new int[5];
 
         for (int i = 0; i < 5; i++)
         {
-            c[i] = column[i];
+            f[i] = files[i];
         }
 
-        return c;
+        return f;
     }
 
     // get square's piece (file: A-file = 0, ..., E-file = 4)
-    int Board::GetSquare(int rank, int file)
+    int Board::GetSquare(File file, Rank rank)
     {
-        if ((rank < 1) || (6 < rank) || (file < 0) || (file > 4))
+        if ((rank < RANK1) || (RANK6 < rank) || (file < AFILE) || (file > EFILE))
             return EMPTYSQ;
 
-        int c = this->column[file];
-        int r = convRank(rank);
+        int c = this->files[file];
+        int r = ConvRankToWeight(rank);
         return (c & (0b1111 * r)) / r;
     }
 
     // move piece
     // ex) white rook a2 -> a3 : Move(WROOK, 0, 2, 0, 3)
-    MCError Board::Move(int piece, int from_file, int from_rank, int to_file, int to_rank)
+    MCError Board::Move(File from_file, Rank from_rank, File to_file, Rank to_rank)
     {
         return mcet::NoErr;
     }
