@@ -117,6 +117,8 @@ namespace minichess_AI
         // search the position of color's king
         Rank krank = RANKERR;
         File kfile = FILEERR;
+        Rank okrank = RANKERR;
+        File okfile = FILEERR;
         for (File f = AFILE; f <= EFILE; f++)
         {
             for (Rank r = RANK1; r <= RANK6; r++)
@@ -127,6 +129,11 @@ namespace minichess_AI
                     kfile = f;
                     krank = r;
                 }
+                if (square[f][r] == ok)
+                {
+                    okfile = f;
+                    okrank = r;
+                }
             }
         }
 
@@ -135,6 +142,12 @@ namespace minichess_AI
             return false;
 
         int i, j, k;
+
+        // king
+        if ((int)okfile - 1 <= (int)kfile && (int)kfile <= (int)okfile + 1 && (int)okrank - 1 <= (int)krank && (int)krank <= (int)okrank + 1)
+        {
+            return true;
+        }
 
         // knight
         File nfile;
