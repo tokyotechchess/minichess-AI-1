@@ -13,6 +13,7 @@ using namespace minichess_AI;
 MCError TestGetSquare();
 MCError TestSetSquare();
 MCError TestSetBoardFEN();
+MCError TestIsChecked();
 
 int main()
 {
@@ -36,6 +37,17 @@ int main()
         if (e == mcet::TestErr)
         {
             std::cout << "Test Error : " + e.GetMessage() << std::endl;
+        }
+    }
+    if ((e = TestIsChecked()) != mcet::NoErr)
+    {
+        if (e == mcet::TestErr)
+        {
+            std::cout << "Test Error : " + e.GetMessage() << std::endl;
+        }
+        else if (e == mcet::FENErr)
+        {
+            std::cout << "FEN Error : " + e.GetMessage() << std::endl;
         }
     }
 }
@@ -250,6 +262,42 @@ MCError TestSetBoardFEN()
     {
         return mcet::genTestErr("In SetBoardFEN, enpassant setting is wrong");
     }
+
+    return mcet::NoErr;
+}
+
+MCError TestIsChecked()
+{
+    Board b;
+    MCError e;
+
+    // knight
+
+    e = b.SetBoardFEN("3nk/1p1bq/pPpNr/B1P2/PKQ1p/4R w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != true)
+        return mcet::genTestErr("IsChecked is wrong in knight test case 1");
+    e = b.SetBoardFEN("3K1/1kP2/2n1q/1p3/1P3/5 w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != true || b.IsChecked(cBlack) != false)
+        return mcet::genTestErr("IsChecked is wrong in knight test case 2");
+    e = b.SetBoardFEN("2N2/1nNkN/n1nNN/1NnN1/nNKnn/1n1n1 w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != false)
+        return mcet::genTestErr("IsChecked is wrong in knight test case 3");
+    e = b.SetBoardFEN("2k1N/p3r/1nP1p/pP2Q/P1K2/5 w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != true || b.IsChecked(cBlack) != false)
+        return mcet::genTestErr("IsChecked is wrong in knight test case 4");
+    e = b.SetBoardFEN("5/5/1q3/2kp1/N1bPp/K3R w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != true)
+        return mcet::genTestErr("IsChecked is wrong in knight test case 4");
 
     return mcet::NoErr;
 }
