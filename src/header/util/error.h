@@ -62,6 +62,12 @@ namespace minichess_AI
     {
         // Error Generator
 
+        // FEN error
+        MCError genFENErr(std::string mes)
+        {
+            return MCError(100, mes);
+        }
+
         // test error
         MCError genTestErr(std::string mes)
         {
@@ -71,6 +77,7 @@ namespace minichess_AI
         // if there is no error, status should be 0
         const MCError NoErr;
         const MCError TestErr = genTestErr("");
+        const MCError FENErr = genFENErr("");
 
     }
 }
