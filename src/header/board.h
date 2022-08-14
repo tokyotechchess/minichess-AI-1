@@ -33,7 +33,7 @@ namespace minichess_AI
         */
         int files[5];
         /*
-            Variable "turn" is the color of now turn.
+            Variable "turn" is the piece color of the player in this turn.
         */
         Color turn;
         /*
