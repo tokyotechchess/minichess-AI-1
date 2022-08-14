@@ -133,6 +133,7 @@ namespace minichess_AI
         int phaze = 0;
         bool csetted = false;
         bool finish = false;
+        MCError err = mcet::NoErr;
 
         // set all squares no piece
         for (int i = AFILE; i <= EFILE; i++)
@@ -148,7 +149,7 @@ namespace minichess_AI
         {
             c = FEN[i];
 
-            if (finish)
+            if (finish || (err != mcet::NoErr))
             {
                 break;
             }
@@ -178,8 +179,9 @@ namespace minichess_AI
                     temp = (int)nowf + int(c - '0');
                     if (temp > (int)EFILE + 1)
                     {
-                        return mcet::genFENErr(
+                        err = mcet::genFENErr(
                             "RANK" + std::to_string((int)nowr + 1) + " has more than 6 files due to too many empty squares");
+                        break;
                     }
 
                     nowf = (temp == (int)EFILE + 1) ? FILEERR : (File)temp;
@@ -192,8 +194,9 @@ namespace minichess_AI
                 {
                     if (nowf == FILEERR)
                     {
-                        return mcet::genFENErr(
+                        err = mcet::genFENErr(
                             "RANK" + std::to_string((int)nowr + 1) + " has more than 6 files due to too many pieces");
+                        break;
                     }
 
                     SetSquare(nowf, nowr, temppiece);
@@ -209,7 +212,8 @@ namespace minichess_AI
 
                     if (nowr == RANK1)
                     {
-                        return mcet::genFENErr("This FEN has more than 7 ranks");
+                        err = mcet::genFENErr("This FEN has more than 7 ranks");
+                        break;
                     }
 
                     nowf = AFILE;
@@ -217,7 +221,8 @@ namespace minichess_AI
                     break;
                 }
 
-                return mcet::genFENErr("Wrong FEN expression about the piece placement");
+                err = mcet::genFENErr("Wrong FEN expression about the piece placement");
+                break;
 
             case 1:
                 // turn
@@ -238,7 +243,8 @@ namespace minichess_AI
                     }
                 }
 
-                return mcet::genFENErr("Wrong FEN expression about the color setting");
+                err = mcet::genFENErr("Wrong FEN expression about the color setting");
+                break;
 
             case 2:
                 // castling possibility
@@ -253,7 +259,8 @@ namespace minichess_AI
                     break;
                 }
 
-                return mcet::genFENErr("Wrong FEN expression about the castling possibility");
+                err = mcet::genFENErr("Wrong FEN expression about the castling possibility");
+                break;
 
             case 3:
                 // enpassant target
@@ -261,23 +268,30 @@ namespace minichess_AI
                 {
                     enpassantAblePawnFile = FILEERR;
                     finish = true;
+                    break;
                 }
                 else if ('a' <= c && c <= 'e')
                 {
                     enpassantAblePawnFile = (File)(int)(c - 'a');
                     finish = true;
+                    break;
                 }
                 else if ('A' <= c && c <= 'E')
                 {
                     enpassantAblePawnFile = (File)(int)(c - 'A');
                     finish = true;
+                    break;
                 }
 
-                return mcet::genFENErr("Wrong FEN expression about the en passant");
+                err = mcet::genFENErr("Wrong FEN expression about the en passant");
+                break;
             }
         }
 
-        return mcet::NoErr;
+        if (err != mcet::NoErr)
+            InitBoard();
+
+        return err;
     }
 
     // move piece
