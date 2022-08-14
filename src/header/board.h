@@ -267,11 +267,21 @@ namespace minichess_AI
                 // castling possibility
                 if (c == 'K')
                 {
+                    if (castlingPossibility & 0b01 != 0)
+                    {
+                        err = mcet::genFENErr("Same characters are overused in castling possibility settings");
+                        break;
+                    }
                     castlingPossibility += 1;
                     break;
                 }
                 else if (c == 'k')
                 {
+                    if (castlingPossibility & 0b10 != 0)
+                    {
+                        err = mcet::genFENErr("Same characters are overused in castling possibility settings");
+                        break;
+                    }
                     castlingPossibility += 2;
                     break;
                 }
