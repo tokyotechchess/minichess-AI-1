@@ -6,13 +6,18 @@ minichess
 --|-----------
   | a b c d e
 --|-----------
-6 | R N B Q K
-5 | P P P P P
+6 | r n b q k
+5 | p p p p p
 4 |
 3 |
 2 | P P P P P
 1 | K Q B N R
-(1, 2 rank: white, 5, 6 rank: black)
+
+about FEN
+- The expressions are almost same.
+- Differences:
+  - No queen side castling
+  - No fifty move rule
 */
 
 #include "collection.h"

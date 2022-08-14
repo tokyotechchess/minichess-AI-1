@@ -15,7 +15,7 @@ Piece definitions.
 namespace minichess_AI
 {
     // pieces definition
-    enum
+    enum Piece : int
     {
         EMPTYSQ = 0b0000,
         WKING = 0b0001,
@@ -32,7 +32,7 @@ namespace minichess_AI
         BBISHOP,
     };
 
-    enum RankWeight
+    enum RankWeight : int
     {
         RANK1W = 0b1,
         RANK2W = 0b10000,
@@ -44,6 +44,7 @@ namespace minichess_AI
 
     enum Rank : int
     {
+        RANKERR = -1,
         RANK1 = 0,
         RANK2,
         RANK3,
@@ -55,6 +56,7 @@ namespace minichess_AI
 
     enum File : int
     {
+        FILEERR = -1,
         AFILE = 0,
         BFILE,
         CFILE,
@@ -62,9 +64,21 @@ namespace minichess_AI
         EFILE,
     };
 
+    // Color
+    // ToDo: piece.h に宣言するのは変かもしれないので, もう少し良いヘッダがあったらそこに移す
+    enum Color : int
+    {
+        cWhite,
+        cBlack,
+    };
+
     // enable increment
     ENABLE_INCR_OPERATORS_ON(Rank);
     ENABLE_INCR_OPERATORS_ON(File);
+
+    // enable calculation between RankWeight and Piece
+    inline int operator*(RankWeight rw, Piece p) { return (int(p) * int(rw)); }
+    inline int operator*(Piece p, RankWeight rw) { return (rw * p); }
 
     // get RANK(r)
     // if 1 <= r <= 6, return RANK(r), else, return 0
@@ -96,5 +110,39 @@ namespace minichess_AI
         }
 
         return static_cast<int>(rw);
+    }
+
+    // Get Piece variable by a charactor of a FEN string
+    Piece ConvFENCharToPiece(char c)
+    {
+        switch (c)
+        {
+        case 'K':
+            return WKING;
+        case 'k':
+            return BKING;
+        case 'Q':
+            return WQUEEN;
+        case 'q':
+            return BQUEEN;
+        case 'B':
+            return WBISHOP;
+        case 'b':
+            return BBISHOP;
+        case 'N':
+            return WKNIGHT;
+        case 'n':
+            return BKNIGHT;
+        case 'R':
+            return WROOK;
+        case 'r':
+            return BROOK;
+        case 'P':
+            return WPAWN;
+        case 'p':
+            return BPAWN;
+        }
+
+        return EMPTYSQ;
     }
 }
