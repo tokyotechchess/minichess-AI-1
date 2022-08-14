@@ -275,6 +275,10 @@ namespace minichess_AI
                     castlingPossibility += 2;
                     break;
                 }
+                else if (c == '-')
+                {
+                    break;
+                }
 
                 err = mcet::genFENErr("Wrong FEN expression about the castling possibility");
                 break;
