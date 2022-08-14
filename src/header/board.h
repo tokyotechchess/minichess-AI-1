@@ -275,9 +275,9 @@ namespace minichess_AI
 
                 return mcet::genFENErr("Wrong FEN expression about the en passant");
             }
-
-            return mcet::NoErr;
         }
+
+        return mcet::NoErr;
     }
 
     // move piece
