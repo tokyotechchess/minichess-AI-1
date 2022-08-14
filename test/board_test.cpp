@@ -155,30 +155,35 @@ MCError TestSetBoardFEN()
     {
         return mcet::genTestErr("Wrong piece placement error due to too many ranks doesn't work in SetBoardFEN");
     }
-    // wrong piece placement (wrong charactor)
+    // wrong piece placement (wrong character)
     if (b.SetBoardFEN("2bk1/pp1pp/n2vq/rRPPP/P4/KQBN1 w Kk d3") != mcet::FENErr)
     {
-        return mcet::genTestErr("Wrong piece placement error due to wrong charactor doesn't work in SetBoardFEN");
+        return mcet::genTestErr("Wrong piece placement error due to wrong character doesn't work in SetBoardFEN");
     }
-    // wrong color setting (wrong charactor)
+    // wrong color setting (wrong character)
     if (b.SetBoardFEN("2bk1/pp1pp/n2pq/rRPPP/P4/KQBN1 v Kk d3") != mcet::FENErr)
     {
-        return mcet::genTestErr("Wrong color setting error due to wrong charactor doesn't work in SetBoardFEN");
+        return mcet::genTestErr("Wrong color setting error due to wrong character doesn't work in SetBoardFEN");
     }
     // wrong color setting (too many color setting)
     if (b.SetBoardFEN("2bk1/pp1pp/n2pq/rRPPP/P4/KQBN1 wb Kk d3") != mcet::FENErr)
     {
         return mcet::genTestErr("Wrong color setting error due to too many color setting doesn't work in SetBoardFEN");
     }
-    // wrong castling setting (wrong charactor)
+    // wrong castling setting (wrong character)
     if (b.SetBoardFEN("2bk1/pp1pp/n2pq/rRPPP/P4/KQBN1 w Kc d3") != mcet::FENErr)
     {
-        return mcet::genTestErr("Wrong castling setting error due to wrong charactor doesn't work in SetBoardFEN");
+        return mcet::genTestErr("Wrong castling setting error due to wrong character doesn't work in SetBoardFEN");
     }
-    // wrong enpassant setting (wrong charactor)
+    // wrong castling setting (same)
+    if (b.SetBoardFEN("2bk1/pp1pp/n2pq/rRPPP/P4/KQBN1 w Kc d3") != mcet::FENErr)
+    {
+        return mcet::genTestErr("Wrong castling setting error due to wrong character doesn't work in SetBoardFEN");
+    }
+    // wrong enpassant setting (wrong character)
     if (b.SetBoardFEN("2bk1/pp1pp/n2pq/rRPPP/P4/KQBN1 w Kk f3") != mcet::FENErr)
     {
-        return mcet::genTestErr("Wrong enpassant setting error due to wrong charactor doesn't work in SetBoardFEN");
+        return mcet::genTestErr("Wrong enpassant setting error due to wrong character doesn't work in SetBoardFEN");
     }
 
     // no error test
