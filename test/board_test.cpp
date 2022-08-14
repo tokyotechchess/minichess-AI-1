@@ -175,10 +175,10 @@ MCError TestSetBoardFEN()
     {
         return mcet::genTestErr("Wrong castling setting error due to wrong character doesn't work in SetBoardFEN");
     }
-    // wrong castling setting (same)
-    if (b.SetBoardFEN("2bk1/pp1pp/n2pq/rRPPP/P4/KQBN1 w Kc d3") != mcet::FENErr)
+    // wrong castling setting (overused characters)
+    if (b.SetBoardFEN("2bk1/pp1pp/n2pq/rRPPP/P4/KQBN1 w KK d3") != mcet::FENErr)
     {
-        return mcet::genTestErr("Wrong castling setting error due to wrong character doesn't work in SetBoardFEN");
+        return mcet::genTestErr("Wrong castling setting error due to overuse of characters doesn't work in SetBoardFEN");
     }
     // wrong enpassant setting (wrong character)
     if (b.SetBoardFEN("2bk1/pp1pp/n2pq/rRPPP/P4/KQBN1 w Kk f3") != mcet::FENErr)
