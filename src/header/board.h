@@ -66,6 +66,9 @@ namespace minichess_AI
         // methods
 
         MCError InitBoard();
+        Color GetTurn();
+        File GetEnpassantAblePawnFile();
+        bool GetCastlingPossibility(Color);
         int *GetBoard();
         int GetSquare(File, Rank);
         MCError SetSquare(File, Rank, Piece);
@@ -89,6 +92,16 @@ namespace minichess_AI
         castlingPossibility = 3;
 
         return mcet::NoErr;
+    }
+
+    // get turn
+    Color Board::GetTurn() { return turn; }
+    // get enpassantAblePawnFile
+    File Board::GetEnpassantAblePawnFile() { return enpassantAblePawnFile; }
+    // check color's castling possibility
+    bool Board::GetCastlingPossibility(Color color)
+    {
+        return ((color == cWhite) ? (0b01 & castlingPossibility != 0) : (0b10 & castlingPossibility != 0));
     }
 
     // get board infomation
