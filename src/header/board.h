@@ -61,7 +61,7 @@ namespace minichess_AI
     public:
         // Constructor
 
-        Board() : turn(cWhite), enpassantAblePawnFile(FILEERR), castlingPossibility(3) { InitBoard(); }
+        Board() { InitBoard(); }
 
         // methods
 
@@ -83,6 +83,10 @@ namespace minichess_AI
         files[2] = WBISHOP * RANK1W + WPAWN * RANK2W + BPAWN * RANK5W + BBISHOP * RANK6W;
         files[3] = WKNIGHT * RANK1W + WPAWN * RANK2W + BPAWN * RANK5W + BQUEEN * RANK6W;
         files[4] = WROOK * RANK1W + WPAWN * RANK2W + BPAWN * RANK5W + BKING * RANK6W;
+
+        turn = cWhite;
+        enpassantAblePawnFile = FILEERR;
+        castlingPossibility = 3;
 
         return mcet::NoErr;
     }
