@@ -101,7 +101,7 @@ namespace minichess_AI
     // check color's castling possibility
     bool Board::GetCastlingPossibility(Color color)
     {
-        return ((color == cWhite) ? (0b01 & castlingPossibility != 0) : (0b10 & castlingPossibility != 0));
+        return ((color == cWhite) ? ((0b01 & castlingPossibility) != 0) : ((0b10 & castlingPossibility) != 0));
     }
 
     // get board infomation
