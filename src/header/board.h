@@ -140,6 +140,10 @@ namespace minichess_AI
             files[i] = 0;
         }
 
+        // set other variables
+        enpassantAblePawnFile = FILEERR;
+        castlingPossibility = 0;
+
         for (int i = 0; i < FEN.length(); i++)
         {
             c = FEN[i];
