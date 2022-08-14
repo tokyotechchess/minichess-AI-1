@@ -116,7 +116,7 @@ namespace minichess_AI
     // if piece = EMPTYSQ, delete piece in the square, else, put a piece to the square
     MCError Board::SetSquare(File file, Rank rank, Piece piece)
     {
-        files[file] *= 0b111111111111111111111111 - ConvRankToWeight(rank) * 0b1111;
+        files[file] &= 0b111111111111111111111111 - ConvRankToWeight(rank) * 0b1111;
         files[file] += ConvRankToWeight(rank) * (int)piece;
 
         return mcet::NoErr;

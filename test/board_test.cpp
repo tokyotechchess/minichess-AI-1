@@ -88,12 +88,12 @@ MCError TestSetSquare()
     b.SetSquare(DFILE, RANK4, WBISHOP);
     b.SetSquare(EFILE, RANK5, WKNIGHT);
     b.SetSquare(AFILE, RANK6, WROOK);
-    b.SetSquare(AFILE, RANK6, BQUEEN);
+    b.SetSquare(BFILE, RANK6, BQUEEN);
     b.SetSquare(BFILE, RANK5, BKING);
     b.SetSquare(CFILE, RANK4, BPAWN);
     b.SetSquare(DFILE, RANK3, BBISHOP);
     b.SetSquare(EFILE, RANK2, BKNIGHT);
-    b.SetSquare(AFILE, RANK1, BROOK);
+    b.SetSquare(EFILE, RANK1, BROOK);
     b.SetSquare(CFILE, RANK1, EMPTYSQ);
     if (b.GetSquare(AFILE, RANK1) != WQUEEN)
         return mcet::genTestErr("SetSquare(AFILE, RANK1, WQUEEN) is wrong");
@@ -107,7 +107,7 @@ MCError TestSetSquare()
         return mcet::genTestErr("SetSquare(EFILE, RANK5, WKNIGHT) is wrong");
     if (b.GetSquare(AFILE, RANK6) != WROOK)
         return mcet::genTestErr("SetSquare(AFILE, RANK6, WROOK) is wrong");
-    if (b.GetSquare(AFILE, RANK6) != BQUEEN)
+    if (b.GetSquare(BFILE, RANK6) != BQUEEN)
         return mcet::genTestErr("SetSquare(AFILE, RANK6, WQUEEN) is wrong");
     if (b.GetSquare(BFILE, RANK5) != BKING)
         return mcet::genTestErr("SetSquare(BFILE, RANK5, WKING) is wrong");
@@ -117,7 +117,7 @@ MCError TestSetSquare()
         return mcet::genTestErr("SetSquare(DFILE, RANK3, WBISHOP) is wrong");
     if (b.GetSquare(EFILE, RANK2) != BKNIGHT)
         return mcet::genTestErr("SetSquare(EFILE, RANK2, WKNIGHT) is wrong");
-    if (b.GetSquare(AFILE, RANK1) != BROOK)
+    if (b.GetSquare(EFILE, RANK1) != BROOK)
         return mcet::genTestErr("SetSquare(AFILE, RANK1, WROOK) is wrong");
     if (b.GetSquare(CFILE, RANK1) != EMPTYSQ)
         return mcet::genTestErr("SetSquare(CFILE, RANK1, EMPTYSQ) is wrong");
