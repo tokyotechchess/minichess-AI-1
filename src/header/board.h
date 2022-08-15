@@ -219,20 +219,20 @@ namespace minichess_AI
         {
             for (j = -1; j <= 1; j += 2)
             {
-                drank = krank;
-                dfile = kfile;
-                for (k = 0; k < min((1 + i) * (5 - krank) + (1 - i) * krank, (1 + j) * (4 - kfile) + (1 - j) * kfile) / 2; k++)
+                drank = krank + i;
+                dfile = kfile + j;
+                while (RANK1 <= drank && drank <= RANK6 && AFILE <= dfile && dfile <= EFILE)
                 {
-                    drank += i;
-                    dfile += j;
-                    if (square[drank][dfile] == q || square[drank - 1][dfile] == b)
+                    if (square[dfile][drank] == q || square[dfile][drank] == b)
                     {
                         return true;
                     }
-                    else if (square[drank][dfile] != EMPTYSQ)
+                    else if (square[dfile][drank] != EMPTYSQ)
                     {
                         break;
                     }
+                    drank += i;
+                    dfile += j;
                 }
             }
         }
@@ -241,50 +241,53 @@ namespace minichess_AI
         int lfile, lrank;
         for (i = -1; i <= 1; i += 2)
         {
-            lrank = krank;
+            lrank = krank + i;
             lfile = kfile;
-            for (j = 0; j < ((1 + i) * (5 - krank) + (1 - i) * (krank) / 2); j++)
+            while (RANK1 <= lrank && lrank <= RANK6)
             {
-                lrank += i;
-                if (square[lrank][lfile] == q || square[lrank - 1][lfile] == r)
+                if (square[lfile][lrank] == q || square[lfile][lrank] == r)
                 {
                     return true;
                 }
-                else if (square[lrank][lfile] != EMPTYSQ)
+                else if (square[lfile][lrank] != EMPTYSQ)
                 {
                     break;
                 }
+                lrank += i;
             }
         }
         for (i = -1; i <= 1; i += 2)
         {
             lrank = krank;
-            lfile = kfile;
-            for (j = 0; j < (1 + i) * (4 - kfile) + (1 - i) * kfile; j++)
+            lfile = kfile + i;
+            while (AFILE <= lfile && lfile <= EFILE)
             {
-                lfile += i;
-                if (square[lrank][lfile] == q || square[lrank - 1][lfile] == r)
+                if (square[lfile][lrank] == q || square[lfile][lrank] == r)
                 {
                     return true;
                 }
-                else if (square[lrank][lfile] != EMPTYSQ)
+                else if (square[lfile][lrank] != EMPTYSQ)
                 {
                     break;
                 }
+                lfile += i;
             }
         }
 
         // pawn
         i = (color == cWhite) ? 1 : -1;
-        for (j = -1; j <= 1; j += 2)
+        if (AFILE <= (int)kfile + i && (int)kfile + i <= EFILE)
         {
-            if ((int)kfile + i < AFILE || EFILE < (int)kfile + i || (int)krank < RANK1 || RANK6 < (int)krank)
+            for (j = -1; j <= 1; j += 2)
             {
-                continue;
-            }
-            if (square[kfile + i][krank + j] == p)
-            {
-                return true;
+                if ((int)krank + j < RANK1 || RANK6 < (int)krank + j)
+                {
+                    continue;
+                }
+                if (square[kfile + i][krank + j] == p)
+                {
+                    return true;
+                }
             }
         }
 

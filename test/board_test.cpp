@@ -297,7 +297,35 @@ MCError TestIsChecked()
     if (e != mcet::NoErr)
         return e;
     if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != true)
-        return mcet::genTestErr("IsChecked is wrong in knight test case 4");
+        return mcet::genTestErr("IsChecked is wrong in knight test case 5");
+
+    // bishop
+
+    e = b.SetBoardFEN("1n3/k1p2/2Pp1/1K1Pp/3BP/4R w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != true)
+        return mcet::genTestErr("IsChecked is wrong in bishop test case 1");
+    e = b.SetBoardFEN("3r1/1n3/k2Pb/p1P1P/2K2/3R1 w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != true || b.IsChecked(cBlack) != false)
+        return mcet::genTestErr("IsChecked is wrong in bishop test case 2");
+    e = b.SetBoardFEN("5/P4/2k1b/qN1n1/2KB1/5 w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != false)
+        return mcet::genTestErr("IsChecked is wrong in bishop test case 3");
+    e = b.SetBoardFEN("5/q4/2K2/5/bRpk1/5 w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != true || b.IsChecked(cBlack) != true)
+        return mcet::genTestErr("IsChecked is wrong in bishop test case 4");
+    e = b.SetBoardFEN("5/2k2/1nr1b/B2p1/3Q1/1KR2 w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != false)
+        return mcet::genTestErr("IsChecked is wrong in bishop test case 5");
 
     return mcet::NoErr;
 }
