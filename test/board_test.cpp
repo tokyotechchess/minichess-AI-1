@@ -355,5 +355,32 @@ MCError TestIsChecked()
     if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != false)
         return mcet::genTestErr("IsChecked is wrong in king test case 5");
 
+    // queen
+    e = b.SetBoardFEN("r3k/1ppbq/p3p/1P3/PKPP1/1Q2R w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != true || b.IsChecked(cBlack) != false)
+        return mcet::genTestErr("IsChecked is wrong in queen test case 1");
+    e = b.SetBoardFEN("r1b2/1k3/5/1pKQ1/pB3/5 w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != true)
+        return mcet::genTestErr("IsChecked is wrong in queen test case 2");
+    e = b.SetBoardFEN("5/2k2/5/2K1q/p2r1/2B2 w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != true || b.IsChecked(cBlack) != false)
+        return mcet::genTestErr("IsChecked is wrong in queen test case 3");
+    e = b.SetBoardFEN("3Q1/q3p/1n1kP/2N2/3K1/5 w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != true)
+        return mcet::genTestErr("IsChecked is wrong in queen test case 4");
+    e = b.SetBoardFEN("3K1/3Q1/2P2/1k3/4n/3q1 w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != false)
+        return mcet::genTestErr("IsChecked is wrong in queen test case 5");
+
     return mcet::NoErr;
 }
