@@ -8,6 +8,7 @@ Class "Board" and its method are defined.
 
 #include <string>
 #include "util/error.h"
+#include "util/util.h"
 #include "piece.h"
 
 namespace minichess_AI
@@ -71,6 +72,7 @@ namespace minichess_AI
         bool GetCastlingPossibility(Color);
         int *GetBoard();
         int GetSquare(File, Rank);
+        bool IsChecked(Color);
         MCError SetSquare(File, Rank, Piece);
         MCError SetBoardFEN(std::string fen);
         MCError Move(File, Rank, File, Rank);
@@ -127,6 +129,173 @@ namespace minichess_AI
         int c = this->files[file];
         int r = ConvRankToWeight(rank);
         return (c & (0b1111 * r)) / r;
+    }
+
+    // check that color's king is checked (Color: cWhite, cBlack)
+    bool Board::IsChecked(Color color)
+    {
+        int square[5][6];
+
+        // searched pieces
+        int mk, ok, p, q, r, n, b;
+        if (color == cWhite)
+        {
+            mk = WKING;
+            ok = BKING;
+            p = BPAWN;
+            q = BQUEEN;
+            r = BROOK;
+            n = BKNIGHT;
+            b = BBISHOP;
+        }
+        else
+        {
+            mk = BKING;
+            ok = WKING;
+            p = WPAWN;
+            q = WQUEEN;
+            r = WROOK;
+            n = WKNIGHT;
+            b = WBISHOP;
+        }
+
+        // search the position of color's king
+        Rank krank = RANKERR;
+        File kfile = FILEERR;
+        Rank okrank = RANKERR;
+        File okfile = FILEERR;
+        for (File f = AFILE; f <= EFILE; f++)
+        {
+            for (Rank r = RANK1; r <= RANK6; r++)
+            {
+                square[f][r] = GetSquare(f, r);
+                if (square[f][r] == mk)
+                {
+                    kfile = f;
+                    krank = r;
+                }
+                if (square[f][r] == ok)
+                {
+                    okfile = f;
+                    okrank = r;
+                }
+            }
+        }
+
+        // color's king is not in the board
+        if (kfile == FILEERR)
+            return false;
+
+        int i, j, k;
+
+        // king
+        if (okfile == FILEERR)
+        {
+            // Nothing to do now
+        }
+        else if ((int)okfile - 1 <= (int)kfile && (int)kfile <= (int)okfile + 1 && (int)okrank - 1 <= (int)krank && (int)krank <= (int)okrank + 1)
+        {
+            return true;
+        }
+
+        // knight
+        File nfile;
+        Rank nrank;
+        for (i = 0; i <= 1; i++)
+        {
+            for (j = 0; j <= 1; j++)
+            {
+                for (k = 0; k <= 1; k++)
+                {
+                    nfile = kfile + (1 + i) * (2 * j - 1);
+                    nrank = krank + (2 - i) * (2 * k - 1);
+                    if (GetSquare(nfile, nrank) == n)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // diagonal pieces
+        int dfile, drank;
+        for (i = -1; i <= 1; i += 2)
+        {
+            for (j = -1; j <= 1; j += 2)
+            {
+                drank = krank + i;
+                dfile = kfile + j;
+                while (RANK1 <= drank && drank <= RANK6 && AFILE <= dfile && dfile <= EFILE)
+                {
+                    if (square[dfile][drank] == q || square[dfile][drank] == b)
+                    {
+                        return true;
+                    }
+                    else if (square[dfile][drank] != EMPTYSQ)
+                    {
+                        break;
+                    }
+                    drank += i;
+                    dfile += j;
+                }
+            }
+        }
+
+        // horizontal piece
+        int lfile, lrank;
+        for (i = -1; i <= 1; i += 2)
+        {
+            lrank = krank + i;
+            lfile = kfile;
+            while (RANK1 <= lrank && lrank <= RANK6)
+            {
+                if (square[lfile][lrank] == q || square[lfile][lrank] == r)
+                {
+                    return true;
+                }
+                else if (square[lfile][lrank] != EMPTYSQ)
+                {
+                    break;
+                }
+                lrank += i;
+            }
+        }
+        for (i = -1; i <= 1; i += 2)
+        {
+            lrank = krank;
+            lfile = kfile + i;
+            while (AFILE <= lfile && lfile <= EFILE)
+            {
+                if (square[lfile][lrank] == q || square[lfile][lrank] == r)
+                {
+                    return true;
+                }
+                else if (square[lfile][lrank] != EMPTYSQ)
+                {
+                    break;
+                }
+                lfile += i;
+            }
+        }
+
+        // pawn
+        i = (color == cWhite) ? 1 : -1;
+        if (RANK1 <= (int)krank + i && (int)krank + i <= RANK6)
+        {
+            for (j = -1; j <= 1; j += 2)
+            {
+                if ((int)kfile + j < AFILE || EFILE < (int)kfile + j)
+                {
+                    continue;
+                }
+                if (square[kfile + j][krank + i] == p)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     // set a piece of square
