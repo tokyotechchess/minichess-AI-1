@@ -68,6 +68,12 @@ namespace minichess_AI
             return MCError(100, mes);
         }
 
+        // illegal move error
+        MCError genMoveErr(std::string mes)
+        {
+            return MCError(200, mes);
+        }
+
         // test error
         MCError genTestErr(std::string mes)
         {
@@ -78,6 +84,7 @@ namespace minichess_AI
         const MCError NoErr;
         const MCError TestErr = genTestErr("");
         const MCError FENErr = genFENErr("");
+        const MCError MoveErr = genMoveErr("");
 
     }
 }
