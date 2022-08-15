@@ -221,15 +221,15 @@ namespace minichess_AI
             {
                 drank = krank;
                 dfile = kfile;
-                for (k = 0; k < min((1 + i) * (6 - krank) + (1 - i) * (krank - 1), (1 + j) * (4 - kfile) + (1 - j) * kfile) / 2; k++)
+                for (k = 0; k < min((1 + i) * (5 - krank) + (1 - i) * krank, (1 + j) * (4 - kfile) + (1 - j) * kfile) / 2; k++)
                 {
                     drank += i;
                     dfile += j;
-                    if (square[drank - 1][dfile] == q || square[drank - 1][dfile] == b)
+                    if (square[drank][dfile] == q || square[drank - 1][dfile] == b)
                     {
                         return true;
                     }
-                    else if (square[drank - 1][dfile] != EMPTYSQ)
+                    else if (square[drank][dfile] != EMPTYSQ)
                     {
                         break;
                     }
@@ -243,14 +243,14 @@ namespace minichess_AI
         {
             lrank = krank;
             lfile = kfile;
-            for (j = 0; j < ((1 + i) * (6 - krank) + (1 - i) * (krank - 1)) / 2; j++)
+            for (j = 0; j < ((1 + i) * (5 - krank) + (1 - i) * (krank) / 2); j++)
             {
                 lrank += i;
-                if (square[lrank - 1][lfile] == q || square[lrank - 1][lfile] == r)
+                if (square[lrank][lfile] == q || square[lrank - 1][lfile] == r)
                 {
                     return true;
                 }
-                else if (square[lrank - 1][lfile] != EMPTYSQ)
+                else if (square[lrank][lfile] != EMPTYSQ)
                 {
                     break;
                 }
@@ -278,7 +278,7 @@ namespace minichess_AI
         i = (color == cWhite) ? 1 : -1;
         for (j = -1; j <= 1; j += 2)
         {
-            if ((int)kfile + i < AFILE || EFILE < (int)kfile + i || (int)krank + 1 < RANK1 || RANK6 < (int)krank + 1)
+            if ((int)kfile + i < AFILE || EFILE < (int)kfile + i || (int)krank < RANK1 || RANK6 < (int)krank)
             {
                 continue;
             }
