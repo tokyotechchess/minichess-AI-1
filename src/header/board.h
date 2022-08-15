@@ -263,11 +263,11 @@ namespace minichess_AI
             for (j = 0; j < (1 + i) * (4 - kfile) + (1 - i) * kfile; j++)
             {
                 lfile += i;
-                if (square[lrank - 1][lfile] == q || square[lrank - 1][lfile] == r)
+                if (square[lrank][lfile] == q || square[lrank - 1][lfile] == r)
                 {
                     return true;
                 }
-                else if (square[lrank - 1][lfile] != EMPTYSQ)
+                else if (square[lrank][lfile] != EMPTYSQ)
                 {
                     break;
                 }
