@@ -469,7 +469,7 @@ MCError TestIsChecked()
     e = b.SetBoardFEN("ppKpp/ppppp/b1r1q/Q1R1B/PPPPP/PPkPP w - -");
     if (e != mcet::NoErr)
         return e;
-    if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != true)
+    if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != false)
         return mcet::genTestErr("IsChecked is wrong in random test case 6");
 
     return mcet::NoErr;
