@@ -284,7 +284,7 @@ namespace minichess_AI
                 {
                     continue;
                 }
-                if (square[kfile + i][krank + j] == p)
+                if (square[kfile + j][krank + i] == p)
                 {
                     return true;
                 }
