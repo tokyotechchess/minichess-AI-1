@@ -189,7 +189,11 @@ namespace minichess_AI
         int i, j, k;
 
         // king
-        if ((int)okfile - 1 <= (int)kfile && (int)kfile <= (int)okfile + 1 && (int)okrank - 1 <= (int)krank && (int)krank <= (int)okrank + 1)
+        if (okfile == FILEERR)
+        {
+            // Nothing to do now
+        }
+        else if ((int)okfile - 1 <= (int)kfile && (int)kfile <= (int)okfile + 1 && (int)okrank - 1 <= (int)krank && (int)krank <= (int)okrank + 1)
         {
             return true;
         }
