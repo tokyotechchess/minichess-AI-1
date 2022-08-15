@@ -276,11 +276,11 @@ namespace minichess_AI
 
         // pawn
         i = (color == cWhite) ? 1 : -1;
-        if (AFILE <= (int)kfile + i && (int)kfile + i <= EFILE)
+        if (RANK1 <= (int)krank + i && (int)krank + i <= RANK6)
         {
             for (j = -1; j <= 1; j += 2)
             {
-                if ((int)krank + j < RANK1 || RANK6 < (int)krank + j)
+                if ((int)kfile + j < AFILE || EFILE < (int)kfile + j)
                 {
                     continue;
                 }
