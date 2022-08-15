@@ -411,5 +411,32 @@ MCError TestIsChecked()
     if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != true)
         return mcet::genTestErr("IsChecked is wrong in rook test case 5");
 
+    // pawn
+    e = b.SetBoardFEN("4k/3r1/2Pp1/2K2/qB3/5 w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != true || b.IsChecked(cBlack) != false)
+        return mcet::genTestErr("IsChecked is wrong in pawn test case 1");
+    e = b.SetBoardFEN("4k/1NpP1/1pP2/pPnp1/P4/K4 w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != true)
+        return mcet::genTestErr("IsChecked is wrong in pawn test case 2");
+    e = b.SetBoardFEN("5/2PpP/PPpKp/PkpPP/pPp2/5 w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != false)
+        return mcet::genTestErr("IsChecked is wrong in pawn test case 3");
+    e = b.SetBoardFEN("PPkPP/P1P1P/PPPPP/ppppp/p1p1p/ppKpp w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != false || b.IsChecked(cBlack) != false)
+        return mcet::genTestErr("IsChecked is wrong in pawn test case 4");
+    e = b.SetBoardFEN("4P/3kr/1pp2/2K2/B1b2/4n w - -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b.IsChecked(cWhite) != true || b.IsChecked(cBlack) != false)
+        return mcet::genTestErr("IsChecked is wrong in pawn test case 5");
+
     return mcet::NoErr;
 }
