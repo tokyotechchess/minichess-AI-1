@@ -319,7 +319,7 @@ MCError TestIsChecked()
     e = b.SetBoardFEN("5/q4/2K2/5/bRpk1/5 w - -");
     if (e != mcet::NoErr)
         return e;
-    if (b.IsChecked(cWhite) != true || b.IsChecked(cBlack) != true)
+    if (b.IsChecked(cWhite) != true || b.IsChecked(cBlack) != false)
         return mcet::genTestErr("IsChecked is wrong in bishop test case 4");
     e = b.SetBoardFEN("5/2k2/1nr1b/B2p1/3Q1/1KR2 w - -");
     if (e != mcet::NoErr)
