@@ -482,3 +482,8 @@ MCError TestIsChecked()
 
     return mcet::NoErr;
 }
+
+MCError TestMove()
+{
+    return mcet::NoErr;
+}
