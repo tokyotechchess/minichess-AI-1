@@ -14,6 +14,7 @@ MCError TestGetSquare();
 MCError TestSetSquare();
 MCError TestSetBoardFEN();
 MCError TestIsChecked();
+MCError TestMove();
 
 int main()
 {
@@ -48,6 +49,13 @@ int main()
         else if (e == mcet::FENErr)
         {
             std::cout << "FEN Error : " + e.GetMessage() << std::endl;
+        }
+    }
+    if ((e = TestMove()) != mcet::NoErr)
+    {
+        if (e == mcet::TestErr)
+        {
+            std::cout << "Test Error : " + e.GetMessage() << std::endl;
         }
     }
 }

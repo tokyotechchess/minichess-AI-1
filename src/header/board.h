@@ -756,7 +756,7 @@ namespace minichess_AI
         }
 
         if (illegal)
-            return mcet::genMoveErr("Wrong move played");
+            return mcet::genMoveErr("illegal move: this type of piece can't move like this");
 
         // move
 
@@ -802,6 +802,9 @@ namespace minichess_AI
             if (err != mcet::NoErr)
                 goto MOVE_ERR_1;
         }
+
+        if (IsChecked(turn))
+            err = mcet::genMoveErr("illegal move: if this move played, turn's player will be checkmated");
 
     MOVE_ERR_1:
         if (err != mcet::NoErr)
