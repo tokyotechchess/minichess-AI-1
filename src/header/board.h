@@ -496,8 +496,306 @@ namespace minichess_AI
 
     // move piece
     // ex) Ra2 -> Ra3: Move(AFILE, RANK2, AFILE, RANK3)
+    // ex) if castling, when turn == cWhite, Move(AFILE, RANK1, CFILE, RANK1)
     MCError Board::Move(File from_file, Rank from_rank, File to_file, Rank to_rank)
     {
+        if (from_file == to_file && from_rank == to_rank)
+            return mcet::genMoveErr("To-square is equal to from-square");
+
+        Piece p = (Piece)GetSquare(from_file, from_rank);
+        Piece op = (Piece)GetSquare(to_file, to_rank);
+
+        // no piece
+        if (p == EMPTYSQ)
+            return mcet::genMoveErr("There is no piece in this square");
+
+        // incorrect color, a same color piece exists in to-square
+        if (((int)p & 0b1000) == 0)
+        {
+            if (turn == cBlack)
+                return mcet::genMoveErr("This piece is an opponent one");
+            if (op != EMPTYSQ && ((int)op && 0b1000) == 0)
+                return mcet::genMoveErr("A same color piece exists in to-square");
+        }
+        else
+        {
+            if (turn == cWhite)
+                return mcet::genMoveErr("This piece is an opponent one");
+            if (op != EMPTYSQ && ((int)op && 0b1000) == 1)
+                return mcet::genMoveErr("A same color piece exists in to-square");
+        }
+
+        // piece type
+
+        bool pawn = false;
+        bool knight = false;
+        bool king = false;
+        bool diagonal = false;
+        bool horizontal = false;
+
+        bool loseCastling = false;
+
+        switch (p)
+        {
+        case WPAWN:
+        case BPAWN:
+            pawn = true;
+            break;
+        case WKNIGHT:
+        case BKNIGHT:
+            knight = true;
+            break;
+        case WKING:
+        case BKING:
+            king = true;
+            loseCastling = true;
+            break;
+        case WBISHOP:
+        case BBISHOP:
+            diagonal = true;
+            break;
+        case WROOK:
+        case BROOK:
+            horizontal = true;
+            loseCastling = true;
+            break;
+        case WQUEEN:
+        case BQUEEN:
+            if (abs((int)from_rank - (int)to_rank) == abs((int)from_file - (int)to_file))
+                diagonal = true;
+            else
+                horizontal = true;
+            break;
+        default:
+            mcet::genMoveErr("Unexpected error when identifing piece type");
+            break;
+        }
+
+        bool illegal = false;
+        bool enpassant = false;
+        bool castling = false;
+        int temp1, temp2, temp3, temp4;
+        Rank tempr1;
+        File tempf1, tempf2;
+        Piece tempp1;
+
+        if (knight)
+        {
+            temp1 = abs((int)from_file - (int)to_file);
+            temp2 = abs((int)from_rank - (int)to_rank);
+            if (temp1 > 2 || temp2 > 2 || temp1 + temp2 != 3)
+                illegal = true;
+        }
+
+        if (pawn)
+        {
+            temp1 = (turn == cWhite) ? 1 : -1;
+            temp2 = (int)to_rank - (int)from_rank;
+            temp3 = (int)to_file - (int)from_file;
+            if (temp3 > 1)
+                illegal = true;
+            if (temp2 == temp1)
+            {
+                if (temp3 == 1)
+                {
+                    // take
+                    if (op == EMPTYSQ)
+                    {
+                        // enpassant
+                        tempr1 = (turn == cWhite) ? RANK4 : RANK3;
+                        tempp1 = (turn == cWhite) ? BPAWN : WPAWN;
+                        if (
+                            (to_file != enpassantAblePawnFile) ||
+                            (to_rank != tempr1) ||
+                            (GetSquare(to_file, tempr1 - temp1) != tempp1))
+                            illegal = true;
+                    }
+                }
+                else
+                {
+                    // not take
+                    if (op != EMPTYSQ)
+                        illegal = true;
+                }
+            }
+            else if (temp2 == 2 * temp2)
+            {
+                if (op != EMPTYSQ)
+                    illegal = true;
+                if (temp3 != 0)
+                    illegal = true;
+                if (turn == cWhite && (from_rank != RANK2 || GetSquare(from_file, RANK3) != EMPTYSQ))
+                    illegal = true;
+                else if (turn == cBlack && (from_rank != RANK5 || GetSquare(from_file, RANK4) != EMPTYSQ))
+                    illegal = true;
+            }
+            else
+            {
+                illegal = true;
+            }
+        }
+
+        if (king)
+        {
+            if (abs((int)from_rank - (int)to_rank) > 1 || abs((int)from_file - (int)to_file) > 1)
+            {
+                // castling
+                if (turn == cWhite)
+                {
+                    tempr1 = RANK1;
+                    tempf1 = AFILE; // king
+                    tempf2 = EFILE; // rook
+                    tempp1 = WROOK;
+                }
+                else
+                {
+                    tempr1 = RANK6;
+                    tempf1 = EFILE; // king
+                    tempf2 = AFILE; // rook
+                    tempp1 = BROOK;
+                }
+
+                if (!GetCastlingPossibility(turn))
+                    illegal = true;
+                else if (
+                    (from_file != tempf1) ||
+                    (to_file != CFILE) ||
+                    (from_rank != tempr1) ||
+                    (to_rank != tempr1))
+                    illegal = true;
+                else if (
+                    (GetSquare(tempf2, tempr1) != tempp1) ||
+                    (GetSquare(BFILE, tempr1) != EMPTYSQ) ||
+                    (GetSquare(CFILE, tempr1) != EMPTYSQ) ||
+                    (GetSquare(DFILE, tempr1) != EMPTYSQ))
+                    illegal = true;
+                else if (IsChecked(turn) == true)
+                    illegal = true;
+                else
+                {
+                    SetSquare(from_file, from_rank, EMPTYSQ);
+                    SetSquare(File(((int)from_file + CFILE) / 2), from_rank, p);
+                    if (IsChecked(turn) == true)
+                    {
+                        illegal = true;
+                    }
+                    else
+                    {
+                        SetSquare(from_file, from_rank, p);
+                        SetSquare(File(((int)from_file + CFILE) / 2), from_rank, EMPTYSQ);
+                        castling = true;
+                    }
+                }
+            }
+        }
+
+        if (diagonal)
+        {
+            temp1 = (int)from_file - (int)to_file;
+            temp2 = (int)from_rank - (int)to_rank;
+            if (abs(temp1) != abs(temp2))
+            {
+                illegal = true;
+            }
+            else
+            {
+                temp3 = temp1 / abs(temp1);
+                temp4 = temp2 / abs(temp2);
+                for (int i = 1; i < abs(temp1); i++)
+                {
+                    if (GetSquare(from_file + i * temp3, from_rank + i * temp4) != EMPTYSQ)
+                        illegal = true;
+                }
+            }
+        }
+
+        if (horizontal)
+        {
+            if (from_rank == to_rank)
+            {
+                temp1 = min((int)from_file, (int)to_file);
+                temp2 = max((int)from_file, (int)to_file);
+                for (File f = File(temp1 + 1); f < File(temp2); f++)
+                {
+                    if (GetSquare(f, from_rank) != EMPTYSQ)
+                        illegal = true;
+                }
+            }
+            else if (from_file == to_file)
+            {
+                temp1 = min((int)from_rank, (int)to_rank);
+                temp2 = max((int)from_rank, (int)to_rank);
+                for (Rank r = Rank(temp1 + 1); r < Rank(temp2); r++)
+                {
+                    if (GetSquare(from_file, r) != EMPTYSQ)
+                        illegal = true;
+                }
+            }
+            else
+            {
+                illegal = true;
+            }
+        }
+
+        if (illegal)
+            return mcet::genMoveErr("Wrong move played");
+
+        // move
+
+        MCError err;
+        Board tempb = *this;
+
+        if (enpassant)
+        {
+            err = SetSquare(from_file, from_rank, EMPTYSQ);
+            if (err != mcet::NoErr)
+                goto MOVE_ERR_1;
+            err = SetSquare(to_file, to_rank, p);
+            if (err != mcet::NoErr)
+                goto MOVE_ERR_1;
+            err = SetSquare(to_file, (turn == cWhite) ? RANK3 : RANK4, EMPTYSQ);
+            if (err != mcet::NoErr)
+                goto MOVE_ERR_1;
+            enpassantAblePawnFile = to_file;
+        }
+        else if (castling)
+        {
+            err = SetSquare(from_file, to_rank, EMPTYSQ);
+            if (err != mcet::NoErr)
+                goto MOVE_ERR_1;
+            err = SetSquare(File(4 - from_file), to_rank, EMPTYSQ);
+            if (err != mcet::NoErr)
+                goto MOVE_ERR_1;
+            err = SetSquare(CFILE, to_rank, p);
+            if (err != mcet::NoErr)
+                goto MOVE_ERR_1;
+            err = SetSquare(File(((int)from_file + CFILE) / 2), to_rank, (turn == cWhite) ? WROOK : BROOK);
+            if (err != mcet::NoErr)
+                goto MOVE_ERR_1;
+        }
+        else
+        {
+            err = SetSquare(from_file, from_rank, EMPTYSQ);
+            if (err != mcet::NoErr)
+                goto MOVE_ERR_1;
+            err = SetSquare(to_file, to_rank, p);
+            if (err != mcet::NoErr)
+                goto MOVE_ERR_1;
+        }
+
+    MOVE_ERR_1:
+        if (err != mcet::NoErr)
+        {
+            *this = tempb;
+            return err;
+        }
+
+        // change variables
+
+        turn++;
+        if (loseCastling && GetCastlingPossibility(turn))
+            castlingPossibility -= (turn == cWhite) ? 0b01 : 0b10;
+
         return mcet::NoErr;
     }
 }

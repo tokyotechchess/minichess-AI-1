@@ -75,6 +75,7 @@ namespace minichess_AI
 
     // Color
     // ToDo: piece.h に宣言するのは変かもしれないので, もう少し良いヘッダがあったらそこに移す
+    // increment meaning is switching Color; cWhite++ == cBlack, cBlack++ == cWhite
     enum Color : int
     {
         cWhite,
@@ -88,6 +89,9 @@ namespace minichess_AI
     // enable calculation between RankWeight and Piece
     inline int operator*(RankWeight rw, Piece p) { return (int(p) * int(rw)); }
     inline int operator*(Piece p, RankWeight rw) { return (rw * p); }
+
+    // change turn
+    inline Color operator++(Color &c, int) { return (c = Color(1 - (int)c)); }
 
     // get RANK(r)
     // if 1 <= r <= 6, return RANK(r), else, return 0
