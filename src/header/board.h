@@ -76,6 +76,11 @@ namespace minichess_AI
         MCError SetSquare(File, Rank, Piece);
         MCError SetBoardFEN(std::string fen);
         MCError Move(File, Rank, File, Rank);
+
+    private:
+        // private methods (danger methods are here)
+
+        MCError SetBoard(int[5]);
     };
 
     // definitions
@@ -494,6 +499,19 @@ namespace minichess_AI
         return err;
     }
 
+    // !danger
+    // set pieces in the whole squares
+    // put arrays to initialize files
+    MCError Board::SetBoard(int new_files[5])
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            files[i] = new_files[i];
+        }
+
+        return mcet::NoErr;
+    }
+
     // move piece
     // ex) Ra2 -> Ra3: Move(AFILE, RANK2, AFILE, RANK3)
     // ex) if castling, when turn == cWhite, Move(AFILE, RANK1, CFILE, RANK1)
@@ -743,7 +761,9 @@ namespace minichess_AI
         // move
 
         MCError err;
-        Board tempb = *this;
+        int *temp_files;
+        temp_files = new int[5];
+        temp_files = GetBoard();
 
         if (enpassant)
         {
@@ -786,7 +806,7 @@ namespace minichess_AI
     MOVE_ERR_1:
         if (err != mcet::NoErr)
         {
-            *this = tempb;
+            SetBoard(temp_files);
             return err;
         }
 
@@ -795,6 +815,8 @@ namespace minichess_AI
         turn++;
         if (loseCastling && GetCastlingPossibility(turn))
             castlingPossibility -= (turn == cWhite) ? 0b01 : 0b10;
+
+        delete temp_files;
 
         return mcet::NoErr;
     }
