@@ -485,5 +485,12 @@ MCError TestIsChecked()
 
 MCError TestMove()
 {
+    Board b;
+    MCError e;
+
+    // illegal moves
+
+    // pawn
+
     return mcet::NoErr;
 }
