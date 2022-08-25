@@ -76,6 +76,10 @@ namespace minichess_AI
         MCError SetSquare(File, Rank, Piece);
         MCError SetBoardFEN(std::string fen);
         MCError Move(File, Rank, File, Rank);
+
+        // opeartors
+
+        bool operator==(const Board &b);
     };
 
     // definitions
@@ -499,5 +503,21 @@ namespace minichess_AI
     MCError Board::Move(File from_file, Rank from_rank, File to_file, Rank to_rank)
     {
         return mcet::NoErr;
+    }
+
+    // check equality between Boards
+    bool Board::operator==(const Board &b) {
+        if (turn != b.turn)
+            return false;
+        else if (castlingPossibility != b.castlingPossibility)
+            return false;
+        else if (enpassantAblePawnFile != b.enpassantAblePawnFile)
+            return false;
+
+        for (int i = 0; i < 5; i++) {
+            if (files[i] != b.files[i])
+                return false;
+        }
+        return true;
     }
 }
