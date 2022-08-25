@@ -527,39 +527,39 @@ MCError TestMove()
 
     e = b.Move(EFILE, RANK1, EFILE, RANK2);
     if (e != mcet::MoveWPErr)
-        return mcet::genTestErr("Move returns wrong error in wrong piece test case 1 : " + e.DisplayError());
+        return mcet::genTestErr("Move returns wrong error in wrong piece test case 8 : " + e.DisplayError());
     if (origin != b)
-        return mcet::genTestErr("Move is wrong in wrong piece test case 1");
+        return mcet::genTestErr("Move is wrong in wrong piece test case 8");
     e = b.Move(DFILE, RANK1, BFILE, RANK2);
     if (e != mcet::MoveWPErr)
-        return mcet::genTestErr("Move returns wrong error in wrong piece test case 2 : " + e.DisplayError());
+        return mcet::genTestErr("Move returns wrong error in wrong piece test case 9 : " + e.DisplayError());
     if (origin != b)
-        return mcet::genTestErr("Move is wrong in wrong piece test case 2");
+        return mcet::genTestErr("Move is wrong in wrong piece test case 9");
     e = b.Move(CFILE, RANK1, DFILE, RANK2);
     if (e != mcet::MoveWPErr)
-        return mcet::genTestErr("Move returns wrong error in wrong piece test case 3 : " + e.DisplayError());
+        return mcet::genTestErr("Move returns wrong error in wrong piece test case 10 : " + e.DisplayError());
     if (origin != b)
-        return mcet::genTestErr("Move is wrong in wrong piece test case 3");
+        return mcet::genTestErr("Move is wrong in wrong piece test case 10");
     e = b.Move(BFILE, RANK1, BFILE, RANK2);
     if (e != mcet::MoveWPErr)
-        return mcet::genTestErr("Move returns wrong error in wrong piece test case 4 : " + e.DisplayError());
+        return mcet::genTestErr("Move returns wrong error in wrong piece test case 11 : " + e.DisplayError());
     if (origin != b)
-        return mcet::genTestErr("Move is wrong in wrong piece test case 4");
+        return mcet::genTestErr("Move is wrong in wrong piece test case 11");
     e = b.Move(AFILE, RANK1, BFILE, RANK2);
     if (e != mcet::MoveWPErr)
-        return mcet::genTestErr("Move returns wrong error in wrong piece test case 5 : " + e.DisplayError());
+        return mcet::genTestErr("Move returns wrong error in wrong piece test case 12 : " + e.DisplayError());
     if (origin != b)
-        return mcet::genTestErr("Move is wrong in wrong piece test case 5");
+        return mcet::genTestErr("Move is wrong in wrong piece test case 12");
     e = b.Move(AFILE, RANK2, AFILE, RANK3);
     if (e != mcet::MoveWPErr)
-        return mcet::genTestErr("Move returns wrong error in wrong piece test case 6 : " + e.DisplayError());
+        return mcet::genTestErr("Move returns wrong error in wrong piece test case 13 : " + e.DisplayError());
     if (origin != b)
-        return mcet::genTestErr("Move is wrong in wrong piece test case 6");
+        return mcet::genTestErr("Move is wrong in wrong piece test case 13");
     e = b.Move(EFILE, RANK6, EFILE, RANK5);
     if (e != mcet::MoveWPErr)
-        return mcet::genTestErr("Move returns wrong error in wrong piece test case 7 : " + e.DisplayError());
+        return mcet::genTestErr("Move returns wrong error in wrong piece test case 14 : " + e.DisplayError());
     if (origin != b)
-        return mcet::genTestErr("Move is wrong in wrong piece test case 7");
+        return mcet::genTestErr("Move is wrong in wrong piece test case 14");
 
     return mcet::NoErr;
 }
