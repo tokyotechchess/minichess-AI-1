@@ -598,21 +598,60 @@ MCError TestMove()
         return mcet::genTestErr("Move returns wrong error in checked after move test case 5 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move test case 5");
-    e = b.Move(AFILE, RANK1, BFILE, RANK2);
+    e = b.Move(CFILE, RANK2, CFILE, RANK4);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move test case 6 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move test case 6");
-    e = b.Move(CFILE, RANK2, CFILE, RANK4);
+    e = b.Move(DFILE, RANK2, DFILE, RANK3);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move test case 7 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move test case 7");
-    e = b.Move(DFILE, RANK2, DFILE, RANK3);
+
+    // black
+
+    e = b.SetBoardFEN("rnbqk/1pp2/5/5/Q4/2K2 b - -");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
+
+    e = b.Move(EFILE, RANK6, DFILE, RANK5);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move test case 8 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move test case 8");
+    e = b.Move(DFILE, RANK6, EFILE, RANK5);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in checked after move test case 9 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in checked after move test case 9");
+    e = b.Move(CFILE, RANK6, EFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in checked after move test case 10 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in checked after move test case 10");
+    e = b.Move(BFILE, RANK6, AFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in checked after move test case 11 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in checked after move test case 11");
+    e = b.Move(AFILE, RANK6, AFILE, RANK5);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in checked after move test case 12 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in checked after move test case 12");
+    e = b.Move(CFILE, RANK5, CFILE, RANK3);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in checked after move test case 13 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in checked after move test case 13");
+    e = b.Move(BFILE, RANK5, BFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in checked after move test case 14 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in checked after move test case 14");
 
     return mcet::NoErr;
 }
