@@ -66,10 +66,14 @@ namespace minichess_AI
     {
         switch (status)
         {
+        case 0:
+            return "";
         case 100:
             return "FEN Error : " + message;
         case 10000:
             return "Test Error : " + message;
+        default:
+            return "Unknown Error : " + message;
         }
 
         return "";
