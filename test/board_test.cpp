@@ -653,5 +653,35 @@ MCError TestMove()
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move test case 14");
 
+    // not checked before move
+
+    // white
+
+    e = b.SetBoardFEN("2k2/4q/5/5/1R3/K4 w - -");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
+
+    e = b.Move(BFILE, RANK2, CFILE, RANK2);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in checked after move test case 15 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in checked after move test case 15");
+
+    // black
+
+    e = b.SetBoardFEN("4k/3r1/5/5/Q4/2K2 b - -");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
+
+    e = b.Move(DFILE, RANK5, CFILE, RANK5);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in checked after move test case 16 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in checked after move test case 16");
+
     return mcet::NoErr;
 }
