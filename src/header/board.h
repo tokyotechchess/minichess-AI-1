@@ -170,7 +170,7 @@ namespace minichess_AI
         else{
             FEN += " ";
             FEN += char(empass_file + 97); //ascii変換 0 + 97 -> a
-            FEN += std::to_string(3*turn_num+2); //cwhite -> 2 cblack -> 5
+            FEN += std::to_string(3 * turn_num + 2); //cwhite -> 2 cblack -> 5
         }
         //ここまでアンパッサン
         //rnbqk/ppppp/5/5/PPPPP/KQBNR w Kk -ここまでの出力(アンパッサンもできてた)
