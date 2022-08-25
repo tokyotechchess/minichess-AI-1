@@ -20,35 +20,19 @@ int main()
     MCError e;
     if ((e = TestGetSquare()) != mcet::NoErr)
     {
-        if (e == mcet::TestErr)
-        {
-            std::cout << "Test Error : " + e.DisplayError() << std::endl;
-        }
+        std::cout << e.DisplayError() << std::endl;
     }
     if ((e = TestSetSquare()) != mcet::NoErr)
     {
-        if (e == mcet::TestErr)
-        {
-            std::cout << "Test Error : " + e.DisplayError() << std::endl;
-        }
+        std::cout << e.DisplayError() << std::endl;
     }
     if ((e = TestSetBoardFEN()) != mcet::NoErr)
     {
-        if (e == mcet::TestErr)
-        {
-            std::cout << "Test Error : " + e.DisplayError() << std::endl;
-        }
+        std::cout << e.DisplayError() << std::endl;
     }
     if ((e = TestIsChecked()) != mcet::NoErr)
     {
-        if (e == mcet::TestErr)
-        {
-            std::cout << "Test Error : " + e.DisplayError() << std::endl;
-        }
-        else if (e == mcet::FENErr)
-        {
-            std::cout << "FEN Error : " + e.DisplayError() << std::endl;
-        }
+        std::cout << e.DisplayError() << std::endl;
     }
 }
 
