@@ -74,6 +74,12 @@ namespace minichess_AI
             return MCError(200, mes);
         }
 
+        // Move() : wrong piece err
+        MCError genMoveWPErr(std::string mes)
+        {
+            return MCError(300, mes);
+        }
+
         // test error
         MCError genTestErr(std::string mes)
         {
@@ -85,6 +91,7 @@ namespace minichess_AI
         const MCError TestErr = genTestErr("");
         const MCError FENErr = genFENErr("");
         const MCError MoveErr = genMoveErr("");
+        const MCError MoveWPErr = genMoveErr("");
 
     }
 }

@@ -536,14 +536,14 @@ namespace minichess_AI
         if (((int)p & 0b1000) == 0)
         {
             if (turn == cBlack)
-                return mcet::genMoveErr("This piece is an opponent one");
+                return mcet::genMoveWPErr("This piece is an opponent one");
             if (op != EMPTYSQ && ((int)op && 0b1000) == 0)
                 return mcet::genMoveErr("A same color piece exists in to-square");
         }
         else
         {
             if (turn == cWhite)
-                return mcet::genMoveErr("This piece is an opponent one");
+                return mcet::genMoveWPErr("This piece is an opponent one");
             if (op != EMPTYSQ && ((int)op && 0b1000) == 1)
                 return mcet::genMoveErr("A same color piece exists in to-square");
         }
@@ -590,7 +590,7 @@ namespace minichess_AI
                 horizontal = true;
             break;
         default:
-            mcet::genMoveErr("Unexpected error when identifing piece type");
+            mcet::genMoveWPErr("Unexpected error when identifing piece type");
             break;
         }
 
