@@ -599,21 +599,21 @@ namespace minichess_AI
 
         // no piece
         if (p == EMPTYSQ)
-            return mcet::genMoveErr("There is no piece in this square");
+            return mcet::genMoveWPErr("There is no piece in this square");
 
         // incorrect color, a same color piece exists in to-square
         if (((int)p & 0b1000) == 0)
         {
             if (turn == cBlack)
                 return mcet::genMoveWPErr("This piece is an opponent one");
-            if (op != EMPTYSQ && ((int)op && 0b1000) == 0)
+            if (op != EMPTYSQ && ((int)op & 0b1000) == 0)
                 return mcet::genMoveErr("A same color piece exists in to-square");
         }
         else
         {
             if (turn == cWhite)
                 return mcet::genMoveWPErr("This piece is an opponent one");
-            if (op != EMPTYSQ && ((int)op && 0b1000) == 1)
+            if (op != EMPTYSQ && ((int)op & 0b1000) == 1)
                 return mcet::genMoveErr("A same color piece exists in to-square");
         }
 

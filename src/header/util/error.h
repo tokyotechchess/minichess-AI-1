@@ -70,6 +70,10 @@ namespace minichess_AI
             return "";
         case 100:
             return "FEN Error : " + message;
+        case 200:
+            return "Move Error : " + message;
+        case 300:
+            return "Move Wrong Piece Error : " + message;
         case 10000:
             return "Test Error : " + message;
         default:
@@ -114,7 +118,7 @@ namespace minichess_AI
         const MCError TestErr = genTestErr("");
         const MCError FENErr = genFENErr("");
         const MCError MoveErr = genMoveErr("");
-        const MCError MoveWPErr = genMoveErr("");
+        const MCError MoveWPErr = genMoveWPErr("");
 
     }
 }
