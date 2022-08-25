@@ -71,6 +71,7 @@ namespace minichess_AI
         File GetEnpassantAblePawnFile();
         bool GetCastlingPossibility(Color);
         int *GetBoard();
+        std::string Board::GetBoardFEN();
         int GetSquare(File, Rank);
         bool IsChecked(Color);
         MCError SetSquare(File, Rank, Piece);
@@ -118,6 +119,11 @@ namespace minichess_AI
         }
 
         return f;
+    }
+
+    std::string Board::GetBoardFEN(){
+        std::string FEN;
+        return FEN;
     }
 
     // get square's piece (file: A-file = 0, ..., E-file = 4)
