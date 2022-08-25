@@ -37,10 +37,7 @@ int main()
     }
     if ((e = TestMove()) != mcet::NoErr)
     {
-        if (e == mcet::TestErr)
-        {
-            std::cout << "Test Error : " + e.GetMessage() << std::endl;
-        }
+        std::cout << e.DisplayError() << std::endl;
     }
 }
 
