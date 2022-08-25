@@ -476,7 +476,7 @@ MCError TestMove()
 
     // wrong piece
 
-    // black
+    // white
 
     e = b.SetBoardFEN("rnbqk/4p/5/5/5/2K2 w - -");
     if (e != mcet::NoErr)
