@@ -683,5 +683,117 @@ MCError TestMove()
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move test case 16");
 
+    // pawn
+
+    // white
+
+    // e3 is q but it has meanings
+    e = b.SetBoardFEN("rnbqk/p3p/1p3/2pPq/PPP1P/KQBNR w - e3");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
+
+    e = b.Move(CFILE, RANK2, CFILE, RANK3);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white pawn test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white pawn test case 1");
+    e = b.Move(CFILE, RANK2, CFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white pawn test case 2 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white pawn test case 2");
+    e = b.Move(BFILE, RANK2, BFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white pawn test case 3 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white pawn test case 3");
+    e = b.Move(DFILE, RANK3, DFILE, RANK5);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white pawn test case 4 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white pawn test case 4");
+    e = b.Move(DFILE, RANK3, CFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white pawn test case 5 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white pawn test case 5");
+    e = b.Move(DFILE, RANK3, EFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white pawn test case 6 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white pawn test case 6");
+    e = b.Move(AFILE, RANK2, BFILE, RANK3);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white pawn test case 7 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white pawn test case 7");
+    e = b.Move(AFILE, RANK2, BFILE, RANK5);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white pawn test case 8 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white pawn test case 8");
+    e = b.Move(AFILE, RANK2, CFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white pawn test case 9 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white pawn test case 9");
+
+    // black
+
+    // a4 is Q but it has meanings
+    e = b.SetBoardFEN("rnbqk/p1ppp/QpP2/3P1/P3P/KQBNR b - a4");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
+
+    e = b.Move(CFILE, RANK5, CFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black pawn test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black pawn test case 1");
+    e = b.Move(CFILE, RANK5, CFILE, RANK3);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black pawn test case 2 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black pawn test case 2");
+    e = b.Move(DFILE, RANK5, DFILE, RANK3);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black pawn test case 3 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black pawn test case 3");
+    e = b.Move(BFILE, RANK4, BFILE, RANK2);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black pawn test case 4 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black pawn test case 4");
+    e = b.Move(BFILE, RANK4, CFILE, RANK3);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black pawn test case 5 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black pawn test case 5");
+    e = b.Move(BFILE, RANK4, AFILE, RANK3);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black pawn test case 6 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black pawn test case 6");
+    e = b.Move(EFILE, RANK5, DFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black pawn test case 7 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black pawn test case 7");
+    e = b.Move(EFILE, RANK5, DFILE, RANK2);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black pawn test case 8 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black pawn test case 8");
+    e = b.Move(EFILE, RANK5, CFILE, RANK3);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black pawn test case 9 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black pawn test case 9");
+
     return mcet::NoErr;
 }
