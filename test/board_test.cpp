@@ -22,32 +22,32 @@ int main()
     {
         if (e == mcet::TestErr)
         {
-            std::cout << "Test Error : " + e.GetMessage() << std::endl;
+            std::cout << "Test Error : " + e.DisplayError() << std::endl;
         }
     }
     if ((e = TestSetSquare()) != mcet::NoErr)
     {
         if (e == mcet::TestErr)
         {
-            std::cout << "Test Error : " + e.GetMessage() << std::endl;
+            std::cout << "Test Error : " + e.DisplayError() << std::endl;
         }
     }
     if ((e = TestSetBoardFEN()) != mcet::NoErr)
     {
         if (e == mcet::TestErr)
         {
-            std::cout << "Test Error : " + e.GetMessage() << std::endl;
+            std::cout << "Test Error : " + e.DisplayError() << std::endl;
         }
     }
     if ((e = TestIsChecked()) != mcet::NoErr)
     {
         if (e == mcet::TestErr)
         {
-            std::cout << "Test Error : " + e.GetMessage() << std::endl;
+            std::cout << "Test Error : " + e.DisplayError() << std::endl;
         }
         else if (e == mcet::FENErr)
         {
-            std::cout << "FEN Error : " + e.GetMessage() << std::endl;
+            std::cout << "FEN Error : " + e.DisplayError() << std::endl;
         }
     }
 }
@@ -207,7 +207,7 @@ MCError TestSetBoardFEN()
 
     if ((e = b.SetBoardFEN("2bk1/pp1pp/n2pq/rRPPP/P4/KQBN1 w Kk d3")) != mcet::NoErr)
     {
-        return mcet::genTestErr("Unexpected error is returned : " + e.GetMessage());
+        return mcet::genTestErr("Unexpected error is returned : " + e.DisplayError());
     }
 
     files = b.GetBoard();
@@ -237,7 +237,7 @@ MCError TestSetBoardFEN()
 
     if ((e = b.SetBoardFEN("3nk/1p1bq/pPpNr/B1P2/PKQ1p/4R b - -")) != mcet::NoErr)
     {
-        return mcet::genTestErr("Unexpected error is returned : " + e.GetMessage());
+        return mcet::genTestErr("Unexpected error is returned : " + e.DisplayError());
     }
 
     files = b.GetBoard();
