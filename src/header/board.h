@@ -76,6 +76,7 @@ namespace minichess_AI
         MCError SetSquare(File, Rank, Piece);
         MCError SetBoardFEN(std::string fen);
         MCError Move(File, Rank, File, Rank);
+        MCError NullMove();
 
         // opeartors
 
