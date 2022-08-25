@@ -174,20 +174,18 @@ namespace minichess_AI
             FEN += "k";
         }
         //ここまでキャスリングの可否
-        int empass_file = GetEnpassantAblePawnFile();
-        if (empass_file == -1)
+        int enpass_file = enpassantAblePawnFile;
+        if (enpass_file == -1)
         {
             FEN += " -";
         }
         else
         {
             FEN += " ";
-            FEN += char(empass_file + 97);           // ascii変換 0 + 97 -> a
+            FEN += char(enpass_file + 97);           // ascii変換 0 + 97 -> a
             FEN += std::to_string(3 * turn_num + 2); // cwhite -> 2 cblack -> 5
         }
         //ここまでアンパッサン
-        // rnbqk/ppppp/5/5/PPPPP/KQBNR w Kk -ここまでの出力(アンパッサンもできてた)
-        //手数がどこにあるのかわからん
         return FEN;
     }
 
