@@ -124,7 +124,7 @@ namespace minichess_AI
     std::string Board::GetBoardFEN(){
         std::string FEN;
         std::string Pieces[15] = {"\0","K","P","Q","R","N","B","\0","\0","k","p","q","r","n","b"};
-        int piece_num, count;
+        int piece_num, count=0;
         for (Rank r = RANK6; r >= RANK1; r--){
             for (File f = AFILE; f <= EFILE; f++){
                 piece_num=GetSquare(f, r);
@@ -133,18 +133,48 @@ namespace minichess_AI
                 }
                 else{
                     if (count != 0){
-                        FEN += count;
+                        FEN += std::to_string(count);
+                        count = 0;
                     }
                     FEN += Pieces[piece_num];
                 }
             }
             if (count != 0){
-                FEN += count;
+                FEN += std::to_string(count);
             }
             FEN += "/";
             count = 0;
         }
-        FEN.pop_back();
+        FEN.pop_back(); 
+        //ここまでコマの位置
+        FEN += " ";
+        int turn_num = GetTurn();
+        if (turn_num == 0){
+            FEN += "w ";
+        }
+        else{
+            FEN += "b ";
+        }
+        //ここまで手番
+        if (GetCastlingPossibility(cWhite)){
+            FEN += "K";
+        }
+        if (GetCastlingPossibility(cBlack)){
+            FEN += "k";
+        }
+        //ここまでキャスリングの可否
+        int empass_file = GetEnpassantAblePawnFile();
+        if (empass_file == -1){
+            FEN += " -";
+        }
+        else{
+            FEN += " ";
+            FEN += char(empass_file + 97); //ascii変換 0 + 97 -> a
+            FEN += std::to_string(3*turn_num+2); //cwhite -> 2 cblack -> 5
+        }
+        //ここまでアンパッサン
+        //rnbqk/ppppp/5/5/PPPPP/KQBNR w Kk -ここまでの出力(アンパッサンもできてた)
+        //手数がどこにあるのかわからん
         return FEN;
     }
 
