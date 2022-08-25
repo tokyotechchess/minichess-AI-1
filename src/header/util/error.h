@@ -27,6 +27,8 @@ namespace minichess_AI
             return message;
         }
 
+        std::string DisplayError();
+
         // operator
 
         // assignment operator
@@ -55,6 +57,27 @@ namespace minichess_AI
                 return false;
         }
     };
+
+    // definitions
+
+    // get error description as std::string
+    // return (error type + error message)
+    std::string MCError::DisplayError()
+    {
+        switch (status)
+        {
+        case 0:
+            return "";
+        case 100:
+            return "FEN Error : " + message;
+        case 10000:
+            return "Test Error : " + message;
+        default:
+            return "Unknown Error : " + message;
+        }
+
+        return "";
+    }
 
     // error types
 
