@@ -829,8 +829,19 @@ namespace minichess_AI
         return mcet::NoErr;
     }
 
+    // null move
+    // skip this turn; turn moves to another color and enpassantAblePawnFile = FILEERR
+    MCError Board::NullMove()
+    {
+        turn++;
+        enpassantAblePawnFile = FILEERR;
+
+        return mcet::NoErr;
+    }
+
     // check equality between Boards
-    bool Board::operator==(const Board &b) {
+    bool Board::operator==(const Board &b)
+    {
         if (turn != b.turn)
             return false;
         else if (castlingPossibility != b.castlingPossibility)
@@ -838,7 +849,8 @@ namespace minichess_AI
         else if (enpassantAblePawnFile != b.enpassantAblePawnFile)
             return false;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++)
+        {
             if (files[i] != b.files[i])
                 return false;
         }
