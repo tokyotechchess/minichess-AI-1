@@ -174,16 +174,15 @@ namespace minichess_AI
             FEN += "k";
         }
         //ここまでキャスリングの可否
-        int enpass_file = enpassantAblePawnFile;
-        if (enpass_file == -1)
+        if (enpassantAblePawnFile == -1)
         {
             FEN += " -";
         }
         else
         {
             FEN += " ";
-            FEN += char(enpass_file + 'a');          // ascii変換 0 + 97 -> a
-            FEN += std::to_string(3 * turn_num + 2); // cwhite -> 2 cblack -> 5
+            FEN += char(enpassantAblePawnFile + 'a'); // ascii変換 0 + 97 -> a
+            FEN += std::to_string(3 * turn_num + 2);  // cwhite -> 2 cblack -> 5
         }
         //ここまでアンパッサン
         return FEN;
