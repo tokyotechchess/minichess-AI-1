@@ -82,6 +82,7 @@ namespace minichess_AI
         // opeartors
 
         bool operator==(const Board &b);
+        bool operator!=(const Board &b);
 
     private:
         // private methods (danger methods are here)
@@ -924,4 +925,6 @@ namespace minichess_AI
         }
         return true;
     }
+
+    bool Board::operator!=(const Board &b) { return !(*this == b); }
 }
