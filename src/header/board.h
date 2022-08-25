@@ -133,7 +133,7 @@ namespace minichess_AI
                 piece_num = GetSquare(f, r);
                 if (piece_num == 0)
                 {
-                    count += 1;
+                    count++;
                 }
                 else
                 {
@@ -174,7 +174,7 @@ namespace minichess_AI
             FEN += "k";
         }
         //ここまでキャスリングの可否
-        if (enpassantAblePawnFile == -1)
+        if (enpassantAblePawnFile == FILEERR)
         {
             FEN += " -";
         }
