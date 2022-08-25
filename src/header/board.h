@@ -182,7 +182,7 @@ namespace minichess_AI
         else
         {
             FEN += " ";
-            FEN += char(enpass_file + 97);           // ascii変換 0 + 97 -> a
+            FEN += char(enpass_file + 'a');          // ascii変換 0 + 97 -> a
             FEN += std::to_string(3 * turn_num + 2); // cwhite -> 2 cblack -> 5
         }
         //ここまでアンパッサン
