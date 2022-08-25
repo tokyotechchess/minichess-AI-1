@@ -123,13 +123,28 @@ namespace minichess_AI
 
     std::string Board::GetBoardFEN(){
         std::string FEN;
-        std::string Pieces[15] = {"emp","K","P","Q","R","N","B","emp","emp","k","p","q","r","n","b"};
-        for (Rank r = RANK1; r <= RANK6; r++){
+        std::string Pieces[15] = {"\0","K","P","Q","R","N","B","\0","\0","k","p","q","r","n","b"};
+        int piece_num, count;
+        for (Rank r = RANK6; r >= RANK1; r--){
             for (File f = AFILE; f <= EFILE; f++){
-                FEN += "a";
+                piece_num=GetSquare(f, r);
+                if (piece_num == 0){
+                    count += 1;
+                }
+                else{
+                    if (count != 0){
+                        FEN += count;
+                    }
+                    FEN += Pieces[piece_num];
                 }
             }
+            if (count != 0){
+                FEN += count;
+            }
             FEN += "/";
+            count = 0;
+        }
+        FEN.pop_back();
         return FEN;
     }
 
