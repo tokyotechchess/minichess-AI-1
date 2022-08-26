@@ -889,9 +889,9 @@ namespace minichess_AI
 
         // change variables
 
-        turn++;
         if (loseCastling && GetCastlingPossibility(turn))
             castlingPossibility -= (turn == cWhite) ? 0b01 : 0b10;
+        turn++;
 
         delete temp_files;
 
