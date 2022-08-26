@@ -665,6 +665,7 @@ namespace minichess_AI
 
         bool illegal = false;
         bool enpassant = false;
+        bool pawn2sq = false;
         bool castling = false;
         int temp1, temp2, temp3, temp4;
         Rank tempr1;
@@ -701,6 +702,8 @@ namespace minichess_AI
                             (to_rank != tempr1) ||
                             (GetSquare(to_file, tempr1 - temp1) != tempp1))
                             illegal = true;
+                        else
+                            enpassant = true;
                     }
                 }
                 else
@@ -710,16 +713,18 @@ namespace minichess_AI
                         illegal = true;
                 }
             }
-            else if (temp2 == 2 * temp2)
+            else if (temp2 == 2 * temp1)
             {
                 if (op != EMPTYSQ)
                     illegal = true;
-                if (temp3 != 0)
+                else if (temp3 != 0)
                     illegal = true;
-                if (turn == cWhite && (from_rank != RANK2 || GetSquare(from_file, RANK3) != EMPTYSQ))
+                else if (turn == cWhite && (from_rank != RANK2 || GetSquare(from_file, RANK3) != EMPTYSQ))
                     illegal = true;
                 else if (turn == cBlack && (from_rank != RANK5 || GetSquare(from_file, RANK4) != EMPTYSQ))
                     illegal = true;
+                else
+                    pawn2sq = true;
             }
             else
             {
@@ -896,6 +901,9 @@ namespace minichess_AI
         if (loseCastling && GetCastlingPossibility(turn))
             castlingPossibility -= (turn == cWhite) ? 0b01 : 0b10;
         turn++;
+
+        if (pawn2sq)
+            enpassantAblePawnFile = from_file;
 
         delete temp_files;
 
