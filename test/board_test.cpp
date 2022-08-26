@@ -1291,7 +1291,6 @@ MCError TestMove()
     e = b.Move(EFILE, RANK6, CFILE, RANK6);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in black castling test case 1 : " + e.DisplayError());
-    std::cout << b.GetBoardFEN() << std::endl;
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in black castling test case 1");
 
