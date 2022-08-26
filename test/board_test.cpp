@@ -1021,7 +1021,7 @@ MCError TestMove()
 
     // black
 
-    e = b.SetBoardFEN("4k/5/2qP1/1p4/5/K4 b - -");
+    e = b.SetBoardFEN("4k/5/2qP1/1p3/5/K4 b - -");
     if (e != mcet::NoErr)
         return e;
 
@@ -1071,7 +1071,7 @@ MCError TestMove()
 
     // black
 
-    e = b.SetBoardFEN("4k/2rP1/2p2/5/5/K4 w - -");
+    e = b.SetBoardFEN("4k/2p2/2rP1/5/5/K4 b - -");
     if (e != mcet::NoErr)
         return e;
 
