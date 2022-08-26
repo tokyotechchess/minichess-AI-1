@@ -832,6 +832,10 @@ namespace minichess_AI
         if (illegal)
             return mcet::genMoveErr("illegal move: this type of piece can't move like this");
 
+        // initialize enpassantAblePawnFile
+
+        enpassantAblePawnFile = FILEERR;
+
         // move
 
         MCError err;
