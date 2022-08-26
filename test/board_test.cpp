@@ -1291,6 +1291,7 @@ MCError TestMove()
     e = b.Move(EFILE, RANK6, CFILE, RANK6);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in black castling test case 1 : " + e.DisplayError());
+    e = corb.SetBoardFEN("2kr1/3p1/5/5/1R3/2K2 w K -");
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in black castling test case 1");
 
