@@ -1263,5 +1263,37 @@ MCError TestMove()
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black knight illegal test case 2");
 
+    // legals
+
+    Board corb;
+
+    // castling
+
+    // white
+
+    e = b.SetBoardFEN("2k2/3r1/5/5/1P3/K3R w Kk -");
+    if (e != mcet::NoErr)
+        return e;
+
+    e = b.Move(AFILE, RANK1, CFILE, RANK1);
+    if (e != mcet::NoErr)
+        return mcet::genTestErr("Move return unexpected error in white castling test case 1 : " + e.DisplayError());
+    e = corb.SetBoardFEN("2k2/3r1/5/5/1P3/1RK2 b k -");
+    if (b != corb)
+        return mcet::genTestErr("Move doesn't work correctly in white castling test case 1");
+
+    // black
+
+    e = b.SetBoardFEN("r3k/3p1/5/5/1R3/2K2 b Kk -");
+    if (e != mcet::NoErr)
+        return e;
+
+    e = b.Move(EFILE, RANK6, CFILE, RANK6);
+    if (e != mcet::NoErr)
+        return mcet::genTestErr("Move return unexpected error in black castling test case 1 : " + e.DisplayError());
+    std::cout << b.GetBoardFEN() << std::endl;
+    if (b != corb)
+        return mcet::genTestErr("Move doesn't work correctly in black castling test case 1");
+
     return mcet::NoErr;
 }
