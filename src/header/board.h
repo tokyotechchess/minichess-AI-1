@@ -783,8 +783,8 @@ namespace minichess_AI
 
         if (diagonal)
         {
-            temp1 = (int)from_file - (int)to_file;
-            temp2 = (int)from_rank - (int)to_rank;
+            temp1 = (int)to_file - (int)from_file;
+            temp2 = (int)to_rank - (int)from_rank;
             if (abs(temp1) != abs(temp2))
             {
                 illegal = true;
