@@ -1143,5 +1143,45 @@ MCError TestMove()
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black bishop illegal test case 3");
 
+    // knight
+
+    // white
+
+    e = b.SetBoardFEN("4k/5/5/2N2/5/K4 w - -");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
+
+    e = b.Move(CFILE, RANK3, EFILE, RANK1);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white knight illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white knight illegal test case 1");
+    e = b.Move(CFILE, RANK3, CFILE, RANK5);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white knight illegal test case 2 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white knight illegal test case 2");
+
+    // black
+
+    e = b.SetBoardFEN("4k/5/2n2/5/5/K4 b - -");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
+
+    e = b.Move(CFILE, RANK4, AFILE, RANK6);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black knight illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black knight illegal test case 1");
+    e = b.Move(CFILE, RANK4, CFILE, RANK2);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black knight illegal test case 2 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black knight illegal test case 2");
+
     return mcet::NoErr;
 }
