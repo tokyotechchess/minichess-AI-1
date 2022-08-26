@@ -1043,5 +1043,55 @@ MCError TestMove()
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black queen illegal test case 3");
 
+    // rook
+
+    // white
+
+    e = b.SetBoardFEN("4k/5/5/1pR2/2P2/K4 w - -");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
+
+    e = b.Move(CFILE, RANK3, AFILE, RANK3);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white rook illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white rook illegal test case 1");
+    e = b.Move(CFILE, RANK3, CFILE, RANK1);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white rook illegal test case 2 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white rook illegal test case 2");
+    e = b.Move(CFILE, RANK3, EFILE, RANK1);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white rook illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white rook illegal test case 3");
+
+    // black
+
+    e = b.SetBoardFEN("4k/2rP1/2p2/5/5/K4 w - -");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
+
+    e = b.Move(CFILE, RANK4, EFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black rook illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black rook illegal test case 1");
+    e = b.Move(CFILE, RANK4, CFILE, RANK6);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black rook illegal test case 2 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black rook illegal test case 2");
+    e = b.Move(CFILE, RANK4, AFILE, RANK6);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black rook illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black rook illegal test case 3");
+
     return mcet::NoErr;
 }
