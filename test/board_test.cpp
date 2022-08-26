@@ -1093,5 +1093,55 @@ MCError TestMove()
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black rook illegal test case 3");
 
+    // bishop
+
+    // white
+
+    e = b.SetBoardFEN("4k/5/3r1/2B2/3N1/K4 w - -");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
+
+    e = b.Move(CFILE, RANK3, EFILE, RANK5);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white bishop illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white bishop illegal test case 1");
+    e = b.Move(CFILE, RANK3, EFILE, RANK1);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white bishop illegal test case 2 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white bishop illegal test case 2");
+    e = b.Move(CFILE, RANK3, EFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white bishop illegal test case 3 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white bishop illegal test case 3");
+
+    // black
+
+    e = b.SetBoardFEN("4k/1n3/2b2/1R3/5/K4 b - -");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
+
+    e = b.Move(CFILE, RANK4, AFILE, RANK2);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black bishop illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black bishop illegal test case 1");
+    e = b.Move(CFILE, RANK4, AFILE, RANK6);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black bishop illegal test case 2 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black bishop illegal test case 2");
+    e = b.Move(CFILE, RANK4, AFILE, RANK3);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in black bishop illegal test case 3 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in black bishop illegal test case 3");
+
     return mcet::NoErr;
 }
