@@ -993,5 +993,55 @@ MCError TestMove()
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black king illegal test case 8");
 
+    // queen
+
+    // white
+
+    e = b.SetBoardFEN("4k/5/3P1/1pQ2/5/K4 w - -");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
+
+    e = b.Move(CFILE, RANK3, AFILE, RANK3);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white queen illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white queen illegal test case 1");
+    e = b.Move(CFILE, RANK3, EFILE, RANK5);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white queen illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white queen illegal test case 1");
+    e = b.Move(CFILE, RANK3, AFILE, RANK6);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white queen illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white queen illegal test case 1");
+
+    // black
+
+    e = b.SetBoardFEN("4k/5/2qP1/1p4/5/K4 b - -");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
+
+    e = b.Move(CFILE, RANK4, EFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white queen illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white queen illegal test case 1");
+    e = b.Move(CFILE, RANK4, AFILE, RANK2);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white queen illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white queen illegal test case 1");
+    e = b.Move(CFILE, RANK4, EFILE, RANK1);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in white queen illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in white queen illegal test case 1");
+
     return mcet::NoErr;
 }
