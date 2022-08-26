@@ -688,7 +688,7 @@ namespace minichess_AI
                 illegal = true;
             if (temp2 == temp1)
             {
-                if (temp3 == 1)
+                if (abs(temp3) == 1)
                 {
                     // take
                     if (op == EMPTYSQ)
