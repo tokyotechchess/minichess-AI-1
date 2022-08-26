@@ -683,12 +683,12 @@ namespace minichess_AI
         {
             temp1 = (turn == cWhite) ? 1 : -1;
             temp2 = (int)to_rank - (int)from_rank;
-            temp3 = (int)to_file - (int)from_file;
+            temp3 = abs((int)to_file - (int)from_file);
             if (temp3 > 1)
                 illegal = true;
             if (temp2 == temp1)
             {
-                if (abs(temp3) == 1)
+                if (temp3 == 1)
                 {
                     // take
                     if (op == EMPTYSQ)
