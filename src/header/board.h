@@ -773,10 +773,10 @@ namespace minichess_AI
                     }
                     else
                     {
-                        SetSquare(from_file, from_rank, p);
-                        SetSquare(File(((int)from_file + CFILE) / 2), from_rank, EMPTYSQ);
                         castling = true;
                     }
+                    SetSquare(from_file, from_rank, p);
+                    SetSquare(File(((int)from_file + CFILE) / 2), from_rank, EMPTYSQ);
                 }
             }
         }
