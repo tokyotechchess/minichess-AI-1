@@ -1029,19 +1029,19 @@ MCError TestMove()
 
     e = b.Move(CFILE, RANK4, EFILE, RANK4);
     if (e != mcet::MoveErr)
-        return mcet::genTestErr("Move returns wrong error in white queen illegal test case 1 : " + e.DisplayError());
+        return mcet::genTestErr("Move returns wrong error in black queen illegal test case 1 : " + e.DisplayError());
     if (origin != b)
-        return mcet::genTestErr("Move is wrong in white queen illegal test case 1");
+        return mcet::genTestErr("Move is wrong in black queen illegal test case 1");
     e = b.Move(CFILE, RANK4, AFILE, RANK2);
     if (e != mcet::MoveErr)
-        return mcet::genTestErr("Move returns wrong error in white queen illegal test case 1 : " + e.DisplayError());
+        return mcet::genTestErr("Move returns wrong error in black queen illegal test case 1 : " + e.DisplayError());
     if (origin != b)
-        return mcet::genTestErr("Move is wrong in white queen illegal test case 1");
+        return mcet::genTestErr("Move is wrong in black queen illegal test case 1");
     e = b.Move(CFILE, RANK4, EFILE, RANK1);
     if (e != mcet::MoveErr)
-        return mcet::genTestErr("Move returns wrong error in white queen illegal test case 1 : " + e.DisplayError());
+        return mcet::genTestErr("Move returns wrong error in black queen illegal test case 1 : " + e.DisplayError());
     if (origin != b)
-        return mcet::genTestErr("Move is wrong in white queen illegal test case 1");
+        return mcet::genTestErr("Move is wrong in black queen illegal test case 1");
 
     return mcet::NoErr;
 }
