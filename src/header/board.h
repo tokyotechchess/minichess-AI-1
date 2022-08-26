@@ -613,7 +613,7 @@ namespace minichess_AI
         {
             if (turn == cWhite)
                 return mcet::genMoveWPErr("This piece is an opponent one");
-            if (op != EMPTYSQ && ((int)op & 0b1000) == 1)
+            if (op != EMPTYSQ && ((int)op & 0b1000) == 0b1000)
                 return mcet::genMoveErr("A same color piece exists in to-square");
         }
 
