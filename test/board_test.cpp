@@ -683,6 +683,86 @@ MCError TestMove()
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move illegal test case 16");
 
+    // move to the square with a same color piece
+
+    // white
+
+    e = b.SetBoardFEN("4k/5/1P3/1pP2/1B3/KQRN1 w - b3");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
+
+    e = b.Move(AFILE, RANK1, BFILE, RANK2);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 1");
+    e = b.Move(BFILE, RANK1, BFILE, RANK2);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 2 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 2");
+    e = b.Move(BFILE, RANK2, AFILE, RANK1);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 3 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 3");
+    e = b.Move(CFILE, RANK1, CFILE, RANK3);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 4 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 4");
+    e = b.Move(CFILE, RANK3, BFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 5 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 5");
+    e = b.Move(DFILE, RANK1, CFILE, RANK3);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 6 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 6");
+
+    // black
+
+    e = b.SetBoardFEN("1nrqk/3b1/2pP1/3p1/5/K4 b - d4");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
+
+    e = b.Move(EFILE, RANK6, DFILE, RANK5);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 7 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 7");
+    e = b.Move(DFILE, RANK6, DFILE, RANK5);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 8 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 8");
+    e = b.Move(DFILE, RANK5, EFILE, RANK6);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 9 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 9");
+    e = b.Move(CFILE, RANK6, CFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 10 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 10");
+    e = b.Move(CFILE, RANK4, DFILE, RANK3);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 11 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 11");
+    e = b.Move(BFILE, RANK6, CFILE, RANK4);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 12 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 12");
+
     // pawn
 
     // white
