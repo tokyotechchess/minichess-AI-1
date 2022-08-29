@@ -1479,5 +1479,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 10. ... Kxd6");
 
+    // first game end
+
     return mcet::NoErr;
 }
