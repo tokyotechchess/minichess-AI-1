@@ -481,37 +481,37 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(AFILE, RANK6, AFILE, RANK5);
+    e = b.Move(AFILE, RANK6, AFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveWPErr)
         return mcet::genTestErr("Move returns wrong error in wrong piece illegal test case 1 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in wrong piece illegal test case 1");
-    e = b.Move(BFILE, RANK6, DFILE, RANK5);
+    e = b.Move(BFILE, RANK6, DFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveWPErr)
         return mcet::genTestErr("Move returns wrong error in wrong piece illegal test case 2 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in wrong piece illegal test case 2");
-    e = b.Move(CFILE, RANK6, BFILE, RANK5);
+    e = b.Move(CFILE, RANK6, BFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveWPErr)
         return mcet::genTestErr("Move returns wrong error in wrong piece illegal test case 3 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in wrong piece illegal test case 3");
-    e = b.Move(DFILE, RANK6, DFILE, RANK5);
+    e = b.Move(DFILE, RANK6, DFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveWPErr)
         return mcet::genTestErr("Move returns wrong error in wrong piece illegal test case 4 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in wrong piece illegal test case 4");
-    e = b.Move(EFILE, RANK6, DFILE, RANK5);
+    e = b.Move(EFILE, RANK6, DFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveWPErr)
         return mcet::genTestErr("Move returns wrong error in wrong piece illegal test case 5 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in wrong piece illegal test case 5");
-    e = b.Move(EFILE, RANK5, EFILE, RANK4);
+    e = b.Move(EFILE, RANK5, EFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveWPErr)
         return mcet::genTestErr("Move returns wrong error in wrong piece illegal test case 6 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in wrong piece illegal test case 6");
-    e = b.Move(AFILE, RANK1, AFILE, RANK2);
+    e = b.Move(AFILE, RANK1, AFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveWPErr)
         return mcet::genTestErr("Move returns wrong error in wrong piece illegal test case 7 : " + e.DisplayError());
     if (origin != b)
@@ -525,37 +525,37 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(EFILE, RANK1, EFILE, RANK2);
+    e = b.Move(EFILE, RANK1, EFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveWPErr)
         return mcet::genTestErr("Move returns wrong error in wrong piece illegal test case 8 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in wrong piece illegal test case 8");
-    e = b.Move(DFILE, RANK1, BFILE, RANK2);
+    e = b.Move(DFILE, RANK1, BFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveWPErr)
         return mcet::genTestErr("Move returns wrong error in wrong piece illegal test case 9 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in wrong piece illegal test case 9");
-    e = b.Move(CFILE, RANK1, DFILE, RANK2);
+    e = b.Move(CFILE, RANK1, DFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveWPErr)
         return mcet::genTestErr("Move returns wrong error in wrong piece illegal test case 10 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in wrong piece illegal test case 10");
-    e = b.Move(BFILE, RANK1, BFILE, RANK2);
+    e = b.Move(BFILE, RANK1, BFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveWPErr)
         return mcet::genTestErr("Move returns wrong error in wrong piece illegal test case 11 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in wrong piece illegal test case 11");
-    e = b.Move(AFILE, RANK1, BFILE, RANK2);
+    e = b.Move(AFILE, RANK1, BFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveWPErr)
         return mcet::genTestErr("Move returns wrong error in wrong piece illegal test case 12 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in wrong piece illegal test case 12");
-    e = b.Move(AFILE, RANK2, AFILE, RANK3);
+    e = b.Move(AFILE, RANK2, AFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveWPErr)
         return mcet::genTestErr("Move returns wrong error in wrong piece illegal test case 13 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in wrong piece illegal test case 13");
-    e = b.Move(EFILE, RANK6, EFILE, RANK5);
+    e = b.Move(EFILE, RANK6, EFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveWPErr)
         return mcet::genTestErr("Move returns wrong error in wrong piece illegal test case 14 : " + e.DisplayError());
     if (origin != b)
@@ -573,37 +573,37 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(AFILE, RANK1, BFILE, RANK2);
+    e = b.Move(AFILE, RANK1, BFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 1 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move illegal test case 1");
-    e = b.Move(BFILE, RANK1, AFILE, RANK2);
+    e = b.Move(BFILE, RANK1, AFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 2 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move illegal test case 2");
-    e = b.Move(CFILE, RANK1, AFILE, RANK3);
+    e = b.Move(CFILE, RANK1, AFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 3 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move illegal test case 3");
-    e = b.Move(DFILE, RANK1, EFILE, RANK3);
+    e = b.Move(DFILE, RANK1, EFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 4 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move illegal test case 4");
-    e = b.Move(EFILE, RANK1, EFILE, RANK2);
+    e = b.Move(EFILE, RANK1, EFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 5 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move illegal test case 5");
-    e = b.Move(CFILE, RANK2, CFILE, RANK4);
+    e = b.Move(CFILE, RANK2, CFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 6 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move illegal test case 6");
-    e = b.Move(DFILE, RANK2, DFILE, RANK3);
+    e = b.Move(DFILE, RANK2, DFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 7 : " + e.DisplayError());
     if (origin != b)
@@ -617,37 +617,37 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(EFILE, RANK6, DFILE, RANK5);
+    e = b.Move(EFILE, RANK6, DFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 8 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move illegal test case 8");
-    e = b.Move(DFILE, RANK6, EFILE, RANK5);
+    e = b.Move(DFILE, RANK6, EFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 9 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move illegal test case 9");
-    e = b.Move(CFILE, RANK6, EFILE, RANK4);
+    e = b.Move(CFILE, RANK6, EFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 10 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move illegal test case 10");
-    e = b.Move(BFILE, RANK6, AFILE, RANK4);
+    e = b.Move(BFILE, RANK6, AFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 11 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move illegal test case 11");
-    e = b.Move(AFILE, RANK6, AFILE, RANK5);
+    e = b.Move(AFILE, RANK6, AFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 12 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move illegal test case 12");
-    e = b.Move(CFILE, RANK5, CFILE, RANK3);
+    e = b.Move(CFILE, RANK5, CFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 13 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in checked after move illegal test case 13");
-    e = b.Move(BFILE, RANK5, BFILE, RANK4);
+    e = b.Move(BFILE, RANK5, BFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 14 : " + e.DisplayError());
     if (origin != b)
@@ -663,7 +663,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(BFILE, RANK2, CFILE, RANK2);
+    e = b.Move(BFILE, RANK2, CFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 15 : " + e.DisplayError());
     if (origin != b)
@@ -677,7 +677,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(DFILE, RANK5, CFILE, RANK5);
+    e = b.Move(DFILE, RANK5, CFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in checked after move illegal test case 16 : " + e.DisplayError());
     if (origin != b)
@@ -693,32 +693,32 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(AFILE, RANK1, BFILE, RANK2);
+    e = b.Move(AFILE, RANK1, BFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 1 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 1");
-    e = b.Move(BFILE, RANK1, BFILE, RANK2);
+    e = b.Move(BFILE, RANK1, BFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 2 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 2");
-    e = b.Move(BFILE, RANK2, AFILE, RANK1);
+    e = b.Move(BFILE, RANK2, AFILE, RANK1, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 3 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 3");
-    e = b.Move(CFILE, RANK1, CFILE, RANK3);
+    e = b.Move(CFILE, RANK1, CFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 4 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 4");
-    e = b.Move(CFILE, RANK3, BFILE, RANK4);
+    e = b.Move(CFILE, RANK3, BFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 5 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 5");
-    e = b.Move(DFILE, RANK1, CFILE, RANK3);
+    e = b.Move(DFILE, RANK1, CFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 6 : " + e.DisplayError());
     if (origin != b)
@@ -732,32 +732,32 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(EFILE, RANK6, DFILE, RANK5);
+    e = b.Move(EFILE, RANK6, DFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 7 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 7");
-    e = b.Move(DFILE, RANK6, DFILE, RANK5);
+    e = b.Move(DFILE, RANK6, DFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 8 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 8");
-    e = b.Move(DFILE, RANK5, EFILE, RANK6);
+    e = b.Move(DFILE, RANK5, EFILE, RANK6, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 9 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 9");
-    e = b.Move(CFILE, RANK6, CFILE, RANK4);
+    e = b.Move(CFILE, RANK6, CFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 10 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 10");
-    e = b.Move(CFILE, RANK4, DFILE, RANK3);
+    e = b.Move(CFILE, RANK4, DFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 11 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in take same color piece illegal tes case 11");
-    e = b.Move(BFILE, RANK6, CFILE, RANK4);
+    e = b.Move(BFILE, RANK6, CFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error take same color piece illegal test case 12 : " + e.DisplayError());
     if (origin != b)
@@ -774,47 +774,47 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK2, CFILE, RANK3);
+    e = b.Move(CFILE, RANK2, CFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white pawn illegal test case 1 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in white pawn illegal test case 1");
-    e = b.Move(CFILE, RANK2, CFILE, RANK4);
+    e = b.Move(CFILE, RANK2, CFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white pawn illegal test case 2 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in white pawn illegal test case 2");
-    e = b.Move(BFILE, RANK2, BFILE, RANK4);
+    e = b.Move(BFILE, RANK2, BFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white pawn illegal test case 3 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in white pawn illegal test case 3");
-    e = b.Move(DFILE, RANK3, DFILE, RANK5);
+    e = b.Move(DFILE, RANK3, DFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white pawn illegal test case 4 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in white pawn illegal test case 4");
-    e = b.Move(DFILE, RANK3, CFILE, RANK4);
+    e = b.Move(DFILE, RANK3, CFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white pawn illegal test case 5 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in white pawn illegal test case 5");
-    e = b.Move(DFILE, RANK3, EFILE, RANK4);
+    e = b.Move(DFILE, RANK3, EFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white pawn illegal test case 6 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in white pawn illegal test case 6");
-    e = b.Move(AFILE, RANK2, BFILE, RANK3);
+    e = b.Move(AFILE, RANK2, BFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white pawn illegal test case 7 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in white pawn illegal test case 7");
-    e = b.Move(AFILE, RANK2, BFILE, RANK5);
+    e = b.Move(AFILE, RANK2, BFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white pawn illegal test case 8 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in white pawn illegal test case 8");
-    e = b.Move(AFILE, RANK2, CFILE, RANK4);
+    e = b.Move(AFILE, RANK2, CFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white pawn illegal test case 9 : " + e.DisplayError());
     if (origin != b)
@@ -829,47 +829,47 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK5, CFILE, RANK4);
+    e = b.Move(CFILE, RANK5, CFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black pawn illegal test case 1 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black pawn illegal test case 1");
-    e = b.Move(CFILE, RANK5, CFILE, RANK3);
+    e = b.Move(CFILE, RANK5, CFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black pawn illegal test case 2 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black pawn illegal test case 2");
-    e = b.Move(DFILE, RANK5, DFILE, RANK3);
+    e = b.Move(DFILE, RANK5, DFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black pawn illegal test case 3 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black pawn illegal test case 3");
-    e = b.Move(BFILE, RANK4, BFILE, RANK2);
+    e = b.Move(BFILE, RANK4, BFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black pawn illegal test case 4 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black pawn illegal test case 4");
-    e = b.Move(BFILE, RANK4, CFILE, RANK3);
+    e = b.Move(BFILE, RANK4, CFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black pawn illegal test case 5 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black pawn illegal test case 5");
-    e = b.Move(BFILE, RANK4, AFILE, RANK3);
+    e = b.Move(BFILE, RANK4, AFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black pawn illegal test case 6 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black pawn illegal test case 6");
-    e = b.Move(EFILE, RANK5, DFILE, RANK4);
+    e = b.Move(EFILE, RANK5, DFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black pawn illegal test case 7 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black pawn illegal test case 7");
-    e = b.Move(EFILE, RANK5, DFILE, RANK2);
+    e = b.Move(EFILE, RANK5, DFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black pawn illegal test case 8 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black pawn illegal test case 8");
-    e = b.Move(EFILE, RANK5, CFILE, RANK3);
+    e = b.Move(EFILE, RANK5, CFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black pawn illegal test case 9 : " + e.DisplayError());
     if (origin != b)
@@ -885,7 +885,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(AFILE, RANK1, CFILE, RANK1);
+    e = b.Move(AFILE, RANK1, CFILE, RANK1, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white king illegal test case 1 : " + e.DisplayError());
     if (origin != b)
@@ -897,7 +897,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(AFILE, RANK1, CFILE, RANK1);
+    e = b.Move(AFILE, RANK1, CFILE, RANK1, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white king illegal test case 2 : " + e.DisplayError());
     if (origin != b)
@@ -909,7 +909,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(AFILE, RANK1, CFILE, RANK1);
+    e = b.Move(AFILE, RANK1, CFILE, RANK1, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white king illegal test case 3 : " + e.DisplayError());
     if (origin != b)
@@ -921,7 +921,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(AFILE, RANK1, CFILE, RANK1);
+    e = b.Move(AFILE, RANK1, CFILE, RANK1, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white king illegal test case 4 : " + e.DisplayError());
     if (origin != b)
@@ -933,7 +933,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(AFILE, RANK1, CFILE, RANK1);
+    e = b.Move(AFILE, RANK1, CFILE, RANK1, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white king illegal test case 5 : " + e.DisplayError());
     if (origin != b)
@@ -945,7 +945,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK3, EFILE, RANK5);
+    e = b.Move(CFILE, RANK3, EFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white king illegal test case 6 : " + e.DisplayError());
     if (origin != b)
@@ -957,7 +957,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK3, AFILE, RANK3);
+    e = b.Move(CFILE, RANK3, AFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white king illegal test case 7 : " + e.DisplayError());
     if (origin != b)
@@ -969,7 +969,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK3, CFILE, RANK1);
+    e = b.Move(CFILE, RANK3, CFILE, RANK1, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white king illegal test case 8 : " + e.DisplayError());
     if (origin != b)
@@ -983,7 +983,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(EFILE, RANK6, CFILE, RANK6);
+    e = b.Move(EFILE, RANK6, CFILE, RANK6, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black king illegal test case 1 : " + e.DisplayError());
     if (origin != b)
@@ -995,7 +995,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(EFILE, RANK6, CFILE, RANK6);
+    e = b.Move(EFILE, RANK6, CFILE, RANK6, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black king illegal test case 2 : " + e.DisplayError());
     if (origin != b)
@@ -1007,7 +1007,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(EFILE, RANK6, CFILE, RANK6);
+    e = b.Move(EFILE, RANK6, CFILE, RANK6, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black king illegal test case 3 : " + e.DisplayError());
     if (origin != b)
@@ -1019,7 +1019,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(EFILE, RANK6, CFILE, RANK6);
+    e = b.Move(EFILE, RANK6, CFILE, RANK6, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black king illegal test case 4 : " + e.DisplayError());
     if (origin != b)
@@ -1031,7 +1031,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(EFILE, RANK6, CFILE, RANK6);
+    e = b.Move(EFILE, RANK6, CFILE, RANK6, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black king illegal test case 5 : " + e.DisplayError());
     if (origin != b)
@@ -1043,7 +1043,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK4, AFILE, RANK2);
+    e = b.Move(CFILE, RANK4, AFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black king illegal test case 6 : " + e.DisplayError());
     if (origin != b)
@@ -1055,7 +1055,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK4, EFILE, RANK4);
+    e = b.Move(CFILE, RANK4, EFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black king illegal test case 7 : " + e.DisplayError());
     if (origin != b)
@@ -1067,7 +1067,7 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK4, CFILE, RANK6);
+    e = b.Move(CFILE, RANK4, CFILE, RANK6, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black king illegal test case 8 : " + e.DisplayError());
     if (origin != b)
@@ -1083,17 +1083,17 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK3, AFILE, RANK3);
+    e = b.Move(CFILE, RANK3, AFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white queen illegal test case 1 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in white queen illegal test case 1");
-    e = b.Move(CFILE, RANK3, EFILE, RANK5);
+    e = b.Move(CFILE, RANK3, EFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white queen illegal test case 2 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in white queen illegal test case 2");
-    e = b.Move(CFILE, RANK3, AFILE, RANK6);
+    e = b.Move(CFILE, RANK3, AFILE, RANK6, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white queen illegal test case 3 : " + e.DisplayError());
     if (origin != b)
@@ -1107,17 +1107,17 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK4, EFILE, RANK4);
+    e = b.Move(CFILE, RANK4, EFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black queen illegal test case 1 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black queen illegal test case 1");
-    e = b.Move(CFILE, RANK4, AFILE, RANK2);
+    e = b.Move(CFILE, RANK4, AFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black queen illegal test case 2 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black queen illegal test case 2");
-    e = b.Move(CFILE, RANK4, EFILE, RANK1);
+    e = b.Move(CFILE, RANK4, EFILE, RANK1, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black queen illegal test case 3 : " + e.DisplayError());
     if (origin != b)
@@ -1133,17 +1133,17 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK3, AFILE, RANK3);
+    e = b.Move(CFILE, RANK3, AFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white rook illegal test case 1 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in white rook illegal test case 1");
-    e = b.Move(CFILE, RANK3, CFILE, RANK1);
+    e = b.Move(CFILE, RANK3, CFILE, RANK1, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white rook illegal test case 2 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in white rook illegal test case 2");
-    e = b.Move(CFILE, RANK3, EFILE, RANK1);
+    e = b.Move(CFILE, RANK3, EFILE, RANK1, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white rook illegal test case 3 : " + e.DisplayError());
     if (origin != b)
@@ -1157,17 +1157,17 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK4, EFILE, RANK4);
+    e = b.Move(CFILE, RANK4, EFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black rook illegal test case 1 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black rook illegal test case 1");
-    e = b.Move(CFILE, RANK4, CFILE, RANK6);
+    e = b.Move(CFILE, RANK4, CFILE, RANK6, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black rook illegal test case 2 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black rook illegal test case 2");
-    e = b.Move(CFILE, RANK4, AFILE, RANK6);
+    e = b.Move(CFILE, RANK4, AFILE, RANK6, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black rook illegal test case 3 : " + e.DisplayError());
     if (origin != b)
@@ -1183,17 +1183,17 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK3, EFILE, RANK5);
+    e = b.Move(CFILE, RANK3, EFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white bishop illegal test case 1 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in white bishop illegal test case 1");
-    e = b.Move(CFILE, RANK3, EFILE, RANK1);
+    e = b.Move(CFILE, RANK3, EFILE, RANK1, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white bishop illegal test case 2 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in white bishop illegal test case 2");
-    e = b.Move(CFILE, RANK3, EFILE, RANK4);
+    e = b.Move(CFILE, RANK3, EFILE, RANK4, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white bishop illegal test case 3 : " + e.DisplayError());
     if (origin != b)
@@ -1207,17 +1207,17 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK4, AFILE, RANK2);
+    e = b.Move(CFILE, RANK4, AFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black bishop illegal test case 1 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black bishop illegal test case 1");
-    e = b.Move(CFILE, RANK4, AFILE, RANK6);
+    e = b.Move(CFILE, RANK4, AFILE, RANK6, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black bishop illegal test case 2 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black bishop illegal test case 2");
-    e = b.Move(CFILE, RANK4, AFILE, RANK3);
+    e = b.Move(CFILE, RANK4, AFILE, RANK3, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black bishop illegal test case 3 : " + e.DisplayError());
     if (origin != b)
@@ -1233,12 +1233,12 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK3, EFILE, RANK1);
+    e = b.Move(CFILE, RANK3, EFILE, RANK1, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white knight illegal test case 1 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in white knight illegal test case 1");
-    e = b.Move(CFILE, RANK3, CFILE, RANK5);
+    e = b.Move(CFILE, RANK3, CFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in white knight illegal test case 2 : " + e.DisplayError());
     if (origin != b)
@@ -1252,12 +1252,12 @@ MCError TestMove()
 
     origin = b;
 
-    e = b.Move(CFILE, RANK4, AFILE, RANK6);
+    e = b.Move(CFILE, RANK4, AFILE, RANK6, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black knight illegal test case 1 : " + e.DisplayError());
     if (origin != b)
         return mcet::genTestErr("Move is wrong in black knight illegal test case 1");
-    e = b.Move(CFILE, RANK4, CFILE, RANK2);
+    e = b.Move(CFILE, RANK4, CFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveErr)
         return mcet::genTestErr("Move returns wrong error in black knight illegal test case 2 : " + e.DisplayError());
     if (origin != b)
@@ -1275,7 +1275,7 @@ MCError TestMove()
     if (e != mcet::NoErr)
         return e;
 
-    e = b.Move(AFILE, RANK1, CFILE, RANK1);
+    e = b.Move(AFILE, RANK1, CFILE, RANK1, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in white castling test case 1 : " + e.DisplayError());
     e = corb.SetBoardFEN("2k2/3r1/5/5/1P3/1RK2 b k -");
@@ -1288,7 +1288,7 @@ MCError TestMove()
     if (e != mcet::NoErr)
         return e;
 
-    e = b.Move(EFILE, RANK6, CFILE, RANK6);
+    e = b.Move(EFILE, RANK6, CFILE, RANK6, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in black castling test case 1 : " + e.DisplayError());
     e = corb.SetBoardFEN("2kr1/3p1/5/5/1R3/2K2 w K -");
@@ -1299,7 +1299,7 @@ MCError TestMove()
 
     b.InitBoard();
 
-    e = b.Move(EFILE, RANK2, EFILE, RANK4);
+    e = b.Move(EFILE, RANK2, EFILE, RANK4, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 1. e4 : " + e.DisplayError());
     e = corb.SetBoardFEN("rnbqk/ppppp/4P/5/PPPP1/KQBNR b Kk e4");
@@ -1308,7 +1308,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 1. e4");
 
-    e = b.Move(DFILE, RANK5, DFILE, RANK4);
+    e = b.Move(DFILE, RANK5, DFILE, RANK4, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 1. ... d4 : " + e.DisplayError());
     e = corb.SetBoardFEN("rnbqk/ppp1p/3pP/5/PPPP1/KQBNR w Kk -");
@@ -1317,7 +1317,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 1. ... d4");
 
-    e = b.Move(BFILE, RANK2, BFILE, RANK3);
+    e = b.Move(BFILE, RANK2, BFILE, RANK3, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 2. b3 : " + e.DisplayError());
     e = corb.SetBoardFEN("rnbqk/ppp1p/3pP/1P3/P1PP1/KQBNR b Kk -");
@@ -1326,7 +1326,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 2. b3");
 
-    e = b.Move(AFILE, RANK5, AFILE, RANK4);
+    e = b.Move(AFILE, RANK5, AFILE, RANK4, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 2. ... a4 : " + e.DisplayError());
     e = corb.SetBoardFEN("rnbqk/1pp1p/p2pP/1P3/P1PP1/KQBNR w Kk -");
@@ -1335,7 +1335,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 2. ... a4");
 
-    e = b.Move(BFILE, RANK3, BFILE, RANK4);
+    e = b.Move(BFILE, RANK3, BFILE, RANK4, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 3. b4 : " + e.DisplayError());
     e = corb.SetBoardFEN("rnbqk/1pp1p/pP1pP/5/P1PP1/KQBNR b Kk -");
@@ -1344,7 +1344,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 3. b4");
 
-    e = b.Move(CFILE, RANK5, BFILE, RANK4);
+    e = b.Move(CFILE, RANK5, BFILE, RANK4, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 3. ... cxb4 : " + e.DisplayError());
     e = corb.SetBoardFEN("rnbqk/1p2p/pp1pP/5/P1PP1/KQBNR w Kk -");
@@ -1353,7 +1353,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 3. ... cxb4");
 
-    e = b.Move(AFILE, RANK2, AFILE, RANK3);
+    e = b.Move(AFILE, RANK2, AFILE, RANK3, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 4. a3 : " + e.DisplayError());
     e = corb.SetBoardFEN("rnbqk/1p2p/pp1pP/P4/2PP1/KQBNR b Kk -");
@@ -1362,7 +1362,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 4. a3");
 
-    e = b.Move(BFILE, RANK6, CFILE, RANK4);
+    e = b.Move(BFILE, RANK6, CFILE, RANK4, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 4. ... Nc4 : " + e.DisplayError());
     e = corb.SetBoardFEN("r1bqk/1p2p/ppnpP/P4/2PP1/KQBNR w Kk -");
@@ -1371,7 +1371,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 4. ... Nc4");
 
-    e = b.Move(AFILE, RANK3, BFILE, RANK4);
+    e = b.Move(AFILE, RANK3, BFILE, RANK4, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 5. axb4 : " + e.DisplayError());
     e = corb.SetBoardFEN("r1bqk/1p2p/pPnpP/5/2PP1/KQBNR b Kk -");
@@ -1380,7 +1380,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 5. axb4");
 
-    e = b.Move(AFILE, RANK4, AFILE, RANK3);
+    e = b.Move(AFILE, RANK4, AFILE, RANK3, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 5. ... a3 : " + e.DisplayError());
     e = corb.SetBoardFEN("r1bqk/1p2p/1PnpP/p4/2PP1/KQBNR w Kk -");
@@ -1389,7 +1389,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 5. ... a3");
 
-    e = b.Move(BFILE, RANK1, BFILE, RANK3);
+    e = b.Move(BFILE, RANK1, BFILE, RANK3, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 6. Qb3 : " + e.DisplayError());
     e = corb.SetBoardFEN("r1bqk/1p2p/1PnpP/pQ3/2PP1/K1BNR b Kk -");
@@ -1398,7 +1398,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 6. Qb3");
 
-    e = b.Move(AFILE, RANK3, AFILE, RANK2);
+    e = b.Move(AFILE, RANK3, AFILE, RANK2, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 6. ... a2 : " + e.DisplayError());
     e = corb.SetBoardFEN("r1bqk/1p2p/1PnpP/1Q3/p1PP1/K1BNR w Kk -");
@@ -1407,7 +1407,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 6. ... a2");
 
-    e = b.Move(DFILE, RANK2, DFILE, RANK3);
+    e = b.Move(DFILE, RANK2, DFILE, RANK3, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 7. d3 : " + e.DisplayError());
     e = corb.SetBoardFEN("r1bqk/1p2p/1PnpP/1Q1P1/p1P2/K1BNR b Kk -");
@@ -1416,7 +1416,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 7. d3");
 
-    e = b.Move(AFILE, RANK6, AFILE, RANK4);
+    e = b.Move(AFILE, RANK6, AFILE, RANK4, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 7. ... Ra4 : " + e.DisplayError());
     e = corb.SetBoardFEN("2bqk/1p2p/rPnpP/1Q1P1/p1P2/K1BNR w K -");
@@ -1425,7 +1425,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 7. ... Ra4");
 
-    e = b.Move(DFILE, RANK3, CFILE, RANK4);
+    e = b.Move(DFILE, RANK3, CFILE, RANK4, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 8. dxc4 : " + e.DisplayError());
     e = corb.SetBoardFEN("2bqk/1p2p/rPPpP/1Q3/p1P2/K1BNR b K -");
@@ -1434,7 +1434,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 1 : 8. dxc4");
 
-    e = b.Move(AFILE, RANK4, BFILE, RANK4);
+    e = b.Move(AFILE, RANK4, BFILE, RANK4, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move return unexpected error in play game test case 1 : 8. ... Rxb4 : " + e.DisplayError());
     e = corb.SetBoardFEN("2bqk/1p2p/1rPpP/1Q3/p1P2/K1BNR w K -");
