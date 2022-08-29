@@ -76,7 +76,7 @@ namespace minichess_AI
         bool IsChecked(Color);
         MCError SetSquare(File, Rank, Piece);
         MCError SetBoardFEN(std::string fen);
-        MCError Move(File, Rank, File, Rank);
+        MCError Move(File, Rank, File, Rank, Piece);
         MCError NullMove();
 
         // opeartors
@@ -587,9 +587,12 @@ namespace minichess_AI
     }
 
     // move piece
-    // ex) Ra2 -> Ra3: Move(AFILE, RANK2, AFILE, RANK3)
-    // ex) if castling, when turn == cWhite, Move(AFILE, RANK1, CFILE, RANK1)
-    MCError Board::Move(File from_file, Rank from_rank, File to_file, Rank to_rank)
+    // ex) Ra2 -> Ra3: Move(AFILE, RANK2, AFILE, RANK3, EMPTYSQ)
+    // ex) if castling, when turn == cWhite, Move(AFILE, RANK1, CFILE, RANK1, EMPTYSQ)
+    // promote_piece is used only when pawn is promoted (so if not promote, any pieces is OK)
+    // ex) Ra2 -> Ra3: Move(AFILE, RANK2, AFILE, RANK3, BKING)
+    // ex) a5 -> a6: Move(AFILE, RANK5, AFILE, RANK6, WQUEEN)
+    MCError Board::Move(File from_file, Rank from_rank, File to_file, Rank to_rank, Piece promote_piece)
     {
         if (from_file == to_file && from_rank == to_rank)
             return mcet::genMoveErr("To-square is equal to from-square");
@@ -667,6 +670,7 @@ namespace minichess_AI
         bool enpassant = false;
         bool pawn2sq = false;
         bool castling = false;
+        bool promotion = false;
         int temp1, temp2, temp3, temp4;
         Rank tempr1;
         File tempf1, tempf2;
@@ -682,6 +686,39 @@ namespace minichess_AI
 
         if (pawn)
         {
+            // promotion
+
+            if (turn == cWhite && to_rank == RANK6)
+            {
+                switch (promote_piece)
+                {
+                case WQUEEN:
+                case WBISHOP:
+                case WKNIGHT:
+                case WROOK:
+                    promotion = true;
+                    break;
+                default:
+                    return mcet::genMoveErr("Promotion error : Pawn can't be promoted to such a piece");
+                }
+            }
+            else if (turn == cBlack && to_rank == RANK1)
+            {
+                switch (promote_piece)
+                {
+                case BQUEEN:
+                case BBISHOP:
+                case BKNIGHT:
+                case BROOK:
+                    promotion = true;
+                    break;
+                default:
+                    return mcet::genMoveErr("Promotion error : Pawn can't be promoted to such a piece");
+                }
+            }
+
+            // movement
+
             temp1 = (turn == cWhite) ? 1 : -1;
             temp2 = (int)to_rank - (int)from_rank;
             temp3 = abs((int)to_file - (int)from_file);
@@ -835,7 +872,7 @@ namespace minichess_AI
         }
 
         if (illegal)
-            return mcet::genMoveErr("illegal move: this type of piece can't move like this");
+            return mcet::genMoveErr("illegal move : this type of piece can't move like this");
 
         // initialize enpassantAblePawnFile
 
@@ -886,8 +923,19 @@ namespace minichess_AI
                 goto MOVE_ERR_1;
         }
 
+        // promotion
+
+        if (promotion)
+        {
+            err = SetSquare(to_file, to_rank, promote_piece);
+            if (err != mcet::NoErr)
+                goto MOVE_ERR_1;
+        }
+
+        // check
+
         if (IsChecked(turn))
-            err = mcet::genMoveErr("illegal move: if this move played, turn's player will be checkmated");
+            err = mcet::genMoveErr("illegal move : if this move played, turn's player will be checkmated");
 
     MOVE_ERR_1:
         if (err != mcet::NoErr)
