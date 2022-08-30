@@ -561,6 +561,27 @@ MCError TestMove()
     if (origin != b)
         return mcet::genTestErr("Move is wrong in wrong piece illegal test case 14");
 
+    // move to the same square
+
+    e = b.SetBoardFEN("8/2k5/8/8/2K5/8 w - -");
+    origin = b;
+
+    // white
+
+    e = b.Move(CFILE, RANK2, CFILE, RANK2, EMPTYSQ);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in same square illegal test case 1 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in same place illegal test case 1");
+
+    // black
+
+    e = b.Move(CFILE, RANK5, CFILE, RANK5, EMPTYSQ);
+    if (e != mcet::MoveErr)
+        return mcet::genTestErr("Move returns wrong error in same square illegal test case 2 : " + e.DisplayError());
+    if (origin != b)
+        return mcet::genTestErr("Move is wrong in same place illegal test case 2");
+
     // checked after move
 
     // already checked but don't avoid
