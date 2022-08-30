@@ -563,10 +563,13 @@ MCError TestMove()
 
     // move to the same square
 
-    e = b.SetBoardFEN("8/2k5/8/8/2K5/8 w - -");
-    origin = b;
-
     // white
+
+    e = b.SetBoardFEN("5/2k2/5/5/2K2/5 w - -");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
 
     e = b.Move(CFILE, RANK2, CFILE, RANK2, EMPTYSQ);
     if (e != mcet::MoveErr)
@@ -575,6 +578,12 @@ MCError TestMove()
         return mcet::genTestErr("Move is wrong in same place illegal test case 1");
 
     // black
+
+    e = b.SetBoardFEN("5/2k2/5/5/2K2/5 b - -");
+    if (e != mcet::NoErr)
+        return e;
+
+    origin = b;
 
     e = b.Move(CFILE, RANK5, CFILE, RANK5, EMPTYSQ);
     if (e != mcet::MoveErr)
