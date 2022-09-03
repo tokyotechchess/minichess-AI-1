@@ -70,6 +70,10 @@ namespace minichess_AI
             return "";
         case 100:
             return "FEN Error : " + message;
+        case 200:
+            return "Move Error : " + message;
+        case 300:
+            return "Move Wrong Piece Error : " + message;
         case 10000:
             return "Test Error : " + message;
         default:
@@ -91,6 +95,18 @@ namespace minichess_AI
             return MCError(100, mes);
         }
 
+        // illegal move error
+        MCError genMoveErr(std::string mes)
+        {
+            return MCError(200, mes);
+        }
+
+        // Move() : wrong piece err
+        MCError genMoveWPErr(std::string mes)
+        {
+            return MCError(300, mes);
+        }
+
         // test error
         MCError genTestErr(std::string mes)
         {
@@ -101,6 +117,8 @@ namespace minichess_AI
         const MCError NoErr;
         const MCError TestErr = genTestErr("");
         const MCError FENErr = genFENErr("");
+        const MCError MoveErr = genMoveErr("");
+        const MCError MoveWPErr = genMoveWPErr("");
 
     }
 }
