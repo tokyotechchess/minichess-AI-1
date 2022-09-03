@@ -166,8 +166,7 @@ namespace minichess_AI
         FEN.pop_back();
         //ここまでコマの位置
         FEN += " ";
-        int turn_num = GetTurn();
-        if (turn_num == 0)
+        if (turn == cWhite)
         {
             FEN += "w ";
         }
@@ -192,8 +191,8 @@ namespace minichess_AI
         else
         {
             FEN += " ";
-            FEN += char(enpassantAblePawnFile + 'a'); // ascii変換 0 + 97 -> a
-            FEN += std::to_string(3 * turn_num + 2);  // cwhite -> 2 cblack -> 5
+            FEN += char(enpassantAblePawnFile + 'a');        // ascii変換 0 + 97 -> a
+            FEN += std::to_string((turn == cWhite) ? 4 : 3); // white pawn : 3, black pawn : 4
         }
         //ここまでアンパッサン
         return FEN;
