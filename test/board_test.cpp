@@ -1604,7 +1604,7 @@ MCError TestMove()
     e = b.Move(EFILE, RANK2, EFILE, RANK4, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move returns unexpected error in play game test case 2 : 2. e4 : " + e.DisplayError());
-    e = corb.SetBoardFEN("rnbqk/ppp1p/3pP/1P3/P1PP1/KQBNR b Kk e4");
+    e = corb.SetBoardFEN("rnbqk/ppp1p/3pP/1P3/P1PP1/KQBNR b Kk e3");
     if (e != mcet::NoErr)
         return e;
     if (b != corb)
@@ -1646,7 +1646,7 @@ MCError TestMove()
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 2 : 4. d3");
 
-    e = b.Move(AFILE, RANK5, AFILE, RANK3, EMPTYSQ);
+    e = b.Move(BFILE, RANK5, BFILE, RANK4, EMPTYSQ);
     if (e != mcet::NoErr)
         return mcet::genTestErr("Move returns unexpected error in play game test case 2 : 4. ... b4 : " + e.DisplayError());
     e = corb.SetBoardFEN("rnbqk/2p1p/1p3/pP1PN/P1P2/KQB1R w Kk -");
@@ -1654,6 +1654,42 @@ MCError TestMove()
         return e;
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 2 : 4. ... b4");
+
+    e = b.Move(CFILE, RANK2, CFILE, RANK3, EMPTYSQ);
+    if (e != mcet::NoErr)
+        return mcet::genTestErr("Move returns unexpected error in play game test case 2 : 5. c3 : " + e.DisplayError());
+    e = corb.SetBoardFEN("rnbqk/2p1p/1p3/pPPPN/P4/KQB1R b Kk -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b != corb)
+        return mcet::genTestErr("Move doesn't work correctly in play game test case 2 : 5. c3");
+
+    e = b.Move(BFILE, RANK4, CFILE, RANK3, EMPTYSQ);
+    if (e != mcet::NoErr)
+        return mcet::genTestErr("Move returns unexpected error in play game test case 2 : 5. ... bxc3 : " + e.DisplayError());
+    e = corb.SetBoardFEN("rnbqk/2p1p/5/pPpPN/P4/KQB1R w Kk -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b != corb)
+        return mcet::genTestErr("Move doesn't work correctly in play game test case 2 : 5. ... bxc3");
+
+    e = b.Move(BFILE, RANK1, CFILE, RANK2, EMPTYSQ);
+    if (e != mcet::NoErr)
+        return mcet::genTestErr("Move returns unexpected error in play game test case 2 : 6. Qc2 : " + e.DisplayError());
+    e = corb.SetBoardFEN("rnbqk/2p1p/5/pPpPN/P1Q2/K1B1R b Kk -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b != corb)
+        return mcet::genTestErr("Move doesn't work correctly in play game test case 2 : 6. Qc2");
+
+    e = b.Move(DFILE, RANK6, DFILE, RANK4, EMPTYSQ);
+    if (e != mcet::NoErr)
+        return mcet::genTestErr("Move returns unexpected error in play game test case 2 : 6. ... Qd4 : " + e.DisplayError());
+    e = corb.SetBoardFEN("rnb1k/2p1p/3q1/pPpPN/P1Q2/K1B1R w Kk -");
+    if (e != mcet::NoErr)
+        return e;
+    if (b != corb)
+        return mcet::genTestErr("Move doesn't work correctly in play game test case 2 : 6. ... Qd4");
 
     return mcet::NoErr;
 }
