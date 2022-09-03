@@ -895,7 +895,6 @@ namespace minichess_AI
             err = SetSquare(to_file, (turn == cWhite) ? RANK3 : RANK4, EMPTYSQ);
             if (err != mcet::NoErr)
                 goto MOVE_ERR_1;
-            enpassantAblePawnFile = to_file;
         }
         else if (castling)
         {
