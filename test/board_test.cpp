@@ -2,21 +2,9 @@
 test board.h
 */
 
-#include <iostream>
-#include <string>
-#include "../src/header/board.h"
-#include "../src/header/util/error.h"
+#include "board_test.h"
 
-using namespace minichess_AI;
-
-// prototype declaration
-MCError TestGetSquare();
-MCError TestSetSquare();
-MCError TestSetBoardFEN();
-MCError TestIsChecked();
-MCError TestMove();
-
-int main()
+void __Test__Board()
 {
     MCError e;
     if ((e = TestGetSquare()) != mcet::NoErr)

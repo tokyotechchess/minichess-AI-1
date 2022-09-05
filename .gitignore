@@ -2,3 +2,5 @@
 .DS_Store
 *.o
 *.out
+minichessAI
+build
