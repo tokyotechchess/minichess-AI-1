@@ -39,29 +39,10 @@ namespace minichess_AI
     {
         // Error Generator
 
-        // FEN error
-        MCError genFENErr(std::string mes)
-        {
-            return MCError(100, mes);
-        }
-
-        // illegal move error
-        MCError genMoveErr(std::string mes)
-        {
-            return MCError(200, mes);
-        }
-
-        // Move() : wrong piece err
-        MCError genMoveWPErr(std::string mes)
-        {
-            return MCError(300, mes);
-        }
-
-        // test error
-        MCError genTestErr(std::string mes)
-        {
-            return MCError(10000, mes);
-        }
+        MCError genFENErr(std::string);
+        MCError genMoveErr(std::string);
+        MCError genMoveWPErr(std::string);
+        MCError genTestErr(std::string);
 
         // if there is no error, status should be 0
         const MCError NoErr;

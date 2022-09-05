@@ -59,4 +59,32 @@ namespace minichess_AI
         else
             return false;
     }
+
+    namespace mcet
+    {
+        // FEN error
+        MCError genFENErr(std::string mes)
+        {
+            return MCError(100, mes);
+        }
+
+        // illegal move error
+        MCError genMoveErr(std::string mes)
+        {
+            return MCError(200, mes);
+        }
+
+        // Move() : wrong piece err
+        MCError genMoveWPErr(std::string mes)
+        {
+            return MCError(300, mes);
+        }
+
+        // test error
+        MCError genTestErr(std::string mes)
+        {
+            return MCError(10000, mes);
+        }
+
+    }
 }

@@ -94,5 +94,5 @@ namespace minichess_AI
     inline Color operator++(Color &c, int) { return (c = Color(1 - (int)c)); }
 
     int ConvRankToWeight(Rank);
-    Piece ConfFENCharToPiece(char c);
+    Piece ConvFENCharToPiece(char c);
 }
