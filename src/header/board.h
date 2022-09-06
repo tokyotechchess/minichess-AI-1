@@ -78,10 +78,12 @@ namespace minichess_AI
         MCError SetBoardFEN(std::string fen);
         MCError Move(File, Rank, File, Rank, Piece);
         MCError NullMove();
+        MCError LegalMoves(File, Rank, File[17], Rank[17], int *);
 
         // opeartors
 
-        bool operator==(const Board &b);
+        bool
+        operator==(const Board &b);
         bool operator!=(const Board &b);
 
     private:

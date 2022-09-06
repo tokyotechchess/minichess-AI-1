@@ -878,6 +878,15 @@ namespace minichess_AI
         return mcet::NoErr;
     }
 
+    // search all legal moves
+    // recieve the squares where the piece in the specified square can move.
+    // the 5-th argument is the number of legal moves.
+    // even if the num of moves are max, there are 17 ones, so the length of arrays are set to 17.
+    MCError Board::LegalMoves(File file, Rank rank, File legalmove_files[17], Rank legalmove_ranks[17], int *no_moves)
+    {
+        return mcet::NoErr;
+    }
+
     // check equality between Boards
     bool Board::operator==(const Board &b)
     {
