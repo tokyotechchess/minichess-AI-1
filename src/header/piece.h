@@ -95,4 +95,5 @@ namespace minichess_AI
 
     int ConvRankToWeight(Rank);
     Piece ConvFENCharToPiece(char c);
+    Color GetPieceColor(Piece p);
 }
