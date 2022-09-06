@@ -72,7 +72,7 @@ namespace minichess_AI
         bool GetCastlingPossibility(Color);
         int *GetBoard();
         std::string GetBoardFEN();
-        int GetSquare(File, Rank);
+        Piece GetSquare(File, Rank);
         bool IsChecked(Color);
         MCError SetSquare(File, Rank, Piece);
         MCError SetBoardFEN(std::string fen);
