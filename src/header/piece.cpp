@@ -73,6 +73,8 @@ namespace minichess_AI
     // get piece color
     Color GetPieceColor(Piece p)
     {
+        if (p == EMPTYSQ)
+            return ColorErr;
         return ((p & 0b1000) == 0) ? cBlack : cWhite;
     }
 }

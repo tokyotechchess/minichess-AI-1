@@ -80,6 +80,7 @@ namespace minichess_AI
     {
         cWhite,
         cBlack,
+        ColorErr,
     };
 
     // enable increment
