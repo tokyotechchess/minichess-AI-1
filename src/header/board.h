@@ -82,8 +82,7 @@ namespace minichess_AI
 
         // opeartors
 
-        bool
-        operator==(const Board &b);
+        bool operator==(const Board &b);
         bool operator!=(const Board &b);
 
     private:
