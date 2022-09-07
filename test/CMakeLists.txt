@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.21)
 project(minichess_AI_test CXX)
 
 # C++ standards
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(TARGET_source_file

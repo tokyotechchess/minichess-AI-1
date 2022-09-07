@@ -53,7 +53,7 @@ namespace minichess_AI
         {
             for (File f = AFILE; f <= EFILE; f++)
             {
-                piece_num = GetSquare(f, r);
+                piece_num = GetSquare(Square{f, r});
                 if (piece_num == 0)
                 {
                     count++;
@@ -111,8 +111,10 @@ namespace minichess_AI
     }
 
     // get square's piece (file: A-file = 0, ..., E-file = 4)
-    int Board::GetSquare(File file, Rank rank)
+    int Board::GetSquare(Square square)
     {
+        File file = square.file;
+        Rank rank = square.rank;
         if ((rank < RANK1) || (RANK6 < rank) || (file < AFILE) || (file > EFILE))
             return EMPTYSQ;
 
@@ -158,7 +160,7 @@ namespace minichess_AI
         {
             for (Rank r = RANK1; r <= RANK6; r++)
             {
-                square[f][r] = GetSquare(f, r);
+                square[f][r] = GetSquare(Square{f, r});
                 if (square[f][r] == mk)
                 {
                     kfile = f;
@@ -199,7 +201,7 @@ namespace minichess_AI
                 {
                     nfile = kfile + (1 + i) * (2 * j - 1);
                     nrank = krank + (2 - i) * (2 * k - 1);
-                    if (GetSquare(nfile, nrank) == n)
+                    if (GetSquare(Square{nfile, nrank}) == n)
                     {
                         return true;
                     }
@@ -290,10 +292,10 @@ namespace minichess_AI
 
     // set a piece of square
     // if piece = EMPTYSQ, delete piece in the square, else, put a piece to the square
-    MCError Board::SetSquare(File file, Rank rank, Piece piece)
+    MCError Board::SetSquare(Square square, Piece piece)
     {
-        files[file] &= 0b111111111111111111111111 - ConvRankToWeight(rank) * 0b1111;
-        files[file] += ConvRankToWeight(rank) * (int)piece;
+        files[square.file] &= 0b111111111111111111111111 - ConvRankToWeight(square.rank) * 0b1111;
+        files[square.file] += ConvRankToWeight(square.rank) * (int)piece;
 
         return mcet::NoErr;
     }
@@ -375,7 +377,7 @@ namespace minichess_AI
                         break;
                     }
 
-                    SetSquare(nowf, nowr, temppiece);
+                    SetSquare(Square{nowf, nowr}, temppiece);
 
                     nowf = (nowf == EFILE) ? FILEERR : File((int)nowf + 1);
                     break;
@@ -503,13 +505,16 @@ namespace minichess_AI
     // promote_piece is used only when pawn is promoted (so if not promote, any pieces is OK)
     // ex) Ra2 -> Ra3: Move(AFILE, RANK2, AFILE, RANK3, BKING)
     // ex) a5 -> a6: Move(AFILE, RANK5, AFILE, RANK6, WQUEEN)
-    MCError Board::Move(File from_file, Rank from_rank, File to_file, Rank to_rank, Piece promote_piece)
+    MCError Board::Move(Square from_square, Square to_square, Piece promote_piece)
     {
+        File from_file = from_square.file, to_file = to_square.file;
+        Rank from_rank = from_square.rank, to_rank = to_square.rank;
+
         if (from_file == to_file && from_rank == to_rank)
             return mcet::genMoveErr("To-square is equal to from-square");
 
-        Piece p = (Piece)GetSquare(from_file, from_rank);
-        Piece op = (Piece)GetSquare(to_file, to_rank);
+        Piece p = (Piece)GetSquare(Square{from_file, from_rank});
+        Piece op = (Piece)GetSquare(Square{to_file, to_rank});
 
         // no piece
         if (p == EMPTYSQ)
@@ -648,7 +653,7 @@ namespace minichess_AI
                         if (
                             (to_file != enpassantAblePawnFile) ||
                             (to_rank != tempr1) ||
-                            (GetSquare(to_file, tempr1 - temp1) != tempp1))
+                            (GetSquare(Square{to_file, tempr1 - temp1}) != tempp1))
                             illegal = true;
                         else
                             enpassant = true;
@@ -667,9 +672,9 @@ namespace minichess_AI
                     illegal = true;
                 else if (temp3 != 0)
                     illegal = true;
-                else if (turn == cWhite && (from_rank != RANK2 || GetSquare(from_file, RANK3) != EMPTYSQ))
+                else if (turn == cWhite && (from_rank != RANK2 || GetSquare(Square{from_file, RANK3}) != EMPTYSQ))
                     illegal = true;
-                else if (turn == cBlack && (from_rank != RANK5 || GetSquare(from_file, RANK4) != EMPTYSQ))
+                else if (turn == cBlack && (from_rank != RANK5 || GetSquare(Square{from_file, RANK4}) != EMPTYSQ))
                     illegal = true;
                 else
                     pawn2sq = true;
@@ -709,17 +714,17 @@ namespace minichess_AI
                     (to_rank != tempr1))
                     illegal = true;
                 else if (
-                    (GetSquare(tempf2, tempr1) != tempp1) ||
-                    (GetSquare(BFILE, tempr1) != EMPTYSQ) ||
-                    (GetSquare(CFILE, tempr1) != EMPTYSQ) ||
-                    (GetSquare(DFILE, tempr1) != EMPTYSQ))
+                    (GetSquare(Square{tempf2, tempr1}) != tempp1) ||
+                    (GetSquare(Square{BFILE, tempr1}) != EMPTYSQ) ||
+                    (GetSquare(Square{CFILE, tempr1}) != EMPTYSQ) ||
+                    (GetSquare(Square{DFILE, tempr1}) != EMPTYSQ))
                     illegal = true;
                 else if (IsChecked(turn) == true)
                     illegal = true;
                 else
                 {
-                    SetSquare(from_file, from_rank, EMPTYSQ);
-                    SetSquare(File(((int)from_file + CFILE) / 2), from_rank, p);
+                    SetSquare(Square{from_file, from_rank}, EMPTYSQ);
+                    SetSquare(Square{File(((int)from_file + CFILE) / 2), from_rank}, p);
                     if (IsChecked(turn) == true)
                     {
                         illegal = true;
@@ -728,8 +733,8 @@ namespace minichess_AI
                     {
                         castling = true;
                     }
-                    SetSquare(from_file, from_rank, p);
-                    SetSquare(File(((int)from_file + CFILE) / 2), from_rank, EMPTYSQ);
+                    SetSquare(Square{from_file, from_rank}, p);
+                    SetSquare(Square{File(((int)from_file + CFILE) / 2), from_rank}, EMPTYSQ);
                 }
             }
         }
@@ -748,7 +753,7 @@ namespace minichess_AI
                 temp4 = temp2 / abs(temp2);
                 for (int i = 1; i < abs(temp1); i++)
                 {
-                    if (GetSquare(from_file + i * temp3, from_rank + i * temp4) != EMPTYSQ)
+                    if (GetSquare(Square{from_file + i * temp3, from_rank + i * temp4}) != EMPTYSQ)
                         illegal = true;
                 }
             }
@@ -762,7 +767,7 @@ namespace minichess_AI
                 temp2 = max((int)from_file, (int)to_file);
                 for (File f = File(temp1 + 1); f < File(temp2); f++)
                 {
-                    if (GetSquare(f, from_rank) != EMPTYSQ)
+                    if (GetSquare(Square{f, from_rank}) != EMPTYSQ)
                         illegal = true;
                 }
             }
@@ -772,7 +777,7 @@ namespace minichess_AI
                 temp2 = max((int)from_rank, (int)to_rank);
                 for (Rank r = Rank(temp1 + 1); r < Rank(temp2); r++)
                 {
-                    if (GetSquare(from_file, r) != EMPTYSQ)
+                    if (GetSquare(Square{from_file, r}) != EMPTYSQ)
                         illegal = true;
                 }
             }
@@ -798,37 +803,37 @@ namespace minichess_AI
 
         if (enpassant)
         {
-            err = SetSquare(from_file, from_rank, EMPTYSQ);
+            err = SetSquare(Square{from_file, from_rank}, EMPTYSQ);
             if (err != mcet::NoErr)
                 goto MOVE_ERR_1;
-            err = SetSquare(to_file, to_rank, p);
+            err = SetSquare(Square{to_file, to_rank}, p);
             if (err != mcet::NoErr)
                 goto MOVE_ERR_1;
-            err = SetSquare(to_file, (turn == cWhite) ? RANK3 : RANK4, EMPTYSQ);
+            err = SetSquare(Square{to_file, (turn == cWhite) ? RANK3 : RANK4}, EMPTYSQ);
             if (err != mcet::NoErr)
                 goto MOVE_ERR_1;
         }
         else if (castling)
         {
-            err = SetSquare(from_file, to_rank, EMPTYSQ);
+            err = SetSquare(Square{from_file, to_rank}, EMPTYSQ);
             if (err != mcet::NoErr)
                 goto MOVE_ERR_1;
-            err = SetSquare(File(4 - from_file), to_rank, EMPTYSQ);
+            err = SetSquare(Square{File(4 - from_file), to_rank}, EMPTYSQ);
             if (err != mcet::NoErr)
                 goto MOVE_ERR_1;
-            err = SetSquare(CFILE, to_rank, p);
+            err = SetSquare(Square{CFILE, to_rank}, p);
             if (err != mcet::NoErr)
                 goto MOVE_ERR_1;
-            err = SetSquare(File(((int)from_file + CFILE) / 2), to_rank, (turn == cWhite) ? WROOK : BROOK);
+            err = SetSquare(Square{File(((int)from_file + CFILE) / 2), to_rank}, (turn == cWhite) ? WROOK : BROOK);
             if (err != mcet::NoErr)
                 goto MOVE_ERR_1;
         }
         else
         {
-            err = SetSquare(from_file, from_rank, EMPTYSQ);
+            err = SetSquare(Square{from_file, from_rank}, EMPTYSQ);
             if (err != mcet::NoErr)
                 goto MOVE_ERR_1;
-            err = SetSquare(to_file, to_rank, p);
+            err = SetSquare(Square{to_file, to_rank}, p);
             if (err != mcet::NoErr)
                 goto MOVE_ERR_1;
         }
@@ -837,7 +842,7 @@ namespace minichess_AI
 
         if (promotion)
         {
-            err = SetSquare(to_file, to_rank, promote_piece);
+            err = SetSquare(Square{to_file, to_rank}, promote_piece);
             if (err != mcet::NoErr)
                 goto MOVE_ERR_1;
         }
