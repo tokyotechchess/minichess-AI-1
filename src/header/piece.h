@@ -73,14 +73,6 @@ namespace minichess_AI
         EFILE,
     };
 
-    // square
-    // ToDo: 現在は高速化のために struct にしているけど、必要であれば class にして演算子を付加する
-    struct Square
-    {
-        File file;
-        Rank rank;
-    };
-
     // Color
     // ToDo: piece.h に宣言するのは変かもしれないので, もう少し良いヘッダがあったらそこに移す
     // increment meaning is switching Color; cWhite++ == cBlack, cBlack++ == cWhite
