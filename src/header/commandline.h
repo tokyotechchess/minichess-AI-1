@@ -4,14 +4,14 @@
 
 namespace minichess_AI
 {
+    struct MCCSetting
+    {
+        bool displayCastlingPossibility;
+        bool displaySpendTurn;
+    };
     class CommandLine
     {
     private:
-        struct MCCSetting
-        {
-            bool displayCastlingPossibility;
-            bool displaySpendTurn;
-        };
         MCCSetting setting;
     };
 }
