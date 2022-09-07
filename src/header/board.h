@@ -80,6 +80,16 @@ namespace minichess_AI
         MCError NullMove();
         MCError LegalMoves(File, Rank, File[17], Rank[17], int *);
 
+        // support methods
+        // arguments or return value can be unnatural
+
+        Square IsCheckedByPawn(Square, Color);
+        Square IsCheckedByKing(Square, Color);
+        Square IsCheckedByQueen(Square, Color);
+        Square IsCheckedByRook(Square, Color);
+        Square IsCheckedByKnight(Square, Color);
+        Square IsCheckedByBishop(Square, Color);
+
         // opeartors
 
         bool operator==(const Board &b);
