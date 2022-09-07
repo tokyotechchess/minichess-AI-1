@@ -882,8 +882,72 @@ namespace minichess_AI
     // recieve the squares where the piece in the specified square can move.
     // the 5-th argument is the number of legal moves.
     // even if the num of moves are max, there are 17 ones, so the length of arrays are set to 17.
+    // promotions are not counted
     MCError Board::LegalMoves(File file, Rank rank, File legalmove_files[17], Rank legalmove_ranks[17], int *no_moves)
     {
+        Piece p = GetSquare(file, rank);
+        if (turn != GetPieceColor(p))
+        {
+            no_moves = 0;
+            return mcet::NoErr;
+        }
+
+        int count = 0;
+
+        int temp1;
+        Rank tempr1;
+        Piece tempp1, tempp2;
+
+        switch (p)
+        {
+        case WPAWN:
+        case BPAWN:
+            temp1 = (turn == cWhite) ? 1 : -1;
+            tempr1 = (turn == cWhite) ? RANK2 : RANK5; // start rank
+
+            if (rank == tempr1 + 4 * temp1)
+            {
+                // final rank
+                no_moves = 0;
+                break;
+            }
+
+            tempp1 = GetSquare(file, rank + temp1);
+
+            if (tempp1 != EMPTYSQ)
+            {
+                // straight
+
+                if (rank == tempr1)
+                {
+                    // 2sq
+                    if (GetSquare(file, rank + temp1))
+                    {
+                        legalmove_files[count] = file;
+                        legalmove_ranks[count] = rank + 2 * temp1;
+                        count++;
+                    }
+                }
+            }
+
+            break;
+        case WKING:
+        case BKING:
+            break;
+        case WQUEEN:
+        case BQUEEN:
+            break;
+        case WBISHOP:
+        case BBISHOP:
+            break;
+        case WKNIGHT:
+        case BKNIGHT:
+            break;
+        case WROOK:
+        case BROOK:
+            break;
+        }
+
         return mcet::NoErr;
     }
 
