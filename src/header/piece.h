@@ -81,6 +81,9 @@ namespace minichess_AI
         Rank rank;
     };
 
+    // Error Square
+    constexpr Square SQUAREERR = Square{FILEERR, RANKERR};
+
     // Color
     // ToDo: piece.h に宣言するのは変かもしれないので, もう少し良いヘッダがあったらそこに移す
     // increment meaning is switching Color; cWhite++ == cBlack, cBlack++ == cWhite

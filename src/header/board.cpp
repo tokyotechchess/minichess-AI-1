@@ -956,6 +956,225 @@ namespace minichess_AI
         return mcet::NoErr;
     }
 
+    // judge whether checked by pawn
+    // variable 'king' is the king square, and 'color' is the color
+    // return the square of checking king
+    Square Board::IsCheckedByPawn(Square king, Color color)
+    {
+        if (color == ColorErr)
+            return SQUAREERR;
+        int direction = (color == cWhite) ? 1 : -1;
+        Rank first = (color == cWhite) ? RANK1 : RANK6;
+        Piece pawn = (color == cWhite) ? BPAWN : WPAWN;
+        if (king.rank == first)
+        {
+            return SQUAREERR;
+        }
+
+        if (king.file == AFILE)
+        {
+            if (GetSquare(Square{BFILE, king.rank + direction}) == pawn)
+                return Square{BFILE, king.rank + direction};
+        }
+        else if (king.file == EFILE)
+        {
+            if (GetSquare(Square{BFILE, king.rank + direction}) == pawn)
+                return Square{BFILE, king.rank + direction};
+        }
+        else
+        {
+            if (GetSquare(Square{king.file - 1, king.rank + direction}) == pawn)
+                return Square{king.file - 1, king.rank + direction};
+            if (GetSquare(Square{king.file + 1, king.rank + direction}) == pawn)
+                return Square{king.file + 1, king.rank + direction};
+        }
+
+        return SQUAREERR;
+    }
+
+    // judge whether checked by king
+    // variable 'king' is the "judged" king square, and 'color' is the color
+    // return the square of checking king
+    Square Board::IsCheckedByKing(Square king, Color color)
+    {
+        if (color == ColorErr)
+            return SQUAREERR;
+        int l = -1, r = 1, b = -1, f = 1;
+        File file = king.file;
+        Rank rank = king.rank;
+        Piece ok = (color == cWhite) ? BKING : WKING;
+
+        if (file == AFILE)
+            l = 1;
+        else if (file == EFILE)
+            r = -1;
+        if (rank = RANK1)
+            b = 1;
+        else if (rank == RANK6)
+            f = -1;
+
+        int i, j;
+
+        for (i = b; i <= f; i += 2)
+        {
+            for (j = l; j <= r; j++)
+            {
+                if (GetSquare(Square{file + j, rank + i}) == ok)
+                    return Square{file + j, rank + i};
+            }
+        }
+        for (j = l; j <= r; j += 2)
+        {
+            if (GetSquare(Square{file + j, rank}) == ok)
+                return Square{file + j, rank};
+        }
+
+        return SQUAREERR;
+    }
+
+    // judge whether checked by horizontal pieces (Rook, Queen)
+    // variable 'king' is the "judged" king square, and 'color' is the color
+    // return the square of checking king
+    Square Board::IsCheckedByHorizontal(Square king, Color color)
+    {
+        if (color == ColorErr)
+            return SQUAREERR;
+        File lfile, kfile = king.file;
+        Rank lrank, krank = king.rank;
+        int i;
+        Piece q, r, p;
+
+        if (color == cWhite)
+        {
+            q = BQUEEN;
+            r = BROOK;
+        }
+        else
+        {
+            q = WQUEEN;
+            r = WROOK;
+        }
+
+        for (i = -1; i <= 1; i += 2)
+        {
+            lrank = krank + i;
+            lfile = kfile;
+            while (RANK1 <= lrank && lrank <= RANK6)
+            {
+                p = GetSquare(Square{lfile, lrank});
+                if (p == q || p == r)
+                {
+                    return Square{lfile, lrank};
+                }
+                else if (p != EMPTYSQ)
+                {
+                    break;
+                }
+                lrank += i;
+            }
+        }
+        for (i = -1; i <= 1; i += 2)
+        {
+            lrank = krank;
+            lfile = kfile + i;
+            while (AFILE <= lfile && lfile <= EFILE)
+            {
+                p = GetSquare(Square{lfile, lrank});
+                if (p == q || p == r)
+                {
+                    return Square{lfile, lrank};
+                }
+                else if (p != EMPTYSQ)
+                {
+                    break;
+                }
+                lfile += i;
+            }
+        }
+
+        return SQUAREERR;
+    }
+
+    // judge whether checked by diagonal pieces (Bishop, Queen)
+    // variable 'king' is the "judged" king square, and 'color' is the color
+    // return the square of checking king
+    Square Board::IsCheckedByDiagonal(Square king, Color color)
+    {
+        if (color == ColorErr)
+            return SQUAREERR;
+
+        File dfile, kfile = king.file;
+        Rank drank, krank = king.rank;
+        Piece q, b, p;
+        int i, j;
+
+        if (color == cWhite)
+        {
+            q = BQUEEN;
+            b = BBISHOP;
+        }
+        else
+        {
+            q = WQUEEN;
+            b = WBISHOP;
+        }
+
+        for (i = -1; i <= 1; i += 2)
+        {
+            for (j = -1; j <= 1; j += 2)
+            {
+                drank = krank + i;
+                dfile = kfile + j;
+                while (RANK1 <= drank && drank <= RANK6 && AFILE <= dfile && dfile <= EFILE)
+                {
+                    p = GetSquare(Square{dfile, drank});
+                    if (p == q || p == b)
+                    {
+                        return Square{dfile, drank};
+                    }
+                    else if (p != EMPTYSQ)
+                    {
+                        break;
+                    }
+                    drank += i;
+                    dfile += j;
+                }
+            }
+        }
+    }
+
+    // judge whether checked by knight
+    // variable 'king' is the "judged" king square, and 'color' is the color
+    // return the square of checking king
+    Square Board::IsCheckedByKnight(Square king, Color color)
+    {
+        if (color != ColorErr)
+            return SQUAREERR;
+
+        File nfile, kfile = king.file;
+        Rank nrank, krank = king.rank;
+        Piece n = (color == cWhite) ? BKNIGHT : WKNIGHT;
+        int i, j, k;
+
+        for (i = 0; i <= 1; i++)
+        {
+            for (j = 0; j <= 1; j++)
+            {
+                for (k = 0; k <= 1; k++)
+                {
+                    nfile = kfile + (1 + i) * (2 * j - 1);
+                    nrank = krank + (2 - i) * (2 * k - 1);
+                    if (GetSquare(Square{nfile, nrank}) == n)
+                    {
+                        return Square{nfile, nrank};
+                    }
+                }
+            }
+        }
+
+        return SQUAREERR;
+    }
+
     // check equality between Boards
     bool Board::operator==(const Board &b)
     {
