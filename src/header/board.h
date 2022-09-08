@@ -85,10 +85,9 @@ namespace minichess_AI
 
         Square IsCheckedByPawn(Square, Color);
         Square IsCheckedByKing(Square, Color);
-        Square IsCheckedByQueen(Square, Color);
-        Square IsCheckedByRook(Square, Color);
+        Square IsCheckedByHorizontal(Square, Color);
+        Square IsCheckedByDiagonal(Square, Color);
         Square IsCheckedByKnight(Square, Color);
-        Square IsCheckedByBishop(Square, Color);
 
         // opeartors
 
