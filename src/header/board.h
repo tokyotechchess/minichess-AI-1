@@ -13,6 +13,9 @@ Class "Board" and its method are defined.
 
 namespace minichess_AI
 {
+    // The max length of array 'legalmoves' recieved by Board::LegalMoves(...)
+    constexpr int MAX_LEGALMOVES = 17;
+
     class Board
     {
     private:
@@ -78,7 +81,7 @@ namespace minichess_AI
         MCError SetBoardFEN(std::string fen);
         MCError Move(Square, Square, Piece);
         MCError NullMove();
-        MCError LegalMoves(File, Rank, File[17], Rank[17], int *);
+        MCError LegalMoves(Square, Square[MAX_LEGALMOVES], int *);
 
         // support methods
         // arguments or return value can be unnatural

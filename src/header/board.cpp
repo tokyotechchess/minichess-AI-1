@@ -886,10 +886,12 @@ namespace minichess_AI
     // search all legal moves
     // recieve the squares where the piece in the specified square can move.
     // the 5-th argument is the number of legal moves.
-    // even if the num of moves are max, there are 17 ones, so the length of arrays are set to 17.
-    // promotions are not counted
-    MCError Board::LegalMoves(File file, Rank rank, File legalmove_files[17], Rank legalmove_ranks[17], int *no_moves)
+    // the length of legalmoves is 'MAX_LEGALMOVES'.
+    // promotions are not counted.
+    MCError Board::LegalMoves(Square square, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
     {
+        File file = square.file;
+        Rank rank = square.rank;
         Piece p = GetSquare(Square{file, rank});
         if (turn != GetPieceColor(p))
         {
@@ -928,8 +930,7 @@ namespace minichess_AI
                     // 2sq
                     if (GetSquare(Square{file, rank + temp1}))
                     {
-                        legalmove_files[count] = file;
-                        legalmove_ranks[count] = rank + 2 * temp1;
+                        legalmoves[count] = Square{file, rank + 2 * temp1};
                         count++;
                     }
                 }
