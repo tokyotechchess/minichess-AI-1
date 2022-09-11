@@ -5,8 +5,6 @@ piece.h
 Piece definitions.
 */
 
-#include <iostream>
-
 // macro to enable increments
 #define ENABLE_INCR_OPERATORS_ON(T)                               \
     inline T &operator++(T &d, int) { return d = T(int(d) + 1); } \
