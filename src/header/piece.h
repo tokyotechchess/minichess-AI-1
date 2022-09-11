@@ -105,9 +105,9 @@ namespace minichess_AI
     Piece ConvFENCharToPiece(char c);
 
     char ConvPieceToFENChar(Piece p);
-    inline std::ostream& operator<<(std::ostream& os, const Piece& p)
-{
-    os << ConvPieceToFENChar(p); 
-    return os;
-}
+    inline std::ostream &operator<<(std::ostream &os, const Piece &p)
+    {
+        os << ConvPieceToFENChar(p);
+        return os;
+    }
 }
