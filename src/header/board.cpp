@@ -890,18 +890,80 @@ namespace minichess_AI
     // promotions are not counted.
     MCError Board::LegalMoves(Square square, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
     {
+        int count = 0;
+
         File file = square.file;
         Rank rank = square.rank;
         Piece p = GetSquare(Square{file, rank});
+
         if (turn != GetPieceColor(p))
         {
-            no_moves = 0;
+            *no_moves = count;
             return mcet::NoErr;
         }
 
-        int count = 0;
+        int i, j;
 
-        int temp1;
+        // search king
+        Piece squares[5][6];
+        Piece king = (turn == cWhite) ? WKING : BKING;
+        Square kingsq;
+        for (i = 0; i < 5; i++)
+        {
+            for (j = 0; j < 6; j++)
+            {
+                squares[i][j] = GetSquare(Square{(File)i, (Rank)j});
+                if (squares[i][j] == king)
+                    kingsq = Square{(File)i, (Rank)j};
+            }
+        }
+
+        // search checked
+        Square checkingPawn, checkingKing, checkingKnight, checkingHorizontal, checkingDiagonal;
+        int no_checkingPieces = 0;
+        Square movableSquares[5]; // the square where 'p' can move if p != king
+        int no_movableSquares = 0;
+        int temp1, temp2;
+
+        if ((checkingPawn = IsCheckedByPawn(kingsq, turn)) != SQUAREERR)
+        {
+            no_checkingPieces++;
+            no_movableSquares = 1;
+            movableSquares[0] = checkingPawn;
+        }
+        if ((checkingKing = IsCheckedByKing(kingsq, turn)) != SQUAREERR)
+        {
+            no_checkingPieces++;
+            no_movableSquares = 1;
+            movableSquares[0] = checkingKing;
+        }
+        if ((checkingKnight = IsCheckedByKnight(kingsq, turn)) != SQUAREERR)
+        {
+            no_checkingPieces++;
+            no_movableSquares = 1;
+            movableSquares[0] = checkingKnight;
+        }
+        if ((checkingHorizontal = IsCheckedByHorizontal(kingsq, turn)) != SQUAREERR)
+        {
+            no_checkingPieces++;
+            if (checkingHorizontal, file == kingsq.file)
+            {
+                temp1 = (checkingHorizontal.rank > kingsq.rank) ? 1 : -1;
+                for (no_movableSquares = 0; no_movableSquares < abs(kingsq.rank - checkingHorizontal.rank); no_movableSquares++)
+                {
+                    movableSquares[no_movableSquares] = Square{kingsq.file, kingsq.rank + no_movableSquares * temp1};
+                }
+            }
+        }
+        if ((checkingDiagonal = IsCheckedByDiagonal(kingsq, turn)) != SQUAREERR)
+            no_checkingPieces++;
+
+        if (no_checkingPieces >= 2 && p != king)
+        {
+            *no_moves = 0;
+            return mcet::NoErr;
+        }
+
         Rank tempr1;
         Piece tempp1, tempp2;
 

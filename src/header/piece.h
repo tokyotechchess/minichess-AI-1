@@ -105,6 +105,10 @@ namespace minichess_AI
     // change turn
     inline Color operator++(Color &c, int) { return (c = Color(1 - (int)c)); }
 
+    // Square equality
+    inline bool operator==(Square s1, const Square s2) { return ((s1.file == s2.file) && (s1.rank == s2.rank)); }
+    inline bool operator!=(Square s1, const Square s2) { return !(s1 == s2); }
+
     int ConvRankToWeight(Rank);
     Piece ConvFENCharToPiece(char c);
     Color GetPieceColor(Piece p);
