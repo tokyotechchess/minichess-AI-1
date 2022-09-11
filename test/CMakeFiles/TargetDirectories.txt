@@ -1,0 +1,3 @@
+/Users/ousuke/projects/minichess-AI-1/test/CMakeFiles/rebuild_cache.dir
+/Users/ousuke/projects/minichess-AI-1/test/CMakeFiles/edit_cache.dir
+/Users/ousuke/projects/minichess-AI-1/test/CMakeFiles/minichessAI.dir
