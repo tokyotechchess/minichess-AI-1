@@ -47,7 +47,6 @@ namespace minichess_AI
     std::string Board::GetBoardFEN()
     {
         std::string FEN;
-        std::string Pieces[15] = {"\0", "K", "P", "Q", "R", "N", "B", "\0", "\0", "k", "p", "q", "r", "n", "b"};
         int piece_num, count = 0;
         for (Rank r = RANK6; r >= RANK1; r--)
         {
@@ -65,7 +64,7 @@ namespace minichess_AI
                         FEN += std::to_string(count);
                         count = 0;
                     }
-                    FEN += Pieces[piece_num];
+                    FEN += ConvPieceToFENChar(Piece(piece_num));
                 }
             }
             if (count != 0)
