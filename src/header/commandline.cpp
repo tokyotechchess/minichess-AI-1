@@ -13,7 +13,7 @@ namespace minichess_AI
             std::cout << r << " | ";
             for (File f = AFILE; f <= EFILE; f++)
             {
-                std::cout << ConvPieceToFENChar(Pieces[b->GetSquare(Square{f, r})]) << " ";
+                std::cout << ConvPieceToFENChar(b->GetSquare(Square{f, r})) << " ";
             }
             std::cout << std::endl;
         }

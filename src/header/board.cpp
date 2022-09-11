@@ -111,7 +111,7 @@ namespace minichess_AI
     }
 
     // get square's piece (file: A-file = 0, ..., E-file = 4)
-    int Board::GetSquare(Square square)
+    Piece Board::GetSquare(Square square)
     {
         File file = square.file;
         Rank rank = square.rank;
@@ -120,7 +120,7 @@ namespace minichess_AI
 
         int c = this->files[file];
         int r = ConvRankToWeight(rank);
-        return (c & (0b1111 * r)) / r;
+        return Piece((c & (0b1111 * r)) / r);
     }
 
     // check that color's king is checked (Color: cWhite, cBlack)
