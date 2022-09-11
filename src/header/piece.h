@@ -5,7 +5,7 @@ piece.h
 Piece definitions.
 */
 
-#include<iostream>
+#include <iostream>
 
 // macro to enable increments
 #define ENABLE_INCR_OPERATORS_ON(T)                               \
