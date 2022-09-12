@@ -100,6 +100,6 @@ namespace minichess_AI
             return 'p';
         }
 
-        return '-';
+        return ' ';
     }
 }

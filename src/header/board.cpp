@@ -47,7 +47,8 @@ namespace minichess_AI
     std::string Board::GetBoardFEN()
     {
         std::string FEN;
-        int piece_num, count = 0;
+        Piece piece_num;
+        int count = 0;
         for (Rank r = RANK6; r >= RANK1; r--)
         {
             for (File f = AFILE; f <= EFILE; f++)
@@ -64,7 +65,7 @@ namespace minichess_AI
                         FEN += std::to_string(count);
                         count = 0;
                     }
-                    FEN += ConvPieceToFENChar(Piece(piece_num));
+                    FEN += ConvPieceToFENChar(piece_num);
                 }
             }
             if (count != 0)
