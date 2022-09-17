@@ -91,6 +91,7 @@ namespace minichess_AI
         Square IsCheckedByHorizontal(Square, Color);
         Square IsCheckedByDiagonal(Square, Color);
         Square IsCheckedByKnight(Square, Color);
+        Square SearchPiece(Piece);
 
         // opeartors
 
