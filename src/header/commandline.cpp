@@ -27,7 +27,7 @@ namespace minichess_AI
         if (setting.displayEnpassantAbleFile == true)
         {
             std::cout << "EnpassantAbleFile" << std::endl;
-            std::cout << "  " << char(b->GetEnpassantAblePawnFile() + 'A') << std::endl;
+            std::cout << "  " << char(b->GetEnpassantAblePawnFile() + 'a') << std::endl;
         }
     }
 }
