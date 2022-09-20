@@ -38,5 +38,7 @@ namespace minichess_AI
                 std::cout << "  " << char(b->GetEnpassantAblePawnFile() + 'a') << std::endl;
             }
         }
+
+        return mcet::NoErr;
     }
 }
