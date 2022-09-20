@@ -16,5 +16,18 @@ namespace minichess_AI
             }
             std::cout << std::endl;
         }
+
+        MCCSetting setting;
+        if (setting.displayCastlingPossibility == true)
+        {
+            std::cout << "CastlingPossibility" << std::endl;
+            std::cout << "  White  " << b->GetCastlingPossibility(cWhite) << std::endl;
+            std::cout << "  Black  " << b->GetCastlingPossibility(cBlack) << std::endl;
+        }
+        if (setting.displayEnpassantAbleFile == true)
+        {
+            std::cout << "EnpassantAbleFile" << std::endl;
+            std::cout << "  " << char(b->GetEnpassantAblePawnFile() + 'A') << std::endl;
+        }
     }
 }
