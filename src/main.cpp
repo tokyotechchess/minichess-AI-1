@@ -26,4 +26,8 @@ using namespace minichess_AI;
 
 int main()
 {
+  Board b;
+  b.InitBoard();
+  CommandLine c;
+  c.DisplayBoard(&b);
 }
