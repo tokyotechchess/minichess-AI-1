@@ -11,9 +11,9 @@ namespace minichess_AI
 {
     struct MCCSetting
     {
-        bool displayCastlingPossibility=true;
+        bool displayCastlingPossibility;
         bool displaySpendTurn;
-        bool displayEnpassantAbleFile=true;
+        bool displayEnpassantAbleFile;
     };
     class CommandLine
     {
