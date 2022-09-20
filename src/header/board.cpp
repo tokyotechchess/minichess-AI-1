@@ -319,6 +319,31 @@ namespace minichess_AI
 
             return mcet::NoErr;
         }
+
+        MCError LegalMovesKing(Board *board, Square square)
+        {
+            bool AttackedSquares[5][6];
+            int i, j, l, r, b, f;
+            Piece p;
+            Color turn = board->GetTurn();
+
+            for (i = 0; i < 5; i++)
+            {
+                for (j = 0; j < 6; j++)
+                {
+                    p = board->GetSquare(Square{(File)i, (Rank)j});
+                    if (GetPieceColor(p) == turn++)
+                    {
+                        l = -1;
+                        switch (p)
+                        {
+                        case WKING:
+                        case BKING:
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // definitions
