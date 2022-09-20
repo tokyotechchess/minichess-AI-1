@@ -41,23 +41,23 @@ namespace minichess_AI
             }
         }
 
-        MCError LMP0C_Take(Board *board, Square square, Square legalmoves[MAX_LEGALMOVES], int *count, int temp1, Color turn)
+        MCError LMP0C_Take(Board *board, Square square, Square legalmoves[MAX_LEGALMOVES], int *no_moves, int temp1, Color turn)
         {
             File tempf1;
             if (square.file != AFILE)
             {
                 if (GetPieceColor(board->GetSquare(Square{square.file - 1, square.rank + temp1})) == turn++)
                 {
-                    legalmoves[*count] = Square{square.file - 1, square.rank + temp1};
-                    *count++;
+                    legalmoves[*no_moves] = Square{square.file - 1, square.rank + temp1};
+                    *no_moves++;
                 }
             }
             if (square.file != EFILE)
             {
                 if (GetPieceColor(board->GetSquare(Square{square.file + 1, square.rank + temp1})) == turn++)
                 {
-                    legalmoves[*count] = Square{square.file + 1, square.rank + temp1};
-                    *count++;
+                    legalmoves[*no_moves] = Square{square.file + 1, square.rank + temp1};
+                    *no_moves++;
                 }
             }
             if (square.rank = (turn == cWhite) ? RANK3 : RANK4)
@@ -70,15 +70,15 @@ namespace minichess_AI
                             (board->GetSquare(Square{tempf1, square.rank}) == ((turn == cWhite) ? BBISHOP : WBISHOP)) &&
                             (board->GetSquare(Square{tempf1, square.rank + temp1}) == EMPTYSQ))
                         {
-                            legalmoves[*count] = Square{tempf1, square.rank + temp1};
-                            *count++;
+                            legalmoves[*no_moves] = Square{tempf1, square.rank + temp1};
+                            *no_moves++;
                         }
                     }
                 }
             }
         }
 
-        MCError LegalMovesPawn0Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES], int *count)
+        MCError LegalMovesPawn0Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
         {
             int i, rdir, fdir, temp1;
             bool able;
@@ -89,7 +89,7 @@ namespace minichess_AI
 
             if ((turn == cWhite) ? (square.rank == RANK6) : (square.rank == RANK1))
             {
-                *count = 0;
+                *no_moves = 0;
                 return mcet::NoErr;
             }
 
@@ -101,7 +101,7 @@ namespace minichess_AI
 
                 // not take
 
-                LMP0C_NotTake(board, square, legalmoves, count, temp1);
+                LMP0C_NotTake(board, square, legalmoves, no_moves, temp1);
 
                 // take
 
@@ -137,7 +137,7 @@ namespace minichess_AI
 
                 if (able)
                 {
-                    LMP0C_Take(board, square, legalmoves, count, temp1, turn);
+                    LMP0C_Take(board, square, legalmoves, no_moves, temp1, turn);
                 }
             }
             else if (kingsq.rank == square.rank)
@@ -184,11 +184,11 @@ namespace minichess_AI
                 {
                     // not take
 
-                    LMP0C_NotTake(board, square, legalmoves, count, temp1);
+                    LMP0C_NotTake(board, square, legalmoves, no_moves, temp1);
 
                     // take
 
-                    LMP0C_Take(board, square, legalmoves, count, temp1, turn);
+                    LMP0C_Take(board, square, legalmoves, no_moves, temp1, turn);
                 }
             }
             else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
@@ -233,33 +233,34 @@ namespace minichess_AI
                 {
                     // not take
 
-                    LMP0C_NotTake(board, square, legalmoves, count, temp1);
+                    LMP0C_NotTake(board, square, legalmoves, no_moves, temp1);
 
                     // take
 
-                    LMP0C_Take(board, square, legalmoves, count, temp1, turn);
+                    LMP0C_Take(board, square, legalmoves, no_moves, temp1, turn);
                 }
                 else if (i == 1)
                 {
-                    legalmoves[*count] = Square{tempf1, tempr1};
+                    legalmoves[*no_moves] = Square{tempf1, tempr1};
+                    *no_moves++;
                 }
             }
             else
             {
                 // not take
 
-                LMP0C_NotTake(board, square, legalmoves, count, temp1);
+                LMP0C_NotTake(board, square, legalmoves, no_moves, temp1);
 
                 // take
 
-                LMP0C_Take(board, square, legalmoves, count, temp1, turn);
+                LMP0C_Take(board, square, legalmoves, no_moves, temp1, turn);
             }
 
             return mcet::NoErr;
         }
 
         MCError LegalMovesPawn1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
-                                       int *count, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
+                                       int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
         {
             Color turn = board->GetTurn();
             int temp1 = (turn == cWhite) ? 1 : -1;
@@ -282,8 +283,8 @@ namespace minichess_AI
                         {
                             if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                             {
-                                legalmoves[*count] = movableSquares[i];
-                                *count++;
+                                legalmoves[*no_moves] = movableSquares[i];
+                                *no_moves++;
                             }
                         }
                         break;
@@ -292,8 +293,8 @@ namespace minichess_AI
                         {
                             if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                             {
-                                legalmoves[*count] = movableSquares[i];
-                                *count++;
+                                legalmoves[*no_moves] = movableSquares[i];
+                                *no_moves++;
                             }
                         }
                     }
@@ -308,8 +309,8 @@ namespace minichess_AI
                         {
                             if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                             {
-                                legalmoves[*count] = movableSquares[i];
-                                *count++;
+                                legalmoves[*no_moves] = movableSquares[i];
+                                *no_moves++;
                             }
                         }
                     }
