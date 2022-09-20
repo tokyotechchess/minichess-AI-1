@@ -6,6 +6,25 @@ namespace minichess_AI
 
     namespace
     {
+        Square IsCheckedByPieceType(Board *board, PieceType piecetype, Square kingsq, Color color)
+        {
+            switch (piecetype)
+            {
+            case PT_KING:
+                return board->IsCheckedByKing(kingsq, color);
+            case PT_PAWN:
+                return board->IsCheckedByPawn(kingsq, color);
+            case PT_KNIGHT:
+                return board->IsCheckedByKnight(kingsq, color);
+            case PT_HORIZONTAL:
+                return board->IsCheckedByHorizontal(kingsq, color);
+            case PT_DIAGONAL:
+                return board->IsCheckedByDiagonal(kingsq, color);
+            }
+
+            return SQUAREERR;
+        }
+
         MCError LMP0C_NotTake(Board *board, Square square, Square legalmoves[MAX_LEGALMOVES], int *count, int temp1)
         {
             Rank tempr1;
@@ -234,6 +253,67 @@ namespace minichess_AI
                 // take
 
                 LMP0C_Take(board, square, legalmoves, count, temp1, turn);
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LegalMovesPawn1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
+                                       int *count, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
+        {
+            Color turn = board->GetTurn();
+            int temp1 = (turn == cWhite) ? 1 : -1;
+            File mvfile;
+            Rank mvrank;
+            Piece tempp1;
+
+            for (int i = 0; i < no_movableSquares; i++)
+            {
+                mvfile = movableSquares[i].file;
+                mvrank = movableSquares[i].rank;
+                tempp1 = board->GetSquare(Square{mvfile, mvrank});
+
+                if (mvrank - square.rank == temp1)
+                {
+                    switch (abs((int)(mvfile - square.file)))
+                    {
+                    case 0:
+                        if (tempp1 == EMPTYSQ)
+                        {
+                            if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                            {
+                                legalmoves[*count] = movableSquares[i];
+                                *count++;
+                            }
+                        }
+                        break;
+                    case 1:
+                        if (GetPieceColor(tempp1) == turn++)
+                        {
+                            if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                            {
+                                legalmoves[*count] = movableSquares[i];
+                                *count++;
+                            }
+                        }
+                    }
+                }
+                else if (mvrank - square.rank == temp1 * 2)
+                {
+                    if (mvrank == ((turn == cWhite) ? RANK4 : RANK3) && mvfile == square.file)
+                    {
+                        if (
+                            tempp1 == EMPTYSQ &&
+                            board->GetSquare(Square{mvfile, (turn == cWhite) ? RANK3 : RANK4}) == EMPTYSQ)
+                        {
+                            if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                            {
+                                legalmoves[*count] = movableSquares[i];
+                                *count++;
+                            }
+                        }
+                    }
+                }
             }
 
             return mcet::NoErr;
@@ -1128,7 +1208,7 @@ namespace minichess_AI
     // promotions are not counted.
     MCError Board::LegalMoves(Square square, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
     {
-        int count = 0;
+        *no_moves = 0;
 
         File file = square.file;
         Rank rank = square.rank;
@@ -1136,7 +1216,6 @@ namespace minichess_AI
 
         if (turn != GetPieceColor(p))
         {
-            *no_moves = count;
             return mcet::NoErr;
         }
 
@@ -1152,6 +1231,7 @@ namespace minichess_AI
             checkingKing, checkingKnight, checkingHorizontal, checkingDiagonal;
         int no_checkingPieces = 0;
         Square movableSquares[5]; // the square where 'p' can move if p != king
+        PieceType checkingPieceType = PT_EMPTY;
         int no_movableSquares = 0;
         int temp1, temp2;
 
@@ -1160,33 +1240,55 @@ namespace minichess_AI
             no_checkingPieces++;
             no_movableSquares = 1;
             movableSquares[0] = checkingPawn;
+            checkingPieceType = PT_PAWN;
         }
         if ((checkingKing = IsCheckedByKing(kingsq, turn)) != SQUAREERR)
         {
             no_checkingPieces++;
             no_movableSquares = 1;
             movableSquares[0] = checkingKing;
+            checkingPieceType = PT_KING;
         }
         if ((checkingKnight = IsCheckedByKnight(kingsq, turn)) != SQUAREERR)
         {
             no_checkingPieces++;
             no_movableSquares = 1;
             movableSquares[0] = checkingKnight;
+            checkingPieceType = PT_KNIGHT;
         }
         if ((checkingHorizontal = IsCheckedByHorizontal(kingsq, turn)) != SQUAREERR)
         {
             no_checkingPieces++;
-            if (checkingHorizontal, file == kingsq.file)
+            if (checkingHorizontal.file == kingsq.file)
             {
                 temp1 = (checkingHorizontal.rank > kingsq.rank) ? 1 : -1;
-                for (no_movableSquares = 0; no_movableSquares < abs(kingsq.rank - checkingHorizontal.rank); no_movableSquares++)
+                for (no_movableSquares = 0; no_movableSquares < abs((int)kingsq.rank - (int)checkingHorizontal.rank); no_movableSquares++)
                 {
                     movableSquares[no_movableSquares] = Square{kingsq.file, kingsq.rank + no_movableSquares * temp1};
                 }
             }
+            else
+            {
+                temp1 = (checkingHorizontal.file > kingsq.file) ? 1 : -1;
+                for (no_movableSquares = 0; no_movableSquares < abs((int)kingsq.file - (int)checkingHorizontal.file); no_movableSquares++)
+                {
+                    movableSquares[no_movableSquares] = Square{kingsq.file + no_movableSquares * temp1, kingsq.rank};
+                }
+            }
+            checkingPieceType = PT_HORIZONTAL;
         }
         if ((checkingDiagonal = IsCheckedByDiagonal(kingsq, turn)) != SQUAREERR)
+        {
             no_checkingPieces++;
+            temp1 = (checkingDiagonal.file > kingsq.file) ? 1 : -1;
+            temp2 = (checkingDiagonal.rank > kingsq.rank) ? 1 : -1;
+            for (no_movableSquares = 0; no_movableSquares < abs((int)kingsq.file - (int)checkingDiagonal.file); no_movableSquares++)
+            {
+                movableSquares[no_movableSquares] = Square{
+                    kingsq.file + no_movableSquares * temp1, kingsq.rank + no_movableSquares * temp2};
+            }
+            checkingPieceType = PT_DIAGONAL;
+        }
 
         if (no_checkingPieces >= 2 && p != king)
         {
@@ -1203,7 +1305,13 @@ namespace minichess_AI
             if (no_checkingPieces == 0)
             {
                 // not checked
-                return LegalMovesPawn0Checked(this, square, kingsq, legalmoves, &count);
+                return LegalMovesPawn0Checked(this, square, kingsq, legalmoves, no_moves);
+            }
+            else
+            {
+                // checked
+                return LegalMovesPawn1Checked(this, square, kingsq, legalmoves, no_moves,
+                                              movableSquares, no_movableSquares, checkingPieceType);
             }
             break;
         case WKING:

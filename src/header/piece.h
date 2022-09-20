@@ -41,6 +41,19 @@ namespace minichess_AI
         BBISHOP,
     };
 
+    enum PieceType : int
+    {
+        PT_EMPTY = 0,
+        PT_KING,
+        PT_PAWN,
+        PT_QUEEN,
+        PT_ROOK,
+        PT_KNIGHT,
+        PT_BISHOP,
+        PT_HORIZONTAL,
+        PT_DIAGONAL,
+    };
+
     enum RankWeight : int
     {
         RANK1W = 0b1,
