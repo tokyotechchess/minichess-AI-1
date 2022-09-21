@@ -77,4 +77,39 @@ namespace minichess_AI
             return ColorErr;
         return ((p & 0b1000) == 0) ? cBlack : cWhite;
     }
+
+    char ConvPieceToFENChar(Piece p)
+    {
+        switch (p)
+        {
+        case WKING:
+            return 'K';
+        case BKING:
+            return 'k';
+        case WQUEEN:
+            return 'Q';
+        case BQUEEN:
+            return 'q';
+        case WBISHOP:
+            return 'B';
+        case BBISHOP:
+            return 'b';
+        case WKNIGHT:
+            return 'N';
+        case BKNIGHT:
+            return 'n';
+        case WROOK:
+            return 'R';
+        case BROOK:
+            return 'r';
+        case WPAWN:
+            return 'P';
+        case BPAWN:
+            return 'p';
+        case EMPTYSQ:
+            return ' ';
+        }
+
+        return ' ';
+    }
 }
