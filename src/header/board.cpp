@@ -1421,7 +1421,7 @@ namespace minichess_AI
 
         for (i = b; i <= f; i += 2)
         {
-            for (j = l; j <= r; j++)
+            for (j = (l == -1) ? -1 : 0; j <= (r == 1) ? 1 : 0; j++)
             {
                 if (GetSquare(Square{file + j, rank + i}) == ok)
                     return Square{file + j, rank + i};
