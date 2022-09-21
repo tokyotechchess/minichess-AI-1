@@ -1459,65 +1459,68 @@ namespace minichess_AI
         int no_movableSquares = 0;
         int temp1, temp2;
 
-        if ((checkingPawn = IsCheckedByPawn(kingsq, turn)) != SQUAREERR)
+        if (p != king)
         {
-            no_checkingPieces++;
-            no_movableSquares = 1;
-            movableSquares[0] = checkingPawn;
-            checkingPieceType = PT_PAWN;
-        }
-        if ((checkingKing = IsCheckedByKing(kingsq, turn)) != SQUAREERR)
-        {
-            no_checkingPieces++;
-            no_movableSquares = 1;
-            movableSquares[0] = checkingKing;
-            checkingPieceType = PT_KING;
-        }
-        if ((checkingKnight = IsCheckedByKnight(kingsq, turn)) != SQUAREERR)
-        {
-            no_checkingPieces++;
-            no_movableSquares = 1;
-            movableSquares[0] = checkingKnight;
-            checkingPieceType = PT_KNIGHT;
-        }
-        if ((checkingHorizontal = IsCheckedByHorizontal(kingsq, turn)) != SQUAREERR)
-        {
-            no_checkingPieces++;
-            if (checkingHorizontal.file == kingsq.file)
+            if ((checkingPawn = IsCheckedByPawn(kingsq, turn)) != SQUAREERR)
             {
-                temp1 = (checkingHorizontal.rank > kingsq.rank) ? 1 : -1;
-                for (no_movableSquares = 0; no_movableSquares < abs((int)kingsq.rank - (int)checkingHorizontal.rank); no_movableSquares++)
+                no_checkingPieces++;
+                no_movableSquares = 1;
+                movableSquares[0] = checkingPawn;
+                checkingPieceType = PT_PAWN;
+            }
+            if ((checkingKing = IsCheckedByKing(kingsq, turn)) != SQUAREERR)
+            {
+                no_checkingPieces++;
+                no_movableSquares = 1;
+                movableSquares[0] = checkingKing;
+                checkingPieceType = PT_KING;
+            }
+            if ((checkingKnight = IsCheckedByKnight(kingsq, turn)) != SQUAREERR)
+            {
+                no_checkingPieces++;
+                no_movableSquares = 1;
+                movableSquares[0] = checkingKnight;
+                checkingPieceType = PT_KNIGHT;
+            }
+            if ((checkingHorizontal = IsCheckedByHorizontal(kingsq, turn)) != SQUAREERR)
+            {
+                no_checkingPieces++;
+                if (checkingHorizontal.file == kingsq.file)
                 {
-                    movableSquares[no_movableSquares] = Square{kingsq.file, kingsq.rank + no_movableSquares * temp1};
+                    temp1 = (checkingHorizontal.rank > kingsq.rank) ? 1 : -1;
+                    for (no_movableSquares = 0; no_movableSquares < abs((int)kingsq.rank - (int)checkingHorizontal.rank); no_movableSquares++)
+                    {
+                        movableSquares[no_movableSquares] = Square{kingsq.file, kingsq.rank + no_movableSquares * temp1};
+                    }
                 }
-            }
-            else
-            {
-                temp1 = (checkingHorizontal.file > kingsq.file) ? 1 : -1;
-                for (no_movableSquares = 0; no_movableSquares < abs((int)kingsq.file - (int)checkingHorizontal.file); no_movableSquares++)
+                else
                 {
-                    movableSquares[no_movableSquares] = Square{kingsq.file + no_movableSquares * temp1, kingsq.rank};
+                    temp1 = (checkingHorizontal.file > kingsq.file) ? 1 : -1;
+                    for (no_movableSquares = 0; no_movableSquares < abs((int)kingsq.file - (int)checkingHorizontal.file); no_movableSquares++)
+                    {
+                        movableSquares[no_movableSquares] = Square{kingsq.file + no_movableSquares * temp1, kingsq.rank};
+                    }
                 }
+                checkingPieceType = PT_HORIZONTAL;
             }
-            checkingPieceType = PT_HORIZONTAL;
-        }
-        if ((checkingDiagonal = IsCheckedByDiagonal(kingsq, turn)) != SQUAREERR)
-        {
-            no_checkingPieces++;
-            temp1 = (checkingDiagonal.file > kingsq.file) ? 1 : -1;
-            temp2 = (checkingDiagonal.rank > kingsq.rank) ? 1 : -1;
-            for (no_movableSquares = 0; no_movableSquares < abs((int)kingsq.file - (int)checkingDiagonal.file); no_movableSquares++)
+            if ((checkingDiagonal = IsCheckedByDiagonal(kingsq, turn)) != SQUAREERR)
             {
-                movableSquares[no_movableSquares] = Square{
-                    kingsq.file + no_movableSquares * temp1, kingsq.rank + no_movableSquares * temp2};
+                no_checkingPieces++;
+                temp1 = (checkingDiagonal.file > kingsq.file) ? 1 : -1;
+                temp2 = (checkingDiagonal.rank > kingsq.rank) ? 1 : -1;
+                for (no_movableSquares = 0; no_movableSquares < abs((int)kingsq.file - (int)checkingDiagonal.file); no_movableSquares++)
+                {
+                    movableSquares[no_movableSquares] = Square{
+                        kingsq.file + no_movableSquares * temp1, kingsq.rank + no_movableSquares * temp2};
+                }
+                checkingPieceType = PT_DIAGONAL;
             }
-            checkingPieceType = PT_DIAGONAL;
-        }
 
-        if (no_checkingPieces >= 2 && p != king)
-        {
-            *no_moves = 0;
-            return mcet::NoErr;
+            if (no_checkingPieces >= 2)
+            {
+                *no_moves = 0;
+                return mcet::NoErr;
+            }
         }
 
         MCError err;
