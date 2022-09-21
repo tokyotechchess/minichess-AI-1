@@ -98,6 +98,8 @@ namespace minichess_AI
             return 'P';
         case BPAWN:
             return 'p';
+        case EMPTYSQ:
+            return ' ';
         }
 
         return ' ';
