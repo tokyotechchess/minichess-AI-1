@@ -1,6 +1,11 @@
 #pragma once
 
 #include <iostream>
+#include <string>
+#include "util/error.h"
+#include "util/util.h"
+#include "piece.h"
+#include "board.h"
 
 namespace minichess_AI
 {
@@ -8,9 +13,12 @@ namespace minichess_AI
     {
         bool displayCastlingPossibility;
         bool displaySpendTurn;
+        bool displayEnpassantAbleFile;
     };
     class CommandLine
     {
+    public:
+        MCError DisplayBoard(Board *b);
     private:
         MCCSetting setting;
     };
