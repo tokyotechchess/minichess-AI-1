@@ -17,7 +17,6 @@ namespace minichess_AI
             std::cout << std::endl;
         }
 
-        MCCSetting setting;
         if (setting.displayCastlingPossibility == true)
         {
             std::cout << "CastlingPossibility" << std::endl;
