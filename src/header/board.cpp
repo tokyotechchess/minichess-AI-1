@@ -44,9 +44,11 @@ namespace minichess_AI
         MCError LMP0C_Take(Board *board, Square square, Square legalmoves[MAX_LEGALMOVES], int *no_moves, int temp1, Color turn)
         {
             File tempf1;
+            Color enturn = turn;
+            enturn++;
             if (square.file != AFILE)
             {
-                if (GetPieceColor(board->GetSquare(Square{square.file - 1, square.rank + temp1})) == turn++)
+                if (GetPieceColor(board->GetSquare(Square{square.file - 1, square.rank + temp1})) == enturn)
                 {
                     legalmoves[*no_moves] = Square{square.file - 1, square.rank + temp1};
                     *no_moves++;
@@ -54,7 +56,7 @@ namespace minichess_AI
             }
             if (square.file != EFILE)
             {
-                if (GetPieceColor(board->GetSquare(Square{square.file + 1, square.rank + temp1})) == turn++)
+                if (GetPieceColor(board->GetSquare(Square{square.file + 1, square.rank + temp1})) == enturn)
                 {
                     legalmoves[*no_moves] = Square{square.file + 1, square.rank + temp1};
                     *no_moves++;
@@ -320,29 +322,225 @@ namespace minichess_AI
             return mcet::NoErr;
         }
 
-        MCError LegalMovesKing(Board *board, Square square)
+        MCError LegalMovesKing(Board *board, Square square, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
         {
-            bool AttackedSquares[5][6];
-            int i, j, l, r, b, f;
+            bool isAttacked[5][6];
+            int i, j, k, m, n, l, r, b, f, temp1, temp2;
             Piece p;
             Color turn = board->GetTurn();
+            Color enturn = turn;
+            enturn++;
 
+            // search attacked squares
             for (i = 0; i < 5; i++)
             {
                 for (j = 0; j < 6; j++)
                 {
-                    p = board->GetSquare(Square{(File)i, (Rank)j});
-                    if (GetPieceColor(p) == turn++)
+                    if (GetPieceColor(p) == enturn)
                     {
-                        l = -1;
                         switch (p)
                         {
                         case WKING:
                         case BKING:
+                            l = -1;
+                            r = 1;
+                            b = -1;
+                            f = 1;
+
+                            if (i == AFILE)
+                                l = 1;
+                            else if (i == EFILE)
+                                r = -1;
+                            if (j == RANK1)
+                                b = 1;
+                            else if (j == RANK6)
+                                f = -1;
+
+                            for (k = b; k <= f; k += 2)
+                            {
+                                for (m = (l == -1) ? -1 : 0; m <= (r == 1) ? 1 : 0; m++)
+                                {
+                                    isAttacked[i + m][j + k] = true;
+                                }
+                            }
+                            for (k = l; k <= r; k += 2)
+                            {
+                                isAttacked[i + k][j] = true;
+                            }
+                            break;
+                        case WPAWN:
+                        case BPAWN:
+                            if (j != ((enturn == cWhite) ? RANK6 : RANK1))
+                            {
+                                temp1 = (enturn == cWhite) ? 1 : -1;
+                                if (i != AFILE)
+                                {
+                                    isAttacked[i - 1][j] = true;
+                                }
+                                if (i != EFILE)
+                                {
+                                    isAttacked[i + 1][j] = true;
+                                }
+                            }
+                            break;
+                        case WKNIGHT:
+                        case BKNIGHT:
+                            for (k = 0; k <= 1; k++)
+                            {
+                                for (m = 0; m <= 1; m++)
+                                {
+                                    for (n = 0; n <= 1; n++)
+                                    {
+                                        temp1 = i + (1 + k) * (2 * m - 1);
+                                        temp2 = j + (2 - k) * (2 * n + 1);
+                                        if (
+                                            AFILE <= temp1 && temp1 <= EFILE && RANK1 <= temp2 && temp2 <= RANK6)
+                                        {
+                                            isAttacked[temp1][temp2] = true;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case WBISHOP:
+                        case BBISHOP:
+                            for (k = -1; k <= 1; k += 2)
+                            {
+                                for (m = -1; m <= 1; m += 2)
+                                {
+                                    for (n = 1;; n++)
+                                    {
+                                        temp1 = i + k * n;
+                                        temp2 = j + m * n;
+                                        if (temp1 < AFILE || EFILE < temp1 || temp2 < RANK1 || RANK6 < temp2)
+                                            break;
+                                        if (board->GetSquare(Square{(File)temp1, (Rank)temp2}) != EMPTYSQ)
+                                            break;
+                                        isAttacked[temp1][temp2] = true;
+                                    }
+                                }
+                            }
+                            break;
+                        case WROOK:
+                        case BROOK:
+                            for (k = 0; k <= 1; k++)
+                            {
+                                for (m = -1; m <= 1; m += 2)
+                                {
+                                    for (n = m;; n += m)
+                                    {
+                                        temp1 = i + k * n;
+                                        temp2 = j + (1 - k) * n;
+                                        if (temp1 < AFILE || EFILE < temp1 || temp2 < RANK1 || RANK6 < temp2)
+                                            break;
+                                        if (board->GetSquare(Square{(File)temp1, (Rank)temp2}) != EMPTYSQ)
+                                            break;
+                                        isAttacked[temp1][temp2] = true;
+                                    }
+                                }
+                            }
+                            break;
+                        case WQUEEN:
+                        case BQUEEN:
+                            for (k = -1; k <= 1; k += 2)
+                            {
+                                for (m = -1; m <= 1; m += 2)
+                                {
+                                    for (n = 1;; n++)
+                                    {
+                                        temp1 = i + k * n;
+                                        temp2 = j + m * n;
+                                        if (temp1 < AFILE || EFILE < temp1 || temp2 < RANK1 || RANK6 < temp2)
+                                            break;
+                                        if (board->GetSquare(Square{(File)temp1, (Rank)temp2}) != EMPTYSQ)
+                                            break;
+                                        isAttacked[temp1][temp2] = true;
+                                    }
+                                }
+                            }
+                            for (k = 0; k <= 1; k++)
+                            {
+                                for (m = -1; m <= 1; m += 2)
+                                {
+                                    for (n = m;; n += m)
+                                    {
+                                        temp1 = i + k * n;
+                                        temp2 = j + (1 - k) * n;
+                                        if (temp1 < AFILE || EFILE < temp1 || temp2 < RANK1 || RANK6 < temp2)
+                                            break;
+                                        if (board->GetSquare(Square{(File)temp1, (Rank)temp2}) != EMPTYSQ)
+                                            break;
+                                        isAttacked[temp1][temp2] = true;
+                                    }
+                                }
+                            }
+                            break;
                         }
                     }
                 }
             }
+
+            // search legal moves
+
+            l = -1;
+            r = 1;
+            b = -1;
+            f = 1;
+
+            if (square.file == AFILE)
+                l = 1;
+            else if (square.file == EFILE)
+                r = -1;
+            if (square.rank = RANK1)
+                b = 1;
+            else if (square.rank == RANK6)
+                f = -1;
+
+            for (k = b; k <= f; k += 2)
+            {
+                for (m = (l == -1) ? -1 : 0; m <= (r == 1) ? 1 : 0; m++)
+                {
+                    if (!isAttacked[square.file + m][square.rank + k])
+                    {
+                        legalmoves[*no_moves] = Square{File(square.file + m), Rank(square.rank + k)};
+                        *no_moves++;
+                    }
+                }
+            }
+            for (k = l; k <= r; k += 2)
+            {
+                if (!isAttacked[square.file + k][square.rank])
+                {
+                    legalmoves[*no_moves] = Square{File(square.file + k), Rank(square.rank)};
+                    *no_moves++;
+                }
+            }
+
+            if (board->GetCastlingPossibility(turn))
+            {
+                if (turn == cWhite && square == Square{AFILE, RANK1})
+                {
+                    if (board->GetSquare(Square{EFILE, RANK1}) == WROOK)
+                    {
+                        if (!(isAttacked[AFILE][RANK1] || isAttacked[BFILE][RANK1] || isAttacked[CFILE][RANK1]))
+                        {
+                            legalmoves[*no_moves] = Square{CFILE, RANK1};
+                        }
+                    }
+                }
+                else if (turn == cBlack && square == Square{EFILE, RANK6})
+                {
+                    if (board->GetSquare(Square{AFILE, RANK6}) == WROOK)
+                    {
+                        if (!(isAttacked[EFILE][RANK6] || isAttacked[DFILE][RANK6] || isAttacked[CFILE][RANK6]))
+                        {
+                            legalmoves[*no_moves] = Square{CFILE, RANK6};
+                        }
+                    }
+                }
+            }
+
+            return mcet::NoErr;
         }
     }
 
@@ -1342,6 +1540,7 @@ namespace minichess_AI
             break;
         case WKING:
         case BKING:
+            return LegalMovesKing(this, square, legalmoves, no_moves);
             break;
         case WQUEEN:
         case BQUEEN:
