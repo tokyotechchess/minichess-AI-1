@@ -265,6 +265,8 @@ namespace minichess_AI
                                        int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
         {
             Color turn = board->GetTurn();
+            Color enturn = turn;
+            enturn++;
             int temp1 = (turn == cWhite) ? 1 : -1;
             File mvfile;
             Rank mvrank;
@@ -291,7 +293,7 @@ namespace minichess_AI
                         }
                         break;
                     case 1:
-                        if (GetPieceColor(tempp1) == turn++)
+                        if (GetPieceColor(tempp1) == enturn)
                         {
                             if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                             {
@@ -535,6 +537,84 @@ namespace minichess_AI
                         if (!(isAttacked[EFILE][RANK6] || isAttacked[DFILE][RANK6] || isAttacked[CFILE][RANK6]))
                         {
                             legalmoves[*no_moves] = Square{CFILE, RANK6};
+                        }
+                    }
+                }
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LegalMovesKnight0Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
+        {
+            bool able = true, check = true;
+            int fdir, rdir, i, j, k, temp1, temp2;
+            File tempf1;
+            Rank tempr1;
+            Color turn = board->GetTurn();
+            Piece checkableP1, checkableP2, tempp1;
+
+            checkableP1 = (turn == cWhite) ? BQUEEN : WQUEEN;
+
+            if (square.file == kingsq.file)
+            {
+                fdir = 0;
+                rdir = (square.rank > kingsq.rank) ? 1 : -1;
+                checkableP2 = (turn == cWhite) ? BROOK : WROOK;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                fdir = (square.file > kingsq.file) ? 1 : -1;
+                rdir = 0;
+                checkableP2 = (turn == cWhite) ? BROOK : WROOK;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                fdir = (square.file > kingsq.file) ? 1 : -1;
+                rdir = (square.rank > kingsq.rank) ? 1 : -1;
+                checkableP2 = (turn == cWhite) ? BBISHOP : WBISHOP;
+            }
+            else
+            {
+                check = false;
+            }
+
+            if (check)
+            {
+                tempf1 = square.file;
+                tempr1 = square.rank;
+                while (AFILE < tempf1 && tempf1 < EFILE && RANK1 < tempr1 && tempr1 < RANK6)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                    if (tempp1 == checkableP1 || tempp1 == checkableP2)
+                    {
+                        able = false;
+                    }
+                    else if (tempp1 == EMPTYSQ)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            if (able)
+            {
+                for (i = 0; i <= 1; i++)
+                {
+                    for (j = 0; j <= 1; j++)
+                    {
+                        for (k = 0; k <= 1; k++)
+                        {
+                            temp1 = (int)square.file + (i + 1) * (2 * j - 1);
+                            temp2 = (int)square.file + (2 - i) * (2 * k - 1);
+
+                            if (AFILE <= temp1 && temp1 <= EFILE && RANK1 <= temp2 && temp2 <= RANK6)
+                            {
+                                legalmoves[*no_moves] = Square{(File)temp1, (Rank)temp2};
+                                *no_moves++;
+                            }
                         }
                     }
                 }
@@ -1553,6 +1633,11 @@ namespace minichess_AI
             break;
         case WKNIGHT:
         case BKNIGHT:
+            if (no_checkingPieces == 0)
+            {
+                // not checked
+                return LegalMovesKnight0Checked(this, square, kingsq, legalmoves, no_moves);
+            }
             break;
         case WROOK:
         case BROOK:
