@@ -622,6 +622,37 @@ namespace minichess_AI
 
             return mcet::NoErr;
         }
+
+        MCError LegalMovesKnight1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
+                                         int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
+        {
+            int i, temp1, temp2;
+            Color turn = board->GetTurn();
+            Piece knight = (turn == cWhite) ? WKNIGHT : BKNIGHT, tempp1;
+
+            for (i = 0; i < no_movableSquares; i++)
+            {
+                temp1 = (int)square.file - (int)movableSquares[i].file;
+                temp2 = (int)square.rank - (int)movableSquares[i].rank;
+                if (abs(temp1) + abs(temp2) == 3 && abs(temp1) != 0 && abs(temp2) != 0)
+                {
+                    tempp1 = board->GetSquare(movableSquares[i]);
+                    board->SetSquare(movableSquares[i], knight);
+                    board->SetSquare(square, EMPTYSQ);
+
+                    if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                    {
+                        legalmoves[*no_moves] = movableSquares[i];
+                        *no_moves;
+                    }
+
+                    board->SetSquare(movableSquares[i], tempp1);
+                    board->SetSquare(square, knight);
+                }
+            }
+
+            return mcet::NoErr;
+        }
     }
 
     // definitions
@@ -1637,6 +1668,12 @@ namespace minichess_AI
             {
                 // not checked
                 return LegalMovesKnight0Checked(this, square, kingsq, legalmoves, no_moves);
+            }
+            else
+            {
+                // checked
+                return LegalMovesKnight1Checked(this, square, kingsq, legalmoves, no_moves,
+                                                movableSquares, no_movableSquares, checkingPieceType);
             }
             break;
         case WROOK:
