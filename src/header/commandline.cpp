@@ -34,7 +34,7 @@ namespace minichess_AI
             }
             else
             {
-                std::cout << "  " << char(b->GetEnpassantAblePawnFile() + 'a') << std::endl;
+                std::cout << "  " << char((int)b->GetEnpassantAblePawnFile() + 'a') << std::endl;
             }
         }
 
