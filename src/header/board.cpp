@@ -103,7 +103,7 @@ namespace minichess_AI
         else
         {
             FEN += " ";
-            FEN += char(enpassantAblePawnFile + 'a');        // ascii変換 0 + 97 -> a
+            FEN += char((int)enpassantAblePawnFile + 'a');   // ascii変換 0 + 97 -> a
             FEN += std::to_string((turn == cWhite) ? 4 : 3); // white pawn : 3, black pawn : 4
         }
         //ここまでアンパッサン
