@@ -270,7 +270,7 @@ namespace minichess_AI
             int temp1 = (turn == cWhite) ? 1 : -1;
             File mvfile;
             Rank mvrank;
-            Piece tempp1;
+            Piece tempp1, tempp2, pawn = (turn == cWhite) ? WPAWN : BPAWN;
 
             for (int i = 0; i < no_movableSquares; i++)
             {
@@ -285,21 +285,56 @@ namespace minichess_AI
                     case 0:
                         if (tempp1 == EMPTYSQ)
                         {
+                            board->SetSquare(square, EMPTYSQ);
+                            board->SetSquare(movableSquares[i], pawn);
+
                             if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                             {
                                 legalmoves[*no_moves] = movableSquares[i];
                                 *no_moves++;
                             }
+
+                            board->SetSquare(square, pawn);
+                            board->SetSquare(movableSquares[i], EMPTYSQ);
                         }
                         break;
                     case 1:
-                        if (GetPieceColor(tempp1) == enturn)
+                        if (board->GetEnpassantAblePawnFile() == mvfile &&
+                            mvrank == ((turn == cWhite) ? RANK4 : RANK3) &&
+                            tempp1 == EMPTYSQ)
                         {
+                            tempp2 = board->GetSquare(Square{mvfile, mvrank - temp1});
+                            if (GetPieceColor(tempp2) == enturn)
+                            {
+                                board->SetSquare(Square{mvfile, mvrank - temp1}, EMPTYSQ);
+                                board->SetSquare(movableSquares[i], pawn);
+                                board->SetSquare(square, EMPTYSQ);
+
+                                if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                                {
+                                    legalmoves[*no_moves] = movableSquares[i];
+                                    *no_moves++;
+                                }
+
+                                board->SetSquare(Square{mvfile, mvrank - temp1}, tempp2);
+                                board->SetSquare(movableSquares[i], EMPTYSQ);
+                                board->SetSquare(square, pawn);
+                            }
+                        }
+                        else if (GetPieceColor(tempp1) == enturn)
+                        {
+                            tempp2 = board->GetSquare(movableSquares[i]);
+                            board->SetSquare(movableSquares[i], pawn);
+                            board->SetSquare(square, EMPTYSQ);
+
                             if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                             {
                                 legalmoves[*no_moves] = movableSquares[i];
                                 *no_moves++;
                             }
+
+                            board->SetSquare(movableSquares[i], EMPTYSQ);
+                            board->SetSquare(square, pawn);
                         }
                     }
                 }
@@ -311,11 +346,17 @@ namespace minichess_AI
                             tempp1 == EMPTYSQ &&
                             board->GetSquare(Square{mvfile, (turn == cWhite) ? RANK3 : RANK4}) == EMPTYSQ)
                         {
+                            board->SetSquare(movableSquares[i], pawn);
+                            board->SetSquare(square, EMPTYSQ);
+
                             if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                             {
                                 legalmoves[*no_moves] = movableSquares[i];
                                 *no_moves++;
                             }
+
+                            board->SetSquare(movableSquares[i], EMPTYSQ);
+                            board->SetSquare(square, pawn);
                         }
                     }
                 }
