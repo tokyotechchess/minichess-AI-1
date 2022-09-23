@@ -904,7 +904,6 @@ namespace minichess_AI
     MCError Board::MoveForce(Square from_square, Square to_square, Piece promotion_piece)
     {
         Piece p = (Piece)GetSquare(from_square);
-
         bool pawn = false;
         bool king = false;
         bool rook = false;
@@ -945,16 +944,60 @@ namespace minichess_AI
             SetSquare(to_square, p);
             SetSquare(from_square, EMPTYSQ);
             enpassantAblePawnFile = FILEERR;
+            turn++;
             return mcet::NoErr;
         }
 
         if (pawn)
         {
+            if (GetSquare(to_square) == EMPTYSQ)
+            {
+                SetSquare(Square{to_square.file, from_square.rank}, EMPTYSQ);
+            }
+
+            if ((int)to_square.rank + 5 * (int)turn == 5)
+            {
+                SetSquare(to_square, promotion_piece);
+            }
+            else
+            {
+                SetSquare(to_square, p);
+            }
+            SetSquare(from_square, EMPTYSQ);
+            enpassantAblePawnFile = FILEERR;
+            if (abs((int)to_square.rank - (int)from_square.rank) == 2)
+            {
+                enpassantAblePawnFile = to_square.file;
+            }
+            turn++;
             return mcet::NoErr;
         }
 
         if (king)
         {
+            if (abs(to_square.file - from_square.file) == 2)
+            {
+                SetSquare(to_square, p);
+                SetSquare(from_square, EMPTYSQ);
+                if (turn == cWhite)
+                {
+                    SetSquare(Square{BFILE, RANK1}, WROOK);
+                    SetSquare(Square{EFILE, RANK1}, EMPTYSQ);
+                }
+                else
+                {
+                    SetSquare(Square{DFILE, RANK6}, BROOK);
+                    SetSquare(Square{AFILE, RANK6}, EMPTYSQ);
+                }
+            }
+            else
+            {
+                SetSquare(to_square, p);
+                SetSquare(from_square, EMPTYSQ);
+            }
+            castlingPossibility -= turn + 1; // if white, 3->2 1->0,,if black, 3->1 2->0
+            enpassantAblePawnFile = FILEERR;
+            turn++;
             return mcet::NoErr;
         }
 
@@ -962,8 +1005,9 @@ namespace minichess_AI
         {
             SetSquare(to_square, p);
             SetSquare(from_square, EMPTYSQ);
-            castlingPossibility -= turn + 1; //if white, 3->2 1->0,,if black, 3->1 2->0
+            castlingPossibility -= turn + 1; // if white, 3->2 1->0,,if black, 3->1 2->0
             enpassantAblePawnFile = FILEERR;
+            turn++;
             return mcet::NoErr;
         }
     }
