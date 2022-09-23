@@ -901,5 +901,10 @@ namespace minichess_AI
         return true;
     }
 
+    MCError Board::MoveForce(Square from_square, Square to_square, Piece promotion_piece)
+    {
+        
+    }
+
     bool Board::operator!=(const Board &b) { return !(*this == b); }
 }
