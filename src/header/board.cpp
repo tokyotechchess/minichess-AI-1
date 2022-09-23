@@ -903,7 +903,69 @@ namespace minichess_AI
 
     MCError Board::MoveForce(Square from_square, Square to_square, Piece promotion_piece)
     {
-        
+        Piece p = (Piece)GetSquare(from_square);
+
+        bool pawn = false;
+        bool king = false;
+        bool rook = false;
+        bool other = false;
+
+        switch (p)
+        {
+        case WPAWN:
+        case BPAWN:
+            pawn = true;
+            break;
+        case WKNIGHT:
+        case BKNIGHT:
+            other = true;
+            break;
+        case WKING:
+        case BKING:
+            king = true;
+            break;
+        case WBISHOP:
+        case BBISHOP:
+            other = true;
+            break;
+        case WROOK:
+        case BROOK:
+            rook = true;
+            break;
+        case WQUEEN:
+        case BQUEEN:
+            other = true;
+            break;
+        default:
+            mcet::genMoveWPErr("Unexpected error when identifing piece type");
+            break;
+        }
+        if (other)
+        {
+            SetSquare(to_square, p);
+            SetSquare(from_square, EMPTYSQ);
+            enpassantAblePawnFile = FILEERR;
+            return mcet::NoErr;
+        }
+
+        if (pawn)
+        {
+            return mcet::NoErr;
+        }
+
+        if (king)
+        {
+            return mcet::NoErr;
+        }
+
+        if (rook)
+        {
+            SetSquare(to_square, p);
+            SetSquare(from_square, EMPTYSQ);
+            castlingPossibility -= turn + 1; //if white, 3->2 1->0,,if black, 3->1 2->0
+            enpassantAblePawnFile = FILEERR;
+            return mcet::NoErr;
+        }
     }
 
     bool Board::operator!=(const Board &b) { return !(*this == b); }
