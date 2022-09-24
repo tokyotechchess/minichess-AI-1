@@ -27,6 +27,10 @@ void __Test__Board()
     {
         std::cout << e.DisplayError() << std::endl;
     }
+    if ((e = TestMoveForce()) != mcet::NoErr)
+    {
+        std::cout << e.DisplayError() << std::endl;
+    }
 }
 
 // GetSquare
@@ -1680,4 +1684,8 @@ MCError TestMove()
         return mcet::genTestErr("Move doesn't work correctly in play game test case 2 : 6. ... Qd4");
 
     return mcet::NoErr;
+}
+
+MCError TestMoveForce()
+{
 }
