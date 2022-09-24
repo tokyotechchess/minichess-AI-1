@@ -1688,4 +1688,22 @@ MCError TestMove()
 
 MCError TestMoveForce()
 {
+
+    Board b, origin , corb;
+    MCError e;
+
+    //Normal Move
+    b.SetBoardFEN("5/5/1Kk2/5/5/5 w K -");
+    b.MoveForce(Square{BFILE,RANK4},Square{BFILE,RANK5},EMPTYSQ);
+    corb.SetBoardFEN("5/1K3/5/5/5/5 w K -");
+    if (b != corb){
+        return mcet::genTestErr("MoveForce doesn't work correctly in white King normal move");
+    }
+    b.MoveForce(Square{CFILE,RANK4},Square{CFILE,RANK5},EMPTYSQ);
+    corb.SetBoardFEN("5/1Kk2/5/5/5/5 w K -");
+    if (b != corb){
+        return mcet::genTestErr("MoveForce doesn't work correctly in black King normal move");
+    }
+
+    return mcet::NoErr;
 }
