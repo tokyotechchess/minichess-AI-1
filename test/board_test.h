@@ -12,4 +12,5 @@ MCError TestSetSquare();
 MCError TestSetBoardFEN();
 MCError TestIsChecked();
 MCError TestMove();
+MCError TestLegalMoves();
 void __Test__Board();
