@@ -993,7 +993,7 @@ namespace minichess_AI
                 SetSquare(to_square, p);
                 SetSquare(from_square, EMPTYSQ);
             }
-            castlingPossibility -= turn + 1; // if white, 3->2 1->0,,if black, 3->1 2->0
+            castlingPossibility = max(castlingPossibility - turn - 1, 0); // if white, 3->2 1->0,,if black, 3->1 2->0
             enpassantAblePawnFile = FILEERR;
             turn++;
         }
@@ -1002,7 +1002,7 @@ namespace minichess_AI
         {
             SetSquare(to_square, p);
             SetSquare(from_square, EMPTYSQ);
-            castlingPossibility -= turn + 1; // if white, 3->2 1->0,,if black, 3->1 2->0
+            castlingPossibility = max(castlingPossibility - turn - 1, 0); // if white, 3->2 1->0,,if black, 3->1 2->0
             enpassantAblePawnFile = FILEERR;
             turn++;
         }
