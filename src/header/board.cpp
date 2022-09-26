@@ -932,7 +932,7 @@ namespace minichess_AI
 
             int i, temp1, temp2;
             Color turn = board->GetTurn();
-            Piece knight = (turn == cWhite) ? WKNIGHT : BKNIGHT, tempp1;
+            Piece bishop = (turn == cWhite) ? WBISHOP : BBISHOP, tempp1;
 
             for (i = 0; i < no_movableSquares; i++)
             {
@@ -941,7 +941,7 @@ namespace minichess_AI
                 if (abs(temp1) == abs(temp2))
                 {
                     tempp1 = board->GetSquare(movableSquares[i]);
-                    board->SetSquare(movableSquares[i], knight);
+                    board->SetSquare(movableSquares[i], bishop);
                     board->SetSquare(square, EMPTYSQ);
 
                     if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
@@ -951,7 +951,7 @@ namespace minichess_AI
                     }
 
                     board->SetSquare(movableSquares[i], tempp1);
-                    board->SetSquare(square, knight);
+                    board->SetSquare(square, bishop);
                 }
             }
 
@@ -1004,7 +1004,7 @@ namespace minichess_AI
                 check = false;
             }
 
-            // king <- here -> bishop
+            // king <- here -> rook
             if (check)
             {
                 tempf1 = kingsq.file;
@@ -1027,7 +1027,7 @@ namespace minichess_AI
                 }
             }
 
-            // king --- bishop -> here
+            // king --- rook -> here
             if (check)
             {
                 tempf1 = square.file;
