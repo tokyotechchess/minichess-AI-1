@@ -2312,7 +2312,7 @@ namespace minichess_AI
             else
             {
                 // checked
-                return LegalMovesQueen1Checked(this, square, kingsqm, legalmoves, no_moves,
+                return LegalMovesQueen1Checked(this, square, kingsq, legalmoves, no_moves,
                                                movableSquares, no_movableSquares, checkingPieceType);
             }
             break;
