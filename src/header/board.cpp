@@ -887,9 +887,9 @@ namespace minichess_AI
                 i = 0;
                 while (i < end)
                 {
-                    i++;
                     if (tempf1 == square.file && tempr1 == square.rank)
                         continue;
+                    i++;
                     legalmoves[*no_moves] = Square{tempf1, tempr1};
                     *no_moves++;
                 }
@@ -1065,9 +1065,9 @@ namespace minichess_AI
                 i = 0;
                 while (i < end)
                 {
-                    i++;
                     if (tempf1 == square.file && tempr1 == square.rank)
                         continue;
+                    i++;
                     legalmoves[*no_moves] = Square{tempf1, tempr1};
                     *no_moves++;
                 }
@@ -1127,6 +1127,143 @@ namespace minichess_AI
 
                     board->SetSquare(movableSquares[i], tempp1);
                     board->SetSquare(square, rook);
+                }
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LegalMovesQueen0Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
+        {
+            bool check = true, limited = false;
+            int fdir, rdir, i, j, end = 0;
+            Color turn = board->GetTurn();
+            Piece checkableP1, checkableP2, tempp1, king;
+            File tempf1;
+            Rank tempr1;
+
+            if (turn == cWhite)
+            {
+                king = WKING;
+                checkableP1 = BQUEEN;
+            }
+            else
+            {
+                king = BKING;
+                checkableP1 = WQUEEN;
+            }
+
+            if (square.file == kingsq.file)
+            {
+                fdir = 0;
+                rdir = (square.rank > kingsq.rank) ? 1 : -1;
+                checkableP2 = (turn == cWhite) ? BROOK : WROOK;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                fdir = (square.file > kingsq.file) ? 1 : -1;
+                rdir = 0;
+                checkableP2 = (turn == cWhite) ? BROOK : WROOK;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                fdir = (square.file > kingsq.file) ? 1 : -1;
+                rdir = (square.rank > kingsq.rank) ? 1 : -1;
+                checkableP2 = (turn == cWhite) ? BBISHOP : WBISHOP;
+            }
+            else
+            {
+                check = false;
+            }
+
+            // king <- here -> queen
+            if (check)
+            {
+                tempf1 = kingsq.file;
+                tempr1 = kingsq.rank;
+                while (true)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    if (tempf1 == square.file && tempr1 == square.rank)
+                        break;
+                    tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                    if (tempp1 == king)
+                        break;
+                    else if (tempp1 != EMPTYSQ)
+                    {
+                        check = false;
+                        break;
+                    }
+                    end++;
+                }
+            }
+
+            // king --- queen -> here
+            if (check)
+            {
+                tempf1 = square.file;
+                tempr1 = square.rank;
+                while (AFILE < tempf1 && tempf1 < EFILE && RANK1 < tempr1 && tempr1 < RANK6)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                    if (tempp1 == checkableP1 || tempp1 == checkableP2)
+                    {
+                        end++;
+                        limited = true;
+                    }
+                    else if (tempp1 != EMPTYSQ)
+                    {
+                        break;
+                    }
+                    end++;
+                }
+            }
+
+            if (limited)
+            {
+                tempf1 = kingsq.file + fdir;
+                tempr1 = kingsq.rank + rdir;
+                i = 0;
+                while (i < end)
+                {
+                    if (tempf1 == square.file && tempr1 == square.rank)
+                        continue;
+                    i++;
+                    legalmoves[*no_moves] = Square{tempf1, tempr1};
+                    *no_moves++;
+                }
+            }
+            else
+            {
+                for (i = -1; i <= 1; i++)
+                {
+                    for (j = -1; j <= 1; j++)
+                    {
+                        if (i == 0 && j == 0)
+                            continue;
+                        tempf1 = square.file;
+                        tempr1 = square.rank;
+                        while (AFILE < tempf1 && tempf1 < EFILE && RANK1 < tempr1 && tempr1 < RANK6)
+                        {
+                            tempf1 += i;
+                            tempr1 += j;
+                            tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                            if (GetPieceColor(tempp1) == turn)
+                            {
+                                break;
+                            }
+                            else if (GetPieceColor(tempp1) == !turn)
+                            {
+                                legalmoves[*no_moves] = Square{tempf1, tempr1};
+                                *no_moves++;
+                            }
+                            legalmoves[*no_moves] = Square{tempf1, tempr1};
+                            *no_moves++;
+                        }
+                    }
                 }
             }
 
@@ -2137,6 +2274,11 @@ namespace minichess_AI
             break;
         case WQUEEN:
         case BQUEEN:
+            if (no_checkingPieces == 0)
+            {
+                // not checked
+                return LegalMovesQueen0Checked(this, square, kingsq, legalmoves, no_moves);
+            }
             break;
         case WBISHOP:
         case BBISHOP:
