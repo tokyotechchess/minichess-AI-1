@@ -107,7 +107,7 @@ namespace minichess_AI
 
                 // take
 
-                able = true;
+                able = false;
                 rdir = (kingsq.rank < square.rank) ? 1 : -1;
                 if (turn == cWhite)
                 {
@@ -119,21 +119,39 @@ namespace minichess_AI
                     roo = WBISHOP;
                     que = WQUEEN;
                 }
-                for (Rank r = square.rank + rdir;; r += rdir)
+
+                // king <- here -> pawn
+                for (Rank r = kingsq.rank + rdir;; r += rdir)
                 {
-                    tempp1 = board->GetSquare(Square{square.file, r});
-                    if (tempp1 == roo || tempp1 == que)
+                    if (r == square.rank)
+                        break;
+                    if (board->GetSquare(Square{square.file, r}) != EMPTYSQ)
                     {
-                        able = false;
+                        able = true;
                         break;
                     }
-                    else if (tempp1 != EMPTYSQ)
+                }
+
+                // king --- pawn -> here
+                if (!able)
+                {
+                    for (Rank r = square.rank + rdir;; r += rdir)
                     {
-                        break;
-                    }
-                    if (r == RANK1 && r == RANK6)
-                    {
-                        break;
+                        tempp1 = board->GetSquare(Square{square.file, r});
+                        if (tempp1 == roo || tempp1 == que)
+                        {
+                            break;
+                        }
+                        else if (tempp1 != EMPTYSQ)
+                        {
+                            able = true;
+                            break;
+                        }
+                        if (r == RANK1 && r == RANK6)
+                        {
+                            able = true;
+                            break;
+                        }
                     }
                 }
 
@@ -148,10 +166,9 @@ namespace minichess_AI
 
                 // find whether pinned
 
-                able = true;
-
                 if (square.file != AFILE && square.file != EFILE)
                 {
+                    able = false;
                     fdir = (kingsq.file < square.file) ? 1 : -1;
                     if (turn == cWhite)
                     {
@@ -164,22 +181,45 @@ namespace minichess_AI
                         que = WQUEEN;
                     }
 
-                    for (File f = square.file + fdir;; f += fdir)
+                    // king <- here -> pawn
+                    for (File f = kingsq.file + fdir;; f += fdir)
                     {
-                        tempp1 = board->GetSquare(Square{f, square.rank});
-                        if (tempp1 == roo || tempp1 == que)
-                        {
-                            able = false;
-                        }
-                        else if (tempp1 != EMPTYSQ)
-                        {
+                        if (f == square.file)
                             break;
-                        }
-                        if (f == AFILE || f == EFILE)
+                        if (board->GetSquare(Square{f, square.rank}) != EMPTYSQ)
                         {
+                            able = true;
                             break;
                         }
                     }
+
+                    // king --- pawn -> here
+                    if (!able)
+                    {
+                        for (File f = square.file + fdir;; f += fdir)
+                        {
+                            tempp1 = board->GetSquare(Square{f, square.rank});
+                            if (tempp1 == roo || tempp1 == que)
+                            {
+                                able = false;
+                                break;
+                            }
+                            else if (tempp1 != EMPTYSQ)
+                            {
+                                able = true;
+                                break;
+                            }
+                            if (f == AFILE || f == EFILE)
+                            {
+                                able = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    able = true;
                 }
 
                 if (able)
@@ -198,36 +238,55 @@ namespace minichess_AI
                 fdir = (kingsq.file < square.file) ? 1 : -1;
                 rdir = (kingsq.rank < square.rank) ? 1 : -1;
 
-                i = 0;
+                able = false;
 
-                tempf1 = square.file;
-                tempr1 = square.rank;
-                able = true;
-                if (turn == cWhite)
+                // king <- here -> pawn
+                tempf1 = kingsq.file + fdir;
+                tempr1 = kingsq.rank + rdir;
+                while (true)
                 {
-                    bis = BBISHOP;
-                    que = BQUEEN;
-                }
-                else
-                {
-                    bis = WBISHOP;
-                    que = WQUEEN;
-                }
-
-                while (tempf1 != AFILE && tempf1 != EFILE && tempr1 != RANK1 && tempr1 != RANK6)
-                {
-                    i++;
-                    tempf1 += fdir;
-                    tempr1 += rdir;
-                    tempp1 = board->GetSquare(Square{tempf1, tempr1});
-                    if (tempp1 == bis || tempp1 == que)
+                    if (tempf1 == square.file && tempr1 == square.rank)
+                        break;
+                    if (board->GetSquare(Square{tempf1, tempr1}) != EMPTYSQ)
                     {
-                        able = false;
+                        able = true;
                         break;
                     }
-                    else if (tempp1 == EMPTYSQ)
+                }
+
+                i = 0;
+
+                if (!able)
+                {
+                    able = true;
+                    tempf1 = square.file;
+                    tempr1 = square.rank;
+                    if (turn == cWhite)
                     {
-                        break;
+                        bis = BBISHOP;
+                        que = BQUEEN;
+                    }
+                    else
+                    {
+                        bis = WBISHOP;
+                        que = WQUEEN;
+                    }
+
+                    while (tempf1 != AFILE && tempf1 != EFILE && tempr1 != RANK1 && tempr1 != RANK6)
+                    {
+                        i++;
+                        tempf1 += fdir;
+                        tempr1 += rdir;
+                        tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                        if (tempp1 == bis || tempp1 == que)
+                        {
+                            able = false;
+                            break;
+                        }
+                        else if (tempp1 == EMPTYSQ)
+                        {
+                            break;
+                        }
                     }
                 }
 
@@ -595,7 +654,14 @@ namespace minichess_AI
             Color turn = board->GetTurn();
             Piece checkableP1, checkableP2, tempp1;
 
-            checkableP1 = (turn == cWhite) ? BQUEEN : WQUEEN;
+            if (turn == cWhite)
+            {
+                checkableP1 = BQUEEN;
+            }
+            else
+            {
+                checkableP1 = WQUEEN;
+            }
 
             if (square.file == kingsq.file)
             {
@@ -618,6 +684,25 @@ namespace minichess_AI
             else
             {
                 check = false;
+            }
+
+            // king <- here -> bishop
+            if (check)
+            {
+                tempf1 = kingsq.file;
+                tempr1 = kingsq.rank;
+                while (true)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    if (tempf1 == square.file && tempr1 == square.rank)
+                        break;
+                    if (board->GetSquare(Square{tempf1, tempr1}) != EMPTYSQ)
+                    {
+                        check = false;
+                        break;
+                    }
+                }
             }
 
             if (check)
