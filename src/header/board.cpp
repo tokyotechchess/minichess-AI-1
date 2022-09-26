@@ -694,6 +694,154 @@ namespace minichess_AI
 
             return mcet::NoErr;
         }
+
+        MCError LegalMovesBishop0Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
+        {
+            bool check = true, diag = false, hori = false, limited = false;
+            int fdir, rdir, i, j, end = 0;
+            Color turn = board->GetTurn();
+            Piece checkableP1, checkableP2, tempp1, king, bishop;
+            File tempf1;
+            Rank tempr1;
+
+            if (turn == cWhite)
+            {
+                king = WKING;
+                bishop = WBISHOP;
+                checkableP1 = BQUEEN;
+            }
+            else
+            {
+                king = BKING;
+                bishop = BBISHOP;
+                checkableP1 = WQUEEN;
+            }
+
+            if (square.file == kingsq.file)
+            {
+                fdir = 0;
+                rdir = (square.rank > kingsq.rank) ? 1 : -1;
+                checkableP2 = (turn == cWhite) ? BROOK : WROOK;
+                hori = true;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                fdir = (square.file > kingsq.file) ? 1 : -1;
+                rdir = 0;
+                checkableP2 = (turn == cWhite) ? BROOK : WROOK;
+                hori = true;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                fdir = (square.file > kingsq.file) ? 1 : -1;
+                rdir = (square.rank > kingsq.rank) ? 1 : -1;
+                checkableP2 = (turn == cWhite) ? BBISHOP : WBISHOP;
+                diag = true;
+            }
+            else
+            {
+                check = false;
+            }
+
+            // king <- here -> bishop
+            if (check)
+            {
+                tempf1 = kingsq.file;
+                tempr1 = kingsq.rank;
+                while (true)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    if (tempf1 == square.file && tempr1 == square.rank)
+                        break;
+                    tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                    if (tempp1 == king)
+                        break;
+                    else if (tempp1 != EMPTYSQ)
+                    {
+                        check = false;
+                        break;
+                    }
+                    end++;
+                }
+            }
+
+            // king --- bishop -> here
+            if (check)
+            {
+                tempf1 = square.file;
+                tempr1 = square.rank;
+                while (AFILE < tempf1 && tempf1 < EFILE && RANK1 < tempr1 && tempr1 < RANK6)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                    if (tempp1 == checkableP1 || tempp1 == checkableP2)
+                    {
+                        end++;
+                        if (hori)
+                        {
+                            return mcet::NoErr;
+                        }
+                        else
+                        {
+                            limited = true;
+                            break;
+                        }
+                    }
+                    else if (tempp1 != EMPTYSQ)
+                    {
+                        break;
+                    }
+                    end++;
+                }
+            }
+
+            if (limited)
+            {
+                tempf1 = kingsq.file + fdir;
+                tempr1 = kingsq.rank + rdir;
+                i = 0;
+                while (i < end)
+                {
+                    i++;
+                    if (tempf1 == square.file && tempr1 == square.rank)
+                        continue;
+                    legalmoves[*no_moves] = Square{tempf1, tempr1};
+                    *no_moves++;
+                }
+            }
+            else
+            {
+                for (i = -1; i <= 1; i += 2)
+                {
+                    for (j = -1; j <= 1; j += 2)
+                    {
+                        tempf1 = square.file;
+                        tempr1 = square.rank;
+                        while (AFILE < tempf1 && tempf1 < EFILE && RANK1 < tempr1 && tempr1 < RANK6)
+                        {
+                            tempf1 += i;
+                            tempr1 += j;
+                            tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                            if (GetPieceColor(tempp1) == turn)
+                            {
+                                break;
+                            }
+                            else if (GetPieceColor(tempp1) == !turn)
+                            {
+                                legalmoves[*no_moves] = Square{tempf1, tempr1};
+                                *no_moves;
+                            }
+                            legalmoves[*no_moves] = Square{tempf1, tempr1};
+                            *no_moves;
+                        }
+                    }
+                }
+            }
+
+            return mcet::NoErr;
+        }
     }
 
     // definitions
@@ -1702,6 +1850,10 @@ namespace minichess_AI
             break;
         case WBISHOP:
         case BBISHOP:
+            if (no_checkingPieces == 0)
+            {
+                return LegalMovesBishop0Checked(this, square, kingsq, legalmoves, no_moves);
+            }
             break;
         case WKNIGHT:
         case BKNIGHT:

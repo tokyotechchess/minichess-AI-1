@@ -118,7 +118,8 @@ namespace minichess_AI
     inline int operator*(Piece p, RankWeight rw) { return (rw * p); }
 
     // change turn
-    inline Color operator++(Color &c, int) { return (c = Color(1 - (int)c)); }
+    inline Color operator++(Color &c, int) { return ((c == ColorErr) ? ColorErr : (c = Color(1 - (int)c))); }
+    inline Color operator!(Color c) { return ((c == ColorErr) ? ColorErr : Color(1 - (int)c)); }
 
     // Square equality
     inline bool operator==(Square s1, const Square s2) { return ((s1.file == s2.file) && (s1.rank == s2.rank)); }
