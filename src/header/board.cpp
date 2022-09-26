@@ -1103,6 +1103,35 @@ namespace minichess_AI
 
             return mcet::NoErr;
         }
+
+        MCError LegalMovesRook1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
+                                       int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
+        {
+            int i;
+            Color turn = board->GetTurn();
+            Piece rook = (turn == cWhite) ? WROOK : BROOK, tempp1;
+
+            for (i = 0; i < no_movableSquares; i++)
+            {
+                if (square.file == movableSquares[i].file || square.rank == movableSquares[i].rank)
+                {
+                    tempp1 = board->GetSquare(movableSquares[i]);
+                    board->SetSquare(movableSquares[i], rook);
+                    board->SetSquare(square, EMPTYSQ);
+
+                    if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                    {
+                        legalmoves[*no_moves] = movableSquares[i];
+                        *no_moves++;
+                    }
+
+                    board->SetSquare(movableSquares[i], tempp1);
+                    board->SetSquare(square, rook);
+                }
+            }
+
+            return mcet::NoErr;
+        }
     }
 
     // definitions
@@ -2143,6 +2172,11 @@ namespace minichess_AI
             {
                 // not checked
                 return LegalMovesRook0Checked(this, square, kingsq, legalmoves, no_moves);
+            }
+            else
+            {
+                return LegalMovesRook1Checked(this, square, kingsq, legalmoves, no_moves,
+                                              movableSquares, no_movableSquares, checkingPieceType);
             }
             break;
         }
