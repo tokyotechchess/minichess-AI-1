@@ -95,6 +95,10 @@ namespace minichess_AI
         {
             FEN += "k";
         }
+        if (GetCastlingPossibility(cWhite) == false && GetCastlingPossibility(cBlack) == false)
+        {
+            FEN += "-";
+        }
         //ここまでキャスリングの可否
         if (enpassantAblePawnFile == FILEERR)
         {
@@ -949,11 +953,10 @@ namespace minichess_AI
 
         if (pawn)
         {
-            if (GetSquare(to_square) == EMPTYSQ)
+            if (GetSquare(to_square) == EMPTYSQ && abs((int)from_square.file - (int)to_square.file) == 1)
             {
                 SetSquare(Square{to_square.file, from_square.rank}, EMPTYSQ);
             }
-
             if ((int)to_square.rank + 5 * (int)turn == 5)
             {
                 SetSquare(to_square, promotion_piece);
@@ -963,10 +966,13 @@ namespace minichess_AI
                 SetSquare(to_square, p);
             }
             SetSquare(from_square, EMPTYSQ);
-            enpassantAblePawnFile = FILEERR;
             if (abs((int)to_square.rank - (int)from_square.rank) == 2)
             {
                 enpassantAblePawnFile = to_square.file;
+            }
+            else
+            {
+                enpassantAblePawnFile = FILEERR;
             }
             turn++;
         }
