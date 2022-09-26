@@ -945,7 +945,6 @@ namespace minichess_AI
             SetSquare(from_square, EMPTYSQ);
             enpassantAblePawnFile = FILEERR;
             turn++;
-            return mcet::NoErr;
         }
 
         if (pawn)
@@ -970,7 +969,6 @@ namespace minichess_AI
                 enpassantAblePawnFile = to_square.file;
             }
             turn++;
-            return mcet::NoErr;
         }
 
         if (king)
@@ -998,7 +996,6 @@ namespace minichess_AI
             castlingPossibility -= turn + 1; // if white, 3->2 1->0,,if black, 3->1 2->0
             enpassantAblePawnFile = FILEERR;
             turn++;
-            return mcet::NoErr;
         }
 
         if (rook)
@@ -1008,8 +1005,8 @@ namespace minichess_AI
             castlingPossibility -= turn + 1; // if white, 3->2 1->0,,if black, 3->1 2->0
             enpassantAblePawnFile = FILEERR;
             turn++;
-            return mcet::NoErr;
         }
+        return mcet::NoErr;
     }
 
     bool Board::operator!=(const Board &b) { return !(*this == b); }
