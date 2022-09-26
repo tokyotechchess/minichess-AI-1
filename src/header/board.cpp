@@ -769,7 +769,7 @@ namespace minichess_AI
                     if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                     {
                         legalmoves[*no_moves] = movableSquares[i];
-                        *no_moves;
+                        *no_moves++;
                     }
 
                     board->SetSquare(movableSquares[i], tempp1);
@@ -916,12 +916,44 @@ namespace minichess_AI
                             else if (GetPieceColor(tempp1) == !turn)
                             {
                                 legalmoves[*no_moves] = Square{tempf1, tempr1};
-                                *no_moves;
+                                *no_moves++;
                             }
                             legalmoves[*no_moves] = Square{tempf1, tempr1};
-                            *no_moves;
+                            *no_moves++;
                         }
                     }
+                }
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LegalMovesBishop1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
+                                         int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
+        {
+
+            int i, temp1, temp2;
+            Color turn = board->GetTurn();
+            Piece knight = (turn == cWhite) ? WKNIGHT : BKNIGHT, tempp1;
+
+            for (i = 0; i < no_movableSquares; i++)
+            {
+                temp1 = (int)square.file - (int)movableSquares[i].file;
+                temp2 = (int)square.rank - (int)movableSquares[i].rank;
+                if (abs(temp1) == abs(temp2))
+                {
+                    tempp1 = board->GetSquare(movableSquares[i]);
+                    board->SetSquare(movableSquares[i], knight);
+                    board->SetSquare(square, EMPTYSQ);
+
+                    if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                    {
+                        legalmoves[*no_moves] = movableSquares[i];
+                        *no_moves++;
+                    }
+
+                    board->SetSquare(movableSquares[i], tempp1);
+                    board->SetSquare(square, knight);
                 }
             }
 
@@ -1938,6 +1970,10 @@ namespace minichess_AI
             if (no_checkingPieces == 0)
             {
                 return LegalMovesBishop0Checked(this, square, kingsq, legalmoves, no_moves);
+            }
+            else
+            {
+                return LegalMovesBishop1Checked(this, square, kingsq, legalmoves, no_moves);
             }
             break;
         case WKNIGHT:
