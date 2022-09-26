@@ -20,6 +20,8 @@ namespace minichess_AI
                 return board->IsCheckedByHorizontal(kingsq, color);
             case PT_DIAGONAL:
                 return board->IsCheckedByDiagonal(kingsq, color);
+            default:
+                return SQUAREERR;
             }
 
             return SQUAREERR;
@@ -31,14 +33,16 @@ namespace minichess_AI
             if (board->GetSquare(Square{square.file, square.rank + 1 * temp1}) == EMPTYSQ)
             {
                 legalmoves[*count] = Square{square.file, square.rank + 1 * temp1};
-                *count++;
+                (*count)++;
                 tempr1 = (board->GetTurn() == cWhite) ? RANK2 : RANK5;
                 if (square.rank == tempr1 && board->GetSquare(Square{square.file, square.rank + 2 * temp1}) == EMPTYSQ)
                 {
                     legalmoves[*count] = Square{square.file, square.rank + 2 * temp1};
-                    *count++;
+                    (*count)++;
                 }
             }
+
+            return mcet::NoErr;
         }
 
         MCError LMP0C_Take(Board *board, Square square, Square legalmoves[MAX_LEGALMOVES], int *no_moves, int temp1, Color turn)
@@ -51,7 +55,7 @@ namespace minichess_AI
                 if (GetPieceColor(board->GetSquare(Square{square.file - 1, square.rank + temp1})) == enturn)
                 {
                     legalmoves[*no_moves] = Square{square.file - 1, square.rank + temp1};
-                    *no_moves++;
+                    (*no_moves)++;
                 }
             }
             if (square.file != EFILE)
@@ -59,10 +63,10 @@ namespace minichess_AI
                 if (GetPieceColor(board->GetSquare(Square{square.file + 1, square.rank + temp1})) == enturn)
                 {
                     legalmoves[*no_moves] = Square{square.file + 1, square.rank + temp1};
-                    *no_moves++;
+                    (*no_moves)++;
                 }
             }
-            if (square.rank = (turn == cWhite) ? RANK3 : RANK4)
+            if (square.rank == (turn == cWhite) ? RANK3 : RANK4)
             {
                 if ((tempf1 = board->GetEnpassantAblePawnFile()) != FILEERR)
                 {
@@ -73,11 +77,13 @@ namespace minichess_AI
                             (board->GetSquare(Square{tempf1, square.rank + temp1}) == EMPTYSQ))
                         {
                             legalmoves[*no_moves] = Square{tempf1, square.rank + temp1};
-                            *no_moves++;
+                            (*no_moves)++;
                         }
                     }
                 }
             }
+
+            return mcet::NoErr;
         }
 
         MCError LegalMovesPawn0Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
@@ -303,7 +309,7 @@ namespace minichess_AI
                 else if (i == 1)
                 {
                     legalmoves[*no_moves] = Square{tempf1, tempr1};
-                    *no_moves++;
+                    (*no_moves)++;
                 }
             }
             else
@@ -350,7 +356,7 @@ namespace minichess_AI
                             if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                             {
                                 legalmoves[*no_moves] = movableSquares[i];
-                                *no_moves++;
+                                (*no_moves)++;
                             }
 
                             board->SetSquare(square, pawn);
@@ -372,7 +378,7 @@ namespace minichess_AI
                                 if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                                 {
                                     legalmoves[*no_moves] = movableSquares[i];
-                                    *no_moves++;
+                                    (*no_moves)++;
                                 }
 
                                 board->SetSquare(Square{mvfile, mvrank - temp1}, tempp2);
@@ -389,7 +395,7 @@ namespace minichess_AI
                             if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                             {
                                 legalmoves[*no_moves] = movableSquares[i];
-                                *no_moves++;
+                                (*no_moves)++;
                             }
 
                             board->SetSquare(movableSquares[i], EMPTYSQ);
@@ -411,7 +417,7 @@ namespace minichess_AI
                             if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                             {
                                 legalmoves[*no_moves] = movableSquares[i];
-                                *no_moves++;
+                                (*no_moves)++;
                             }
 
                             board->SetSquare(movableSquares[i], EMPTYSQ);
@@ -577,6 +583,8 @@ namespace minichess_AI
                                 }
                             }
                             break;
+                        case EMPTYSQ:
+                            break;
                         }
                     }
                 }
@@ -593,7 +601,7 @@ namespace minichess_AI
                 l = 1;
             else if (square.file == EFILE)
                 r = -1;
-            if (square.rank = RANK1)
+            if (square.rank == RANK1)
                 b = 1;
             else if (square.rank == RANK6)
                 f = -1;
@@ -605,7 +613,7 @@ namespace minichess_AI
                     if (!isAttacked[square.file + m][square.rank + k])
                     {
                         legalmoves[*no_moves] = Square{File(square.file + m), Rank(square.rank + k)};
-                        *no_moves++;
+                        (*no_moves)++;
                     }
                 }
             }
@@ -614,7 +622,7 @@ namespace minichess_AI
                 if (!isAttacked[square.file + k][square.rank])
                 {
                     legalmoves[*no_moves] = Square{File(square.file + k), Rank(square.rank)};
-                    *no_moves++;
+                    (*no_moves)++;
                 }
             }
 
@@ -739,7 +747,7 @@ namespace minichess_AI
                             if (AFILE <= temp1 && temp1 <= EFILE && RANK1 <= temp2 && temp2 <= RANK6)
                             {
                                 legalmoves[*no_moves] = Square{(File)temp1, (Rank)temp2};
-                                *no_moves++;
+                                (*no_moves)++;
                             }
                         }
                     }
@@ -769,7 +777,7 @@ namespace minichess_AI
                     if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                     {
                         legalmoves[*no_moves] = movableSquares[i];
-                        *no_moves++;
+                        (*no_moves)++;
                     }
 
                     board->SetSquare(movableSquares[i], tempp1);
@@ -891,7 +899,7 @@ namespace minichess_AI
                         continue;
                     i++;
                     legalmoves[*no_moves] = Square{tempf1, tempr1};
-                    *no_moves++;
+                    (*no_moves)++;
                 }
             }
             else
@@ -914,10 +922,10 @@ namespace minichess_AI
                             else if (GetPieceColor(tempp1) == !turn)
                             {
                                 legalmoves[*no_moves] = Square{tempf1, tempr1};
-                                *no_moves++;
+                                (*no_moves)++;
                             }
                             legalmoves[*no_moves] = Square{tempf1, tempr1};
-                            *no_moves++;
+                            (*no_moves)++;
                         }
                     }
                 }
@@ -947,7 +955,7 @@ namespace minichess_AI
                     if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                     {
                         legalmoves[*no_moves] = movableSquares[i];
-                        *no_moves++;
+                        (*no_moves)++;
                     }
 
                     board->SetSquare(movableSquares[i], tempp1);
@@ -1069,7 +1077,7 @@ namespace minichess_AI
                         continue;
                     i++;
                     legalmoves[*no_moves] = Square{tempf1, tempr1};
-                    *no_moves++;
+                    (*no_moves)++;
                 }
             }
             else
@@ -1092,10 +1100,10 @@ namespace minichess_AI
                             else if (GetPieceColor(tempp1) == !turn)
                             {
                                 legalmoves[*no_moves] = Square{tempf1, tempr1};
-                                *no_moves++;
+                                (*no_moves)++;
                             }
                             legalmoves[*no_moves] = Square{tempf1, tempr1};
-                            *no_moves++;
+                            (*no_moves)++;
                         }
                     }
                 }
@@ -1122,7 +1130,7 @@ namespace minichess_AI
                     if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                     {
                         legalmoves[*no_moves] = movableSquares[i];
-                        *no_moves++;
+                        (*no_moves)++;
                     }
 
                     board->SetSquare(movableSquares[i], tempp1);
@@ -1233,7 +1241,7 @@ namespace minichess_AI
                         continue;
                     i++;
                     legalmoves[*no_moves] = Square{tempf1, tempr1};
-                    *no_moves++;
+                    (*no_moves)++;
                 }
             }
             else
@@ -1258,10 +1266,10 @@ namespace minichess_AI
                             else if (GetPieceColor(tempp1) == !turn)
                             {
                                 legalmoves[*no_moves] = Square{tempf1, tempr1};
-                                *no_moves++;
+                                (*no_moves)++;
                             }
                             legalmoves[*no_moves] = Square{tempf1, tempr1};
-                            *no_moves++;
+                            (*no_moves)++;
                         }
                     }
                 }
@@ -1289,7 +1297,7 @@ namespace minichess_AI
                     if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                     {
                         legalmoves[*no_moves] = movableSquares[i];
-                        *no_moves++;
+                        (*no_moves)++;
                     }
 
                     board->SetSquare(movableSquares[i], tempp1);
@@ -2357,6 +2365,8 @@ namespace minichess_AI
                                               movableSquares, no_movableSquares, checkingPieceType);
             }
             break;
+        case EMPTYSQ:
+            break;
         }
 
         return mcet::NoErr;
@@ -2414,7 +2424,7 @@ namespace minichess_AI
             l = 1;
         else if (file == EFILE)
             r = -1;
-        if (rank = RANK1)
+        if (rank == RANK1)
             b = 1;
         else if (rank == RANK6)
             f = -1;
@@ -2547,6 +2557,8 @@ namespace minichess_AI
                 }
             }
         }
+
+        return SQUAREERR;
     }
 
     // judge whether checked by knight
