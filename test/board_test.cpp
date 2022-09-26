@@ -1693,6 +1693,12 @@ MCError TestMoveForce()
     MCError e;
 
     // Normal Move
-
+    b.SetBoardFEN("5/5/2Kk1/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/3k1/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("errror");
+    }
     return mcet::NoErr;
 }
