@@ -1973,7 +1973,8 @@ namespace minichess_AI
             }
             else
             {
-                return LegalMovesBishop1Checked(this, square, kingsq, legalmoves, no_moves);
+                return LegalMovesBishop1Checked(this, square, kingsq, legalmoves, no_moves,
+                                                movableSquares, no_movableSquares, checkingPieceType);
             }
             break;
         case WKNIGHT:
