@@ -1688,4 +1688,8 @@ MCError TestMove()
 
 MCError TestLegalMoves()
 {
+    Board b;
+    MCError e;
+    Square lms[MAX_LEGALMOVES];
+    int no_mvs;
 }
