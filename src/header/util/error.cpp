@@ -1,17 +1,17 @@
 #include "error.h"
-
+using std::string;
 namespace minichess_AI
 {
     // definitions
 
-    std::string MCError::GetMessage()
+    string MCError::GetMessage()
     {
         return message;
     }
 
     // get error description as std::string
     // return (error type + error message)
-    std::string MCError::DisplayError()
+    string MCError::DisplayError()
     {
         switch (status)
         {
@@ -63,25 +63,25 @@ namespace minichess_AI
     namespace mcet
     {
         // FEN error
-        MCError genFENErr(std::string mes)
+        MCError genFENErr(string mes)
         {
             return MCError(100, mes);
         }
 
         // illegal move error
-        MCError genMoveErr(std::string mes)
+        MCError genMoveErr(string mes)
         {
             return MCError(200, mes);
         }
 
         // Move() : wrong piece err
-        MCError genMoveWPErr(std::string mes)
+        MCError genMoveWPErr(string mes)
         {
             return MCError(300, mes);
         }
 
         // test error
-        MCError genTestErr(std::string mes)
+        MCError genTestErr(string mes)
         {
             return MCError(10000, mes);
         }
