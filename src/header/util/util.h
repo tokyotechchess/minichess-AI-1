@@ -15,13 +15,13 @@ bool SameAsSet(T *a, T *b, int length)
 {
     T _a[length], _b[length];
     int i, j;
-    void (*__swap)(T * a, T * b) = []()
+    void (*__swap)(T *, T *) = [](T *x, T *y)
     {
         T temp;
-        temp = *a;
-        *a = *b;
-        *b = temp;
-    }
+        temp = *x;
+        *x = *y;
+        *y = temp;
+    };
 
     for (i = 0; i < length; i++)
     {
@@ -29,14 +29,14 @@ bool SameAsSet(T *a, T *b, int length)
         _b[i] = b[i];
     }
 
-    for (i = 0; i < lenght; i++)
+    for (i = 0; i < length; i++)
     {
         for (j = 0; j < length - i; j++)
         {
             if (_a[i] == _b[j])
             {
-                swap(_b + j, _b + length - i - 1);
-                continue;
+                __swap(_b + j, _b + length - i - 1);
+                break;
             }
             if (i + j == length - 1)
                 return false;

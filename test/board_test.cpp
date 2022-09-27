@@ -1692,4 +1692,6 @@ MCError TestLegalMoves()
     MCError e;
     Square lms[MAX_LEGALMOVES];
     int no_mvs;
+
+    return mcet::NoErr;
 }
