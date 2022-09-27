@@ -33,8 +33,15 @@ bool SameAsSet(T *a, T *b, int length)
     {
         for (j = 0; j < length - i; j++)
         {
+            if (_a[i] == _b[j])
+            {
+                swap(_b + j, _b + length - i - 1);
+                continue;
+            }
             if (i + j == length - 1)
                 return false;
         }
     }
+
+    return true;
 }
