@@ -1,5 +1,5 @@
 #include "board.h"
-
+using std::string;
 namespace minichess_AI
 {
     // definitions
@@ -44,9 +44,9 @@ namespace minichess_AI
         return f;
     }
 
-    std::string Board::GetBoardFEN()
+    string Board::GetBoardFEN()
     {
-        std::string FEN;
+        string FEN;
         Piece piece_num;
         int count = 0;
         for (Rank r = RANK6; r >= RANK1; r--)
@@ -301,7 +301,7 @@ namespace minichess_AI
     }
 
     // set pieces in the whole board by FEN
-    MCError Board::SetBoardFEN(std::string FEN)
+    MCError Board::SetBoardFEN(string FEN)
     {
         File nowf = AFILE;
         Rank nowr = RANK6;

@@ -10,7 +10,7 @@ Class "Board" and its method are defined.
 #include "util/error.h"
 #include "util/util.h"
 #include "piece.h"
-
+using std::string;
 namespace minichess_AI
 {
     class Board
@@ -71,11 +71,11 @@ namespace minichess_AI
         File GetEnpassantAblePawnFile();
         bool GetCastlingPossibility(Color);
         int *GetBoard();
-        std::string GetBoardFEN();
+        string GetBoardFEN();
         Piece GetSquare(Square);
         bool IsChecked(Color);
         MCError SetSquare(Square, Piece);
-        MCError SetBoardFEN(std::string fen);
+        MCError SetBoardFEN(string fen);
         MCError Move(Square, Square, Piece);
         MCError NullMove();
 
