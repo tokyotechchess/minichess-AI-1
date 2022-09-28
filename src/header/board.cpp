@@ -95,6 +95,10 @@ namespace minichess_AI
         {
             FEN += "k";
         }
+        if (GetCastlingPossibility(cWhite) == false && GetCastlingPossibility(cBlack) == false)
+        {
+            FEN += "-";
+        }
         //ここまでキャスリングの可否
         if (enpassantAblePawnFile == FILEERR)
         {
@@ -880,6 +884,78 @@ namespace minichess_AI
         turn++;
         enpassantAblePawnFile = FILEERR;
 
+        return mcet::NoErr;
+    }
+
+    MCError Board::MoveForce(Square from_square, Square to_square, Piece promotion_piece)
+    {
+        Piece p = GetSquare(from_square);
+
+        switch (p)
+        {
+        case WPAWN:
+        case BPAWN:
+            if (GetSquare(to_square) == EMPTYSQ && abs((int)from_square.file - (int)to_square.file) == 1)
+            {
+                SetSquare(Square{to_square.file, from_square.rank}, EMPTYSQ);
+            }
+            if ((int)to_square.rank + 5 * (int)turn == 5)
+            {
+                SetSquare(to_square, promotion_piece);
+            }
+            else
+            {
+                SetSquare(to_square, p);
+            }
+            SetSquare(from_square, EMPTYSQ);
+            if (abs((int)to_square.rank - (int)from_square.rank) == 2)
+            {
+                enpassantAblePawnFile = to_square.file;
+            }
+            else
+            {
+                enpassantAblePawnFile = FILEERR;
+            }
+            break;
+        case WKING:
+        case BKING:
+            if (abs(to_square.file - from_square.file) == 2)
+            {
+                SetSquare(to_square, p);
+                SetSquare(from_square, EMPTYSQ);
+                if (turn == cWhite)
+                {
+                    SetSquare(Square{BFILE, RANK1}, WROOK);
+                    SetSquare(Square{EFILE, RANK1}, EMPTYSQ);
+                }
+                else
+                {
+                    SetSquare(Square{DFILE, RANK6}, BROOK);
+                    SetSquare(Square{AFILE, RANK6}, EMPTYSQ);
+                }
+            }
+            else
+            {
+                SetSquare(to_square, p);
+                SetSquare(from_square, EMPTYSQ);
+            }
+            castlingPossibility = max((int)castlingPossibility - (int)turn - 1, 0); // if white, 3->2 1->0,,if black, 3->1 2->0
+            enpassantAblePawnFile = FILEERR;
+            break;
+        case WROOK:
+        case BROOK:
+            SetSquare(to_square, p);
+            SetSquare(from_square, EMPTYSQ);
+            castlingPossibility = max((int)castlingPossibility - (int)turn - 1, 0); // if white, 3->2 1->0,,if black, 3->1 2->0
+            enpassantAblePawnFile = FILEERR;
+            break;
+        default:
+            SetSquare(to_square, p);
+            SetSquare(from_square, EMPTYSQ);
+            enpassantAblePawnFile = FILEERR;
+            break;
+        }
+        turn++;
         return mcet::NoErr;
     }
 

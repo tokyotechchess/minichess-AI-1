@@ -78,6 +78,7 @@ namespace minichess_AI
         MCError SetBoardFEN(string fen);
         MCError Move(Square, Square, Piece);
         MCError NullMove();
+        MCError MoveForce(Square from_square, Square to_square, Piece promotion_piece);
 
         // opeartors
 
