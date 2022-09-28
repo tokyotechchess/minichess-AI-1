@@ -939,9 +939,12 @@ namespace minichess_AI
                                          int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
         {
 
-            int i, temp1, temp2;
+            int i, temp1, temp2, fdir, rdir;
+            bool skip;
             Color turn = board->GetTurn();
             Piece bishop = (turn == cWhite) ? WBISHOP : BBISHOP, tempp1;
+            File tempf1;
+            Rank tempr1;
 
             for (i = 0; i < no_movableSquares; i++)
             {
@@ -949,6 +952,26 @@ namespace minichess_AI
                 temp2 = (int)square.rank - (int)movableSquares[i].rank;
                 if (abs(temp1) == abs(temp2))
                 {
+                    fdir = (temp1 < 0) ? 1 : -1;
+                    rdir = (temp2 < 0) ? 1 : -1;
+                    tempf1 = square.file + fdir;
+                    tempr1 = square.rank + rdir;
+                    skip = false;
+
+                    while (tempf1 != movableSquares[i].file)
+                    {
+                        if (board->GetSquare(Square{tempf1, tempr1}) != EMPTYSQ)
+                        {
+                            skip = true;
+                            break;
+                        }
+                        tempf1 += fdir;
+                        tempr1 += rdir;
+                    }
+
+                    if (skip)
+                        continue;
+
                     tempp1 = board->GetSquare(movableSquares[i]);
                     board->SetSquare(movableSquares[i], bishop);
                     board->SetSquare(square, EMPTYSQ);
@@ -1102,6 +1125,7 @@ namespace minichess_AI
                             {
                                 legalmoves[*no_moves] = Square{tempf1, tempr1};
                                 (*no_moves)++;
+                                break;
                             }
                             legalmoves[*no_moves] = Square{tempf1, tempr1};
                             (*no_moves)++;
@@ -1116,14 +1140,57 @@ namespace minichess_AI
         MCError LegalMovesRook1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
                                        int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
         {
-            int i;
+            int i, temp1, temp2, fdir, rdir;
+            bool skip;
             Color turn = board->GetTurn();
             Piece rook = (turn == cWhite) ? WROOK : BROOK, tempp1;
+            File tempf1;
+            Rank tempr1;
 
             for (i = 0; i < no_movableSquares; i++)
             {
-                if (square.file == movableSquares[i].file || square.rank == movableSquares[i].rank)
+                temp1 = (int)square.file - (int)movableSquares[i].file;
+                temp2 = (int)square.rank - (int)movableSquares[i].rank;
+                if (temp1 == 0 || temp2 == 0)
                 {
+                    skip = false;
+                    if (temp1 > 0)
+                    {
+                        fdir = -1;
+                        rdir = 0;
+                    }
+                    else if (temp1 < 0)
+                    {
+                        fdir = 1;
+                        rdir = 0;
+                    }
+                    else if (temp2 > 0)
+                    {
+                        fdir = 0;
+                        rdir = -1;
+                    }
+                    else
+                    {
+                        fdir = 0;
+                        rdir = 1;
+                    }
+
+                    tempf1 = square.file + fdir;
+                    tempr1 = square.rank + rdir;
+                    while (movableSquares[i].file != tempf1 && movableSquares[i].rank != tempr1)
+                    {
+                        if (board->GetSquare(Square{tempf1, tempr1}) != EMPTYSQ)
+                        {
+                            skip = true;
+                            break;
+                        }
+                        tempf1 += fdir;
+                        tempr1 += rdir;
+                    }
+
+                    if (skip)
+                        continue;
+
                     tempp1 = board->GetSquare(movableSquares[i]);
                     board->SetSquare(movableSquares[i], rook);
                     board->SetSquare(square, EMPTYSQ);
@@ -1268,6 +1335,7 @@ namespace minichess_AI
                             {
                                 legalmoves[*no_moves] = Square{tempf1, tempr1};
                                 (*no_moves)++;
+                                break;
                             }
                             legalmoves[*no_moves] = Square{tempf1, tempr1};
                             (*no_moves)++;
@@ -1282,15 +1350,49 @@ namespace minichess_AI
         MCError LegalMovesQueen1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
                                         int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
         {
-            int i;
+            int i, fdir, rdir, temp1, temp2;
+            bool skip;
             Color turn = board->GetTurn();
             Piece queen = (turn == cWhite) ? WQUEEN : BQUEEN, tempp1;
+            File tempf1;
+            Rank tempr1;
 
             for (i = 0; i < no_movableSquares; i++)
             {
-                if (square.file == movableSquares[i].file || square.rank == movableSquares[i].rank ||
-                    abs((int)square.file - (int)movableSquares[i].file) == abs((int)square.rank == (int)movableSquares[i].rank))
+                temp1 = (int)square.file - (int)movableSquares[i].file;
+                temp2 = (int)square.rank - (int)movableSquares[i].rank;
+                if (temp1 == 0 || temp2 == 0 || abs(temp1) == abs(temp2))
                 {
+                    skip = false;
+                    if (temp1 > 0)
+                        fdir = -1;
+                    else if (temp1 < 0)
+                        fdir = 1;
+                    else
+                        fdir = 0;
+                    if (temp2 > 0)
+                        rdir = -1;
+                    else if (temp2 < 0)
+                        rdir = 1;
+                    else
+                        rdir = 0;
+                    tempf1 = square.file + fdir;
+                    tempr1 = square.rank + rdir;
+
+                    while (tempf1 != movableSquares[i].file && tempr1 != movableSquares[i].rank)
+                    {
+                        if (board->GetSquare(Square{tempf1, tempr1}) != EMPTYSQ)
+                        {
+                            skip = true;
+                            break;
+                        }
+                        tempf1 += fdir;
+                        tempr1 += rdir;
+                    }
+
+                    if (skip)
+                        continue;
+
                     tempp1 = board->GetSquare(movableSquares[i]);
                     board->SetSquare(movableSquares[i], queen);
                     board->SetSquare(square, EMPTYSQ);
