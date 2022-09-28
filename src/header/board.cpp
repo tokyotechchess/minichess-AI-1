@@ -890,10 +890,6 @@ namespace minichess_AI
     MCError Board::MoveForce(Square from_square, Square to_square, Piece promotion_piece)
     {
         Piece p = GetSquare(from_square);
-        bool pawn = false;
-        bool king = false;
-        bool rook = false;
-        bool other = false;
 
         switch (p)
         {
