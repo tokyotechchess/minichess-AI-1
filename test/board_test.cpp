@@ -1692,19 +1692,6 @@ MCError TestMoveForce()
     Board b, origin, corb;
     MCError e;
 
-    /*
-    Memo
-    --|-----------
-    --| a b c d e
-    --|-----------
-    6 | r n b q k
-    5 | p p p p p
-    4 |
-    3 |
-    2 | P P P P P
-    1 | K Q B N R
-    */
-
     // Normal Move
     b.SetBoardFEN("5/5/2K2/5/5/5 w - -");
     b.MoveForce(Square{CFILE, RANK4}, Square{BFILE, RANK4}, EMPTYSQ);
