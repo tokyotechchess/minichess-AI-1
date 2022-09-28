@@ -887,27 +887,9 @@ namespace minichess_AI
         return mcet::NoErr;
     }
 
-    // check equality between Boards
-    bool Board::operator==(const Board &b)
-    {
-        if (turn != b.turn)
-            return false;
-        else if (castlingPossibility != b.castlingPossibility)
-            return false;
-        else if (enpassantAblePawnFile != b.enpassantAblePawnFile)
-            return false;
-
-        for (int i = 0; i < 5; i++)
-        {
-            if (files[i] != b.files[i])
-                return false;
-        }
-        return true;
-    }
-
     MCError Board::MoveForce(Square from_square, Square to_square, Piece promotion_piece)
     {
-        Piece p = (Piece)GetSquare(from_square);
+        Piece p = GetSquare(from_square);
         bool pawn = false;
         bool king = false;
         bool rook = false;
@@ -917,42 +899,6 @@ namespace minichess_AI
         {
         case WPAWN:
         case BPAWN:
-            pawn = true;
-            break;
-        case WKNIGHT:
-        case BKNIGHT:
-            other = true;
-            break;
-        case WKING:
-        case BKING:
-            king = true;
-            break;
-        case WBISHOP:
-        case BBISHOP:
-            other = true;
-            break;
-        case WROOK:
-        case BROOK:
-            rook = true;
-            break;
-        case WQUEEN:
-        case BQUEEN:
-            other = true;
-            break;
-        default:
-            mcet::genMoveWPErr("Unexpected error when identifing piece type");
-            break;
-        }
-        if (other)
-        {
-            SetSquare(to_square, p);
-            SetSquare(from_square, EMPTYSQ);
-            enpassantAblePawnFile = FILEERR;
-            turn++;
-        }
-
-        if (pawn)
-        {
             if (GetSquare(to_square) == EMPTYSQ && abs((int)from_square.file - (int)to_square.file) == 1)
             {
                 SetSquare(Square{to_square.file, from_square.rank}, EMPTYSQ);
@@ -974,11 +920,9 @@ namespace minichess_AI
             {
                 enpassantAblePawnFile = FILEERR;
             }
-            turn++;
-        }
-
-        if (king)
-        {
+            break;
+        case WKING:
+        case BKING:
             if (abs(to_square.file - from_square.file) == 2)
             {
                 SetSquare(to_square, p);
@@ -1001,18 +945,40 @@ namespace minichess_AI
             }
             castlingPossibility = max((int)castlingPossibility - (int)turn - 1, 0); // if white, 3->2 1->0,,if black, 3->1 2->0
             enpassantAblePawnFile = FILEERR;
-            turn++;
-        }
-
-        if (rook)
-        {
+            break;
+        case WROOK:
+        case BROOK:
             SetSquare(to_square, p);
             SetSquare(from_square, EMPTYSQ);
             castlingPossibility = max((int)castlingPossibility - (int)turn - 1, 0); // if white, 3->2 1->0,,if black, 3->1 2->0
             enpassantAblePawnFile = FILEERR;
-            turn++;
+            break;
+        default:
+            SetSquare(to_square, p);
+            SetSquare(from_square, EMPTYSQ);
+            enpassantAblePawnFile = FILEERR;
+            break;
         }
+        turn++;
         return mcet::NoErr;
+    }
+
+    // check equality between Boards
+    bool Board::operator==(const Board &b)
+    {
+        if (turn != b.turn)
+            return false;
+        else if (castlingPossibility != b.castlingPossibility)
+            return false;
+        else if (enpassantAblePawnFile != b.enpassantAblePawnFile)
+            return false;
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (files[i] != b.files[i])
+                return false;
+        }
+        return true;
     }
 
     bool Board::operator!=(const Board &b) { return !(*this == b); }
