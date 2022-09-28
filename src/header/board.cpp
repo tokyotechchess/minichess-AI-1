@@ -923,6 +923,7 @@ namespace minichess_AI
                             {
                                 legalmoves[*no_moves] = Square{tempf1, tempr1};
                                 (*no_moves)++;
+                                break;
                             }
                             legalmoves[*no_moves] = Square{tempf1, tempr1};
                             (*no_moves)++;

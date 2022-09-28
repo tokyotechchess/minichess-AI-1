@@ -75,7 +75,7 @@ namespace minichess_AI
     {
         if (p == EMPTYSQ)
             return ColorErr;
-        return ((p & 0b1000) == 0) ? cBlack : cWhite;
+        return ((p & 0b1000) == 0) ? cWhite : cBlack;
     }
 
     char ConvPieceToFENChar(Piece p)
