@@ -1706,8 +1706,22 @@ MCError TestLegalMoves()
         Square{DFILE, RANK5}, Square{DFILE, RANK3}, Square{EFILE, RANK6}, Square{EFILE, RANK2}};
     if (no_mvs != 8)
         return mcet::genTestErr("LegalMoves is wrong about no_moves in no other pieces test case 1");
-    else if (SameAsSet(lms, corlms, 7))
+    else if (!SameAsSet(lms, corlms, 8))
         return mcet::genTestErr("LegalMoves is wrong about legalmoves in no other pieces test case 1");
+
+    e = b.SetBoardFEN("4k/5/2b2/5/5/K4 b - -");
+    if (e != mcet::NoErr)
+        return e;
+    e = b.LegalMoves(Square{CFILE, RANK4}, lms, &no_mvs);
+    if (e != mcet::NoErr)
+        return e;
+    corlms = new Square[7]{
+        Square{AFILE, RANK6}, Square{AFILE, RANK2}, Square{BFILE, RANK5}, Square{BFILE, RANK3},
+        Square{DFILE, RANK5}, Square{DFILE, RANK3}, Square{EFILE, RANK2}};
+    if (no_mvs != 7)
+        return mcet::genTestErr("LegalMoves is wrong about no_moves in no other pieces test case 2");
+    else if (!SameAsSet(lms, corlms, 7))
+        return mcet::genTestErr("LegalMoves is wrong about legalmoves in no other pieces test case 2");
 
     return mcet::NoErr;
 }
