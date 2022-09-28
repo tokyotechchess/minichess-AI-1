@@ -4,6 +4,8 @@ test board.h
 
 #include "board_test.h"
 
+using std::string;
+
 void __Test__Board()
 {
     MCError e;
@@ -1688,40 +1690,63 @@ MCError TestMove()
 
 MCError TestLegalMoves()
 {
-    Board b;
     MCError e;
-    Square lms[MAX_LEGALMOVES], *corlms;
-    int no_mvs;
 
-    // no other pieces
+    struct __TestTemplateArgs
+    {
+        string testname;
+        string FEN;
+        Square square;
+        int cor_no_moves;
+        Square *cor_legalmoves;
+    };
 
-    e = b.SetBoardFEN("4k/5/2B2/5/5/K4 w - -");
-    if (e != mcet::NoErr)
-        return e;
-    e = b.LegalMoves(Square{CFILE, RANK4}, lms, &no_mvs);
-    if (e != mcet::NoErr)
-        return e;
-    corlms = new Square[8]{
-        Square{AFILE, RANK6}, Square{AFILE, RANK2}, Square{BFILE, RANK5}, Square{BFILE, RANK3},
-        Square{DFILE, RANK5}, Square{DFILE, RANK3}, Square{EFILE, RANK6}, Square{EFILE, RANK2}};
-    if (no_mvs != 8)
-        return mcet::genTestErr("LegalMoves is wrong about no_moves in no other pieces test case 1");
-    else if (!SameAsSet(lms, corlms, 8))
-        return mcet::genTestErr("LegalMoves is wrong about legalmoves in no other pieces test case 1");
+    MCError (*__TestTemplate)(__TestTemplateArgs) = [](__TestTemplateArgs args) -> MCError
+    {
+        Board b;
+        MCError e;
+        Square *lms;
+        int no_mvs;
 
-    e = b.SetBoardFEN("4k/5/2b2/5/5/K4 b - -");
-    if (e != mcet::NoErr)
-        return e;
-    e = b.LegalMoves(Square{CFILE, RANK4}, lms, &no_mvs);
-    if (e != mcet::NoErr)
-        return e;
-    corlms = new Square[7]{
-        Square{AFILE, RANK6}, Square{AFILE, RANK2}, Square{BFILE, RANK5}, Square{BFILE, RANK3},
-        Square{DFILE, RANK5}, Square{DFILE, RANK3}, Square{EFILE, RANK2}};
-    if (no_mvs != 7)
-        return mcet::genTestErr("LegalMoves is wrong about no_moves in no other pieces test case 2");
-    else if (!SameAsSet(lms, corlms, 7))
-        return mcet::genTestErr("LegalMoves is wrong about legalmoves in no other pieces test case 2");
+        e = b.SetBoardFEN(args.FEN);
+        if (e != mcet::NoErr)
+            return e;
+        e = b.LegalMoves(args.square, lms, &no_mvs);
+        if (e != mcet::NoErr)
+            return e;
+        if (no_mvs != args.cor_no_moves)
+            return mcet::genTestErr("LegalMoves is wrong about no_moves in " + args.testname);
+        else if (!SameAsSet(lms, args.cor_legalmoves, no_mvs))
+            return mcet::genTestErr("LegalMoves is wrong about legalmoves in " + args.testname);
+    };
+
+    __TestTemplateArgs args[] =
+        {
+            // no other pieces
+
+            __TestTemplateArgs{
+                "no other pieces test case 1", "4k/5/2B2/5/5/K4 w - -", Square{CFILE, RANK4}, 8,
+                new Square[8]{Square{AFILE, RANK6}, Square{AFILE, RANK2}, Square{BFILE, RANK5}, Square{BFILE, RANK3},
+                              Square{DFILE, RANK5}, Square{DFILE, RANK3}, Square{EFILE, RANK6}, Square{EFILE, RANK2}}},
+            __TestTemplateArgs{
+                "no other pieces test case 2", "4k/5/2b2/5/5/K4 b - -", Square{CFILE, RANK4}, 7,
+                new Square[7]{Square{AFILE, RANK6}, Square{AFILE, RANK2}, Square{BFILE, RANK5}, Square{BFILE, RANK3},
+                              Square{DFILE, RANK5}, Square{DFILE, RANK3}, Square{EFILE, RANK2}}},
+            __TestTemplateArgs{
+                "no other pieces test case 3", "4k/5/5/3K1/5/5 w - -", Square{DFILE, RANK3}, 8,
+                new Square[8]{Square{CFILE, RANK2}, Square{CFILE, RANK3}, Square{CFILE, RANK4}, Square{DFILE, RANK2},
+                              Square{DFILE, RANK4}, Square{EFILE, RANK2}, Square{EFILE, RANK3}, Square{EFILE, RANK4}}},
+            __TestTemplateArgs{
+                "no other pieces test case 4", "4k/5/5/3K1/5/5 b - -", Square{EFILE, RANK6}, 3,
+                new Square[5]{Square{DFILE, RANK6}, Square{DFILE, RANK5}, Square{EFILE, RANK5}}},
+        };
+
+    for (__TestTemplateArgs arg : args)
+    {
+        e = __TestTemplate(arg);
+        if (e != mcet::NoErr)
+            return e;
+    }
 
     return mcet::NoErr;
 }
