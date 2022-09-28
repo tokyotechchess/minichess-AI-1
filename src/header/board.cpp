@@ -444,6 +444,7 @@ namespace minichess_AI
             {
                 for (j = 0; j < 6; j++)
                 {
+                    p = board->GetSquare(Square{(File)i, (Rank)j});
                     if (GetPieceColor(p) == enturn)
                     {
                         switch (p)
