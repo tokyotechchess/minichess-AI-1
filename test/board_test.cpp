@@ -1705,7 +1705,7 @@ MCError TestLegalMoves()
     {
         Board b;
         MCError e;
-        Square *lms;
+        Square lms[MAX_LEGALMOVES];
         int no_mvs;
 
         e = b.SetBoardFEN(args.FEN);
@@ -1718,6 +1718,8 @@ MCError TestLegalMoves()
             return mcet::genTestErr("LegalMoves is wrong about no_moves in " + args.testname);
         else if (!SameAsSet(lms, args.cor_legalmoves, no_mvs))
             return mcet::genTestErr("LegalMoves is wrong about legalmoves in " + args.testname);
+
+        return mcet::NoErr;
     };
 
     __TestTemplateArgs args[] =
@@ -1738,7 +1740,7 @@ MCError TestLegalMoves()
                               Square{DFILE, RANK4}, Square{EFILE, RANK2}, Square{EFILE, RANK3}, Square{EFILE, RANK4}}},
             __TestTemplateArgs{
                 "no other pieces test case 4", "4k/5/5/3K1/5/5 b - -", Square{EFILE, RANK6}, 3,
-                new Square[5]{Square{DFILE, RANK6}, Square{DFILE, RANK5}, Square{EFILE, RANK5}}},
+                new Square[3]{Square{DFILE, RANK6}, Square{DFILE, RANK5}, Square{EFILE, RANK5}}},
         };
 
     for (__TestTemplateArgs arg : args)
