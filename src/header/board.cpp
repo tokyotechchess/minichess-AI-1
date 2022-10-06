@@ -754,7 +754,7 @@ namespace minichess_AI
                         for (k = 0; k <= 1; k++)
                         {
                             temp1 = (int)square.file + (i + 1) * (2 * j - 1);
-                            temp2 = (int)square.file + (2 - i) * (2 * k - 1);
+                            temp2 = (int)square.rank + (2 - i) * (2 * k - 1);
 
                             if (AFILE <= temp1 && temp1 <= EFILE && RANK1 <= temp2 && temp2 <= RANK6)
                             {
