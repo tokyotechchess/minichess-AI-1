@@ -439,6 +439,15 @@ namespace minichess_AI
             Color enturn = turn;
             enturn++;
 
+            // init
+            for (i = 0; i < 5; i++)
+            {
+                for (j = 0; j < 6; j++)
+                {
+                    isAttacked[i][j] = false;
+                }
+            }
+
             // search attacked squares
             for (i = 0; i < 5; i++)
             {
@@ -636,6 +645,7 @@ namespace minichess_AI
                         if (!(isAttacked[AFILE][RANK1] || isAttacked[BFILE][RANK1] || isAttacked[CFILE][RANK1]))
                         {
                             legalmoves[*no_moves] = Square{CFILE, RANK1};
+                            (*no_moves)++;
                         }
                     }
                 }
@@ -646,6 +656,7 @@ namespace minichess_AI
                         if (!(isAttacked[EFILE][RANK6] || isAttacked[DFILE][RANK6] || isAttacked[CFILE][RANK6]))
                         {
                             legalmoves[*no_moves] = Square{CFILE, RANK6};
+                            (*no_moves)++;
                         }
                     }
                 }
