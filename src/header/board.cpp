@@ -73,7 +73,7 @@ namespace minichess_AI
                     if (abs((int)(tempf1 - square.file)) == 1)
                     {
                         if (
-                            (board->GetSquare(Square{tempf1, square.rank}) == ((turn == cWhite) ? BBISHOP : WBISHOP)) &&
+                            (board->GetSquare(Square{tempf1, square.rank}) == ((turn == cWhite) ? BPAWN : WPAWN)) &&
                             (board->GetSquare(Square{tempf1, square.rank + temp1}) == EMPTYSQ))
                         {
                             legalmoves[*no_moves] = Square{tempf1, square.rank + temp1};
