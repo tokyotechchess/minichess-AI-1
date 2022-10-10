@@ -1336,8 +1336,8 @@ namespace minichess_AI
                             continue;
                         tempf1 = square.file;
                         tempr1 = square.rank;
-                        while (AFILE - i * (i - 1) / 2 <= tempf1 && tempf1 <= EFILE - i * (i + 1) / 2 &&
-                               RANK1 - j * (j - 1) / 2 <= tempr1 && tempr1 <= RANK6 - j * (j + 1) / 2)
+                        while (AFILE + i * (i - 1) / 2 <= tempf1 && tempf1 <= EFILE - i * (i + 1) / 2 &&
+                               RANK1 + j * (j - 1) / 2 <= tempr1 && tempr1 <= RANK6 - j * (j + 1) / 2)
                         {
                             tempf1 += i;
                             tempr1 += j;
