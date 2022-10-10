@@ -1757,6 +1757,15 @@ MCError TestLegalMoves()
                 "no other pieces test case 8", "4k/3b1/5/5/5/K4 b - -", Square{DFILE, RANK5}, 5,
                 new Square[5]{Square{CFILE, RANK6}, Square{EFILE, RANK4}, Square{CFILE, RANK4}, Square{BFILE, RANK3},
                               Square{AFILE, RANK2}}},
+            __TestTemplateArgs{
+                "no other pieces test case 9", "4k/5/5/R4/5/K4 w - -", Square{AFILE, RANK3}, 8,
+                new Square[8]{Square{AFILE, RANK4}, Square{AFILE, RANK5}, Square{AFILE, RANK6}, Square{AFILE, RANK2},
+                              Square{BFILE, RANK3}, Square{CFILE, RANK3}, Square{DFILE, RANK3}, Square{EFILE, RANK3}}},
+            __TestTemplateArgs{
+                "no other pieces test case 10", "4k/5/2r2/5/5/K4 b - -", Square{CFILE, RANK4}, 9,
+                new Square[9]{Square{CFILE, RANK5}, Square{CFILE, RANK6}, Square{CFILE, RANK3}, Square{CFILE, RANK2},
+                              Square{CFILE, RANK1}, Square{AFILE, RANK4}, Square{BFILE, RANK4}, Square{DFILE, RANK4},
+                              Square{EFILE, RANK4}}},
         };
 
     for (__TestTemplateArgs arg : args)
