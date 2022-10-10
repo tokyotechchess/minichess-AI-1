@@ -922,7 +922,8 @@ namespace minichess_AI
                     {
                         tempf1 = square.file;
                         tempr1 = square.rank;
-                        while (AFILE < tempf1 && tempf1 < EFILE && RANK1 < tempr1 && tempr1 < RANK6)
+                        while (AFILE + (1 - i) / 2 <= tempf1 && tempf1 <= EFILE - (1 + i) / 2 &&
+                               RANK1 + (1 - j) / 2 <= tempr1 && tempr1 <= RANK6 - (1 + j) / 2)
                         {
                             tempf1 += i;
                             tempr1 += j;
@@ -1124,7 +1125,8 @@ namespace minichess_AI
                     {
                         tempf1 = square.file;
                         tempr1 = square.rank;
-                        while (AFILE < tempf1 && tempf1 < EFILE && RANK1 < tempr1 && tempr1 < RANK6)
+                        while ((i == 1) ? (AFILE + (1 - j) / 2 <= tempf1 && tempf1 <= EFILE - (1 + j) / 2)
+                                        : (RANK1 + (1 - j) / 2 <= tempr1 && tempr1 <= RANK6 - (1 + j) / 2))
                         {
                             tempf1 += i * j;
                             tempr1 += (1 - i) * j;
@@ -1334,7 +1336,8 @@ namespace minichess_AI
                             continue;
                         tempf1 = square.file;
                         tempr1 = square.rank;
-                        while (AFILE < tempf1 && tempf1 < EFILE && RANK1 < tempr1 && tempr1 < RANK6)
+                        while (AFILE - i * (i - 1) / 2 <= tempf1 && tempf1 <= EFILE - i * (i + 1) / 2 &&
+                               RANK1 - j * (j - 1) / 2 <= tempr1 && tempr1 <= RANK6 - j * (j + 1) / 2)
                         {
                             tempf1 += i;
                             tempr1 += j;
