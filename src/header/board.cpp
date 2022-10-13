@@ -778,8 +778,11 @@ namespace minichess_AI
 
                             if (AFILE <= temp1 && temp1 <= EFILE && RANK1 <= temp2 && temp2 <= RANK6)
                             {
-                                legalmoves[*no_moves] = Square{(File)temp1, (Rank)temp2};
-                                (*no_moves)++;
+                                if (GetPieceColor(board->GetSquare(Square{(File)temp1, (Rank)temp2})) != turn)
+                                {
+                                    legalmoves[*no_moves] = Square{(File)temp1, (Rank)temp2};
+                                    (*no_moves)++;
+                                }
                             }
                         }
                     }
