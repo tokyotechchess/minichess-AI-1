@@ -493,11 +493,11 @@ namespace minichess_AI
                                 temp1 = (enturn == cWhite) ? 1 : -1;
                                 if (i != AFILE)
                                 {
-                                    isAttacked[i - 1][j] = true;
+                                    isAttacked[i - 1][j + temp1] = true;
                                 }
                                 if (i != EFILE)
                                 {
-                                    isAttacked[i + 1][j] = true;
+                                    isAttacked[i + 1][j + temp1] = true;
                                 }
                             }
                             break;
