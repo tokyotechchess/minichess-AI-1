@@ -1792,7 +1792,8 @@ MCError TestLegalMoves()
                 new Square[2]{Square{CFILE, RANK3}, Square{DFILE, RANK3}}},
             __TestTemplateArgs{
                 "with other pieces test case pawn 4", "4k/5/K1P2/1p3/1pNR1/Q1b2 b - c4", Square{BFILE, RANK2}, 2,
-                new Square[2]{Square{AFILE, RANK1}, Square{BFILE, RANK1}}}};
+                new Square[2]{Square{AFILE, RANK1}, Square{BFILE, RANK1}}},
+        };
 
     for (__TestTemplateArgs arg : args)
     {
