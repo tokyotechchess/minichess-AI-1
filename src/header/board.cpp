@@ -434,10 +434,10 @@ namespace minichess_AI
         {
             bool isAttacked[5][6];
             int i, j, k, m, n, l, r, b, f, temp1, temp2;
-            Piece p;
             Color turn = board->GetTurn();
             Color enturn = turn;
             enturn++;
+            Piece p, tempp, king = (turn == cWhite) ? WKING : BKING;
 
             // init
             for (i = 0; i < 5; i++)
@@ -510,7 +510,7 @@ namespace minichess_AI
                                     for (n = 0; n <= 1; n++)
                                     {
                                         temp1 = i + (1 + k) * (2 * m - 1);
-                                        temp2 = j + (2 - k) * (2 * n + 1);
+                                        temp2 = j + (2 - k) * (2 * n - 1);
                                         if (
                                             AFILE <= temp1 && temp1 <= EFILE && RANK1 <= temp2 && temp2 <= RANK6)
                                         {
@@ -532,8 +532,12 @@ namespace minichess_AI
                                         temp2 = j + m * n;
                                         if (temp1 < AFILE || EFILE < temp1 || temp2 < RANK1 || RANK6 < temp2)
                                             break;
-                                        if (board->GetSquare(Square{(File)temp1, (Rank)temp2}) != EMPTYSQ)
+                                        tempp = board->GetSquare(Square{(File)temp1, (Rank)temp2});
+                                        if (tempp != king && tempp != EMPTYSQ)
+                                        {
+                                            isAttacked[temp1][temp2] = true;
                                             break;
+                                        }
                                         isAttacked[temp1][temp2] = true;
                                     }
                                 }
@@ -551,8 +555,12 @@ namespace minichess_AI
                                         temp2 = j + (1 - k) * n;
                                         if (temp1 < AFILE || EFILE < temp1 || temp2 < RANK1 || RANK6 < temp2)
                                             break;
-                                        if (board->GetSquare(Square{(File)temp1, (Rank)temp2}) != EMPTYSQ)
+                                        tempp = board->GetSquare(Square{(File)temp1, (Rank)temp2});
+                                        if (tempp != king && tempp != EMPTYSQ)
+                                        {
+                                            isAttacked[temp1][temp2] = true;
                                             break;
+                                        }
                                         isAttacked[temp1][temp2] = true;
                                     }
                                 }
@@ -570,8 +578,12 @@ namespace minichess_AI
                                         temp2 = j + m * n;
                                         if (temp1 < AFILE || EFILE < temp1 || temp2 < RANK1 || RANK6 < temp2)
                                             break;
-                                        if (board->GetSquare(Square{(File)temp1, (Rank)temp2}) != EMPTYSQ)
+                                        tempp = board->GetSquare(Square{(File)temp1, (Rank)temp2});
+                                        if (tempp != king && tempp != EMPTYSQ)
+                                        {
+                                            isAttacked[temp1][temp2] = true;
                                             break;
+                                        }
                                         isAttacked[temp1][temp2] = true;
                                     }
                                 }
@@ -586,8 +598,12 @@ namespace minichess_AI
                                         temp2 = j + (1 - k) * n;
                                         if (temp1 < AFILE || EFILE < temp1 || temp2 < RANK1 || RANK6 < temp2)
                                             break;
-                                        if (board->GetSquare(Square{(File)temp1, (Rank)temp2}) != EMPTYSQ)
+                                        tempp = board->GetSquare(Square{(File)temp1, (Rank)temp2});
+                                        if (tempp != king && tempp != EMPTYSQ)
+                                        {
+                                            isAttacked[temp1][temp2] = true;
                                             break;
+                                        }
                                         isAttacked[temp1][temp2] = true;
                                     }
                                 }
