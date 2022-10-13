@@ -597,6 +597,10 @@ namespace minichess_AI
                             break;
                         }
                     }
+                    else if (GetPieceColor(p) == turn)
+                    {
+                        isAttacked[i][j] = true;
+                    }
                 }
             }
 
