@@ -117,12 +117,12 @@ namespace minichess_AI
                 rdir = (kingsq.rank < square.rank) ? 1 : -1;
                 if (turn == cWhite)
                 {
-                    roo = BBISHOP;
+                    roo = BROOK;
                     que = BQUEEN;
                 }
                 else
                 {
-                    roo = WBISHOP;
+                    roo = WROOK;
                     que = WQUEEN;
                 }
 
@@ -178,12 +178,12 @@ namespace minichess_AI
                     fdir = (kingsq.file < square.file) ? 1 : -1;
                     if (turn == cWhite)
                     {
-                        roo = BBISHOP;
+                        roo = BROOK;
                         que = BQUEEN;
                     }
                     else
                     {
-                        roo = WBISHOP;
+                        roo = WROOK;
                         que = WQUEEN;
                     }
 
@@ -258,6 +258,8 @@ namespace minichess_AI
                         able = true;
                         break;
                     }
+                    tempf1 += fdir;
+                    tempr1 += rdir;
                 }
 
                 i = 0;
@@ -289,7 +291,7 @@ namespace minichess_AI
                             able = false;
                             break;
                         }
-                        else if (tempp1 == EMPTYSQ)
+                        else if (tempp1 != EMPTYSQ)
                         {
                             break;
                         }
