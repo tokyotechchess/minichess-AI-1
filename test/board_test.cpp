@@ -1866,6 +1866,24 @@ MCError TestLegalMoves()
             __TestTemplateArgs{
                 "with other pieces test case queen 4", "n3q/1r1kN/5/2P2/K4/5 b - -", Square{EFILE, RANK6}, 4,
                 new Square[4]{Square{EFILE, RANK5}, Square{BFILE, RANK6}, Square{CFILE, RANK6}, Square{DFILE, RANK6}}},
+
+            // pinned
+
+            __TestTemplateArgs{
+                "pinned test case pawn 1", "5/3nk/5/2b2/KP2r/5 w - -", Square{BFILE, RANK2}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "pinned test case pawn 2", "r4/2k2/5/1b3/P4/K2R1 w - -", Square{AFILE, RANK2}, 2,
+                new Square[2]{Square{AFILE, RANK3}, Square{AFILE, RANK4}}},
+            __TestTemplateArgs{
+                "pinned test case pawn 3", "1k3/2p2/1NbB/5/2K2/5 b - -", Square{CFILE, RANK5}, 1,
+                new Square[1]{Square{DFILE, RANK4}}},
+            __TestTemplateArgs{
+                "pinned test case pawn 4", "5/5/3k1/2p2/1n1p1/QK3 b - -", Square{CFILE, RANK3}, 1,
+                new Square[1]{Square{CFILE, RANK2}}},
+            __TestTemplateArgs{
+                "pinned test case pawn 5", "4k/4p/3B1/4n/4Q/K3R b - -", Square{EFILE, RANK5}, 2,
+                new Square[2]{Square{DFILE, RANK4}, Square{EFILE, RANK4}}},
         };
 
     for (__TestTemplateArgs arg : args)
