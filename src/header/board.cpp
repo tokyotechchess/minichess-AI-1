@@ -728,7 +728,7 @@ namespace minichess_AI
                 check = false;
             }
 
-            // king <- here -> bishop
+            // king <- here -> knight
             if (check)
             {
                 tempf1 = kingsq.file;
@@ -760,7 +760,7 @@ namespace minichess_AI
                     {
                         able = false;
                     }
-                    else if (tempp1 == EMPTYSQ)
+                    else if (tempp1 != EMPTYSQ)
                     {
                         break;
                     }
