@@ -1841,7 +1841,14 @@ MCError TestLegalMoves()
                 "with other pieces test case rook 2", "R2r1/1k3/5/B4/2K2/5 w - -", Square{AFILE, RANK6}, 5,
                 new Square[5]{Square{AFILE, RANK5}, Square{AFILE, RANK4}, Square{BFILE, RANK6}, Square{CFILE, RANK6},
                               Square{DFILE, RANK6}}},
-        };
+            __TestTemplateArgs{
+                "with ohter pieces test case rook 3", "5/2qrk/5/1K1Q1/5/5 b - -", Square{DFILE, RANK5}, 3,
+                new Square[3]{Square{DFILE, RANK6}, Square{DFILE, RANK4}, Square{DFILE, RANK3}}},
+            __TestTemplateArgs{
+                "with other pieces test case rook 4", "r4/1b1k1/5/1N3/2K2/1Q3 b - -", Square{AFILE, RANK6}, 9,
+                new Square[9]{Square{AFILE, RANK5}, Square{AFILE, RANK4}, Square{AFILE, RANK3}, Square{AFILE, RANK2},
+                              Square{AFILE, RANK1}, Square{BFILE, RANK6}, Square{CFILE, RANK6}, Square{DFILE, RANK6},
+                              Square{EFILE, RANK6}}}};
 
     for (__TestTemplateArgs arg : args)
     {
