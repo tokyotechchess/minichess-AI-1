@@ -932,6 +932,8 @@ namespace minichess_AI
                 i = 0;
                 while (i < end)
                 {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
                     if (tempf1 == square.file && tempr1 == square.rank)
                         continue;
                     i++;
