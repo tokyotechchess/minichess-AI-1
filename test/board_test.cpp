@@ -1916,7 +1916,7 @@ MCError TestLegalMoves()
                 new Square[8]{Square{AFILE, RANK6}, Square{AFILE, RANK2}, Square{BFILE, RANK5}, Square{BFILE, RANK3},
                               Square{DFILE, RANK5}, Square{DFILE, RANK3}, Square{EFILE, RANK6}, Square{EFILE, RANK2}}},
             __TestTemplateArgs{
-                "pinned test cas bishop 5", "2r2/1kP2/3P1/2B2/1n1K1/5 w - -", Square{CFILE, RANK3}, 3,
+                "pinned test case bishop 5", "2r2/1kP2/3P1/2B2/1n1K1/5 w - -", Square{CFILE, RANK3}, 3,
                 new Square[3]{Square{BFILE, RANK2}, Square{BFILE, RANK4}, Square{AFILE, RANK5}}},
         };
 
