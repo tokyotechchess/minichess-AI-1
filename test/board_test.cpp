@@ -1891,6 +1891,15 @@ MCError TestLegalMoves()
                 "pinned test case pawn 7", "2k2/5/2p2/2PN1/5/K1R2 b - -", Square{CFILE, RANK4}, 1,
                 new Square[1]{Square{DFILE, RANK3}}},
             __TestTemplateArgs{
+                "pinned test case pawn 8", "1k3/1r3/2n2/1P3/1B3/1K3 w - -", Square{BFILE, RANK3}, 2,
+                new Square[2]{Square{BFILE, RANK4}, Square{CFILE, RANK4}}},
+            __TestTemplateArgs{
+                "pinned test case pawn 9", "5/Rpp1k/5/1K3/5/5 b - -", Square{CFILE, RANK5}, 2,
+                new Square[2]{Square{CFILE, RANK4}, Square{CFILE, RANK3}}},
+            __TestTemplateArgs{
+                "pinned test case pawn 10", "4k/3N1/2p2/5/B4/4K b - -", Square{CFILE, RANK4}, 1,
+                new Square[1]{Square{CFILE, RANK3}}},
+            __TestTemplateArgs{
                 "pinned test case knight 1", "5/1k1b1/5/1N3/K1N2/5 w - -", Square{BFILE, RANK3}, 0,
                 new Square[0]{}},
             __TestTemplateArgs{
