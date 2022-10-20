@@ -1951,20 +1951,20 @@ MCError TestLegalMoves()
                 "pinned test case queen 2", "5/5/5/1KQ1r/3p1/3k1 w - -", Square{CFILE, RANK3}, 2,
                 new Square[2]{Square{DFILE, RANK3}, Square{EFILE, RANK3}}},
             __TestTemplateArgs{
-                "pinned test case queen 3", "5/k4/3p1/2q2/3B1/4K b - -", Square{CFILE, RANK3}, 1,
-                new Square[1]{DFILE, RANK2}},
+                "pinned test case queen 3", "5/k4/3p1/2q2/3B1/4K b - -", Square{CFILE, RANK3}, 2,
+                new Square[2]{Square{DFILE, RANK2}, Square{BFILE, RANK4}}},
             __TestTemplateArgs{
-                "pinned test case queen 4", "5/k4/3p1/2q2/3B1/4K b - -", Square{CFILE, RANK3}, 12,
+                "pinned test case queen 4", "2n2/5/5/1kqpR/5/2K2 b - -", Square{CFILE, RANK3}, 12,
                 new Square[12]{
                     Square{AFILE, RANK5}, Square{CFILE, RANK5}, Square{EFILE, RANK5}, Square{BFILE, RANK4},
                     Square{CFILE, RANK4}, Square{DFILE, RANK4}, Square{AFILE, RANK1}, Square{CFILE, RANK1},
                     Square{EFILE, RANK1}, Square{BFILE, RANK2}, Square{CFILE, RANK2}, Square{DFILE, RANK2}}},
             __TestTemplateArgs{
-                "pinned test case queen 5", "5/5/kb3/2r2/3Q1/4K w - -", Square{DFILE, RANK2}, 11,
+                "pinned test case queen 5", "5/5/kb3/2r2/3Q1/4K w - -", Square{DFILE, RANK2}, 12,
                 new Square[12]{
                     Square{DFILE, RANK1}, Square{DFILE, RANK3}, Square{DFILE, RANK4}, Square{DFILE, RANK5},
                     Square{DFILE, RANK6}, Square{AFILE, RANK2}, Square{BFILE, RANK2}, Square{CFILE, RANK2},
-                    Square{EFILE, RANK2}, Square{CFILE, RANK1}, Square{EFILE, RANK3}}},
+                    Square{EFILE, RANK2}, Square{CFILE, RANK1}, Square{EFILE, RANK3}, Square{CFILE, RANK3}}},
         };
 
     for (__TestTemplateArgs arg : args)
