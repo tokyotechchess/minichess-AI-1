@@ -2672,8 +2672,8 @@ namespace minichess_AI
         if (color == ColorErr)
             return SQUAREERR;
 
-        File dfile, kfile = king.file;
-        Rank drank, krank = king.rank;
+        int dfile, kfile = king.file;
+        int drank, krank = king.rank;
         Piece q, b, p;
         int i, j;
 
@@ -2696,10 +2696,10 @@ namespace minichess_AI
                 dfile = kfile + j;
                 while (RANK1 <= drank && drank <= RANK6 && AFILE <= dfile && dfile <= EFILE)
                 {
-                    p = GetSquare(Square{dfile, drank});
+                    p = GetSquare(Square{(File)dfile, (Rank)drank});
                     if (p == q || p == b)
                     {
-                        return Square{dfile, drank};
+                        return Square{(File)dfile, (Rank)drank};
                     }
                     else if (p != EMPTYSQ)
                     {
@@ -2719,7 +2719,7 @@ namespace minichess_AI
     // return the square of checking king
     Square Board::IsCheckedByKnight(Square king, Color color)
     {
-        if (color != ColorErr)
+        if (color == ColorErr)
             return SQUAREERR;
 
         File nfile, kfile = king.file;
