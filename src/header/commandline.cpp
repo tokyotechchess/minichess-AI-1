@@ -41,4 +41,10 @@ namespace minichess_AI
 
         return mcet::NoErr;
     }
+
+    MCError CommandLine::ChangeSetting(MCCSetting set)
+    {
+        setting = set;
+        return mcet::NoErr;
+    }
 }
