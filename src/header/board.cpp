@@ -969,6 +969,9 @@ namespace minichess_AI
         Board copy;
         double ret;
         MCError err;
+        Square legalmoves[MAX_LEGALMOVES];
+        int *no_moves;
+
         if (depth == depthMax)
         {
             return tempEvaluator(b);
@@ -980,36 +983,41 @@ namespace minichess_AI
             {
                 for (Rank r = RANK1; r <= RANK6; r++)
                 {
-                    copy = b;
-                    err = copy.Move(Square{f, r}, Square{f, r}, WPAWN);
+                    b.LegalMoves(Square{f, r}, legalmoves[MAX_LEGALMOVES], *no_moves);
 
-                    if (err != mcet::NoErr)
-                        continue;
-
-                    ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
-
-                    switch (b.GetTurn())
+                    for (Square to_square : legalmoves)
                     {
-                    case cWhite:
-                        if (beta <= ret)
-                            return ret;
-                        else if (alpha < ret)
+                        copy = b;
+                        err = copy.Move(Square{f, r}, to_square, WQUEEN);
+
+                        if (err != mcet::NoErr)
+                            continue;
+
+                        ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
+
+                        switch (b.GetTurn())
                         {
-                            alpha = ret;
-                            bestMoves[depth] = Square{f, r};
+                        case cWhite:
+                            if (beta <= ret)
+                                return ret;
+                            else if (alpha < ret)
+                            {
+                                alpha = ret;
+                                bestMoves[depth] = Square{f, r};
+                            }
+                            break;
+                        case cBlack:
+                            if (alpha >= ret)
+                                return ret;
+                            else if (beta > ret)
+                            {
+                                beta = ret;
+                                bestMoves[depth] = Square{f, r};
+                            }
+                            break;
+                        default:
+                            break;
                         }
-                        break;
-                    case cBlack:
-                        if (alpha >= ret)
-                            return ret;
-                        else if (beta > ret)
-                        {
-                            beta = ret;
-                            bestMoves[depth] = Square{f, r};
-                        }
-                        break;
-                    default:
-                        break;
                     }
                 }
             }

@@ -16,6 +16,10 @@ namespace minichess_AI
     //chessの最長手数は228らしい
     constexpr int MAX_BESTMOVES = 228;
 
+    // The max length of array 'legalmoves' recieved by Board::LegalMoves(...)
+    constexpr int MAX_LEGALMOVES = 17;
+
+
     class Board
     {
     private:
