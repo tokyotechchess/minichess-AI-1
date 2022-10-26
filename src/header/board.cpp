@@ -985,10 +985,10 @@ namespace minichess_AI
                 {
                     b.LegalMoves(Square{f, r}, legalmoves[MAX_LEGALMOVES], *no_moves);
 
-                    for (Square to_square : legalmoves)
+                    for (int i = 0; i < *no_moves; i++)
                     {
                         copy = b;
-                        err = copy.Move(Square{f, r}, to_square, WQUEEN);
+                        err = copy.Move(Square{f, r}, legalmoves[i], WQUEEN);
 
                         if (err != mcet::NoErr)
                             continue;
