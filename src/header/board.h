@@ -66,7 +66,9 @@ namespace minichess_AI
         */
         int castlingPossibility;
 
-        Square bestMoves[MAX_BESTMOVES];
+        Square bestMoves_from[MAX_BESTMOVES];
+        Square bestMoves_to[MAX_BESTMOVES];
+        Piece bestMovesPromotion[MAX_BESTMOVES];
 
     public:
         // Constructor

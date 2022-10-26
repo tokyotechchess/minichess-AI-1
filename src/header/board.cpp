@@ -968,9 +968,10 @@ namespace minichess_AI
     {
         Board copy;
         double ret;
-        MCError err;
+        double retsub;
         Square legalmoves[MAX_LEGALMOVES];
         int *no_moves;
+        Piece bestPromotion = EMPTYSQ;
 
         if (depth == depthMax)
         {
@@ -984,16 +985,63 @@ namespace minichess_AI
                 for (Rank r = RANK1; r <= RANK6; r++)
                 {
                     b.LegalMoves(Square{f, r}, legalmoves[MAX_LEGALMOVES], *no_moves);
-
                     for (int i = 0; i < *no_moves; i++)
                     {
                         copy = b;
-                        err = copy.Move(Square{f, r}, legalmoves[i], WQUEEN);
-
-                        if (err != mcet::NoErr)
-                            continue;
-
-                        ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
+                        switch (b.GetSquare(Square{f, r}))
+                        {
+                        case WPAWN:
+                            if (r == RANK5)
+                            {
+                                copy.MoveForce(Square{f, r}, legalmoves[i], WQUEEN);
+                                ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
+                                copy = b;
+                                copy.MoveForce(Square{f, r}, legalmoves[i], WKNIGHT);
+                                retsub = alphabeta(copy, alpha, beta, depth + 1, depthMax);
+                                if (retsub > ret)
+                                {
+                                    ret = retsub;
+                                    bestPromotion = WKNIGHT;
+                                }
+                                else
+                                {
+                                    bestPromotion = WQUEEN;
+                                }
+                            }
+                            else
+                            {
+                                copy.MoveForce(Square{f, r}, legalmoves[i], EMPTYSQ);
+                                ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
+                            }
+                            break;
+                        case BPAWN:
+                            if (r == RANK2)
+                            {
+                                copy.MoveForce(Square{f, r}, legalmoves[i], WQUEEN);
+                                ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
+                                copy = b;
+                                copy.MoveForce(Square{f, r}, legalmoves[i], WKNIGHT);
+                                retsub = alphabeta(copy, alpha, beta, depth + 1, depthMax);
+                                if (retsub < ret)
+                                {
+                                    ret = retsub;
+                                    bestPromotion = BKNIGHT;
+                                }
+                                else
+                                {
+                                    bestPromotion = BQUEEN;
+                                }
+                            }
+                            else
+                            {
+                                copy.MoveForce(Square{f, r}, legalmoves[i], EMPTYSQ);
+                                ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
+                            }
+                            break;
+                        default:
+                            copy.MoveForce(Square{f, r}, legalmoves[i], EMPTYSQ);
+                            ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
+                        }
 
                         switch (b.GetTurn())
                         {
@@ -1003,7 +1051,9 @@ namespace minichess_AI
                             else if (alpha < ret)
                             {
                                 alpha = ret;
-                                bestMoves[depth] = Square{f, r};
+                                bestMoves_from[depth] = Square{f, r};
+                                bestMoves_to[depth] = legalmoves[i];
+                                bestMovesPromotion[depth] = bestPromotion;
                             }
                             break;
                         case cBlack:
@@ -1012,7 +1062,9 @@ namespace minichess_AI
                             else if (beta > ret)
                             {
                                 beta = ret;
-                                bestMoves[depth] = Square{f, r};
+                                bestMoves_from[depth] = Square{f, r};
+                                bestMoves_to[depth] = legalmoves[i];
+                                bestMovesPromotion[depth] = bestPromotion;
                             }
                             break;
                         default:
