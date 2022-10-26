@@ -959,6 +959,74 @@ namespace minichess_AI
         return mcet::NoErr;
     }
 
+    double Board::tempEvaluator(Board b)
+    {
+        return 0;
+    }
+
+    double Board::alphabeta(Board b, double alpha, double beta, int depth, int depthMax)
+    {
+        Board copy;
+        double ret;
+        MCError err;
+        if (depth == depthMax)
+        {
+            return tempEvaluator(b);
+        }
+        else
+        {
+
+            for (File f = AFILE; f <= EFILE; f++)
+            {
+                for (Rank r = RANK1; r <= RANK6; r++)
+                {
+                    copy = b;
+                    err = copy.Move(Square{f, r}, Square{f, r}, WPAWN);
+
+                    if (err != mcet::NoErr)
+                        continue;
+
+                    ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
+
+                    switch (b.GetTurn())
+                    {
+                    case cWhite:
+                        if (beta <= ret)
+                            return ret;
+                        else if (alpha < ret)
+                        {
+                            alpha = ret;
+                            bestMoves[depth] = Square{f, r};
+                        }
+                        break;
+                    case cBlack:
+                        if (alpha >= ret)
+                            return ret;
+                        else if (beta > ret)
+                        {
+                            beta = ret;
+                            bestMoves[depth] = Square{f, r};
+                        }
+                        break;
+                    default:
+                        break;
+                    }
+                }
+            }
+            switch (b.GetTurn())
+            {
+            case cWhite:
+                return alpha;
+            case cBlack:
+                return beta;
+            default:
+                break;
+            }
+
+            return 0;
+        }
+    }
+
     // check equality between Boards
     bool Board::operator==(const Board &b)
     {

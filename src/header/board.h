@@ -13,6 +13,9 @@ Class "Board" and its method are defined.
 using std::string;
 namespace minichess_AI
 {
+    //chessの最長手数は228らしい
+    constexpr int MAX_BESTMOVES = 228;
+
     class Board
     {
     private:
@@ -59,6 +62,8 @@ namespace minichess_AI
         */
         int castlingPossibility;
 
+        Square bestMoves[MAX_BESTMOVES];
+
     public:
         // Constructor
 
@@ -79,6 +84,8 @@ namespace minichess_AI
         MCError Move(Square, Square, Piece);
         MCError NullMove();
         MCError MoveForce(Square from_square, Square to_square, Piece promotion_piece);
+        double tempEvaluator(Board b);
+        double alphabeta(Board b, double alpha, double beta, int depth, int depthMax);
 
         // opeartors
 
