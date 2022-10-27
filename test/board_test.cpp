@@ -1995,6 +1995,21 @@ MCError TestLegalMoves()
             __TestTemplateArgs{
                 "checked test case pawn 9", "5/2k2/5/3p1/2KP1/5 w - d3", Square{DFILE, RANK2}, 0,
                 new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case king 1", "5/2k2/4q/5/2K2/5 w - -", Square{CFILE, RANK2}, 6,
+                new Square[6]{Square{BFILE, RANK3}, Square{CFILE, RANK3}, Square{BFILE, RANK2}, Square{DFILE, RANK2},
+                              Square{CFILE, RANK1}, Square{DFILE, RANK1}}},
+            __TestTemplateArgs{
+                "checked test case king 2", "5/2k2/5/3K1/2R2/5 b - -", Square{CFILE, RANK5}, 5,
+                new Square[5]{Square{BFILE, RANK6}, Square{BFILE, RANK5}, Square{BFILE, RANK4}, Square{DFILE, RANK6},
+                              Square{DFILE, RANK5}}},
+            __TestTemplateArgs{
+                "checked test case king 3", "5/3N1/1k3/3K1/5/5 b - -", Square{BFILE, RANK4}, 6,
+                new Square[6]{Square{AFILE, RANK5}, Square{AFILE, RANK4}, Square{AFILE, RANK3}, Square{BFILE, RANK5},
+                              Square{BFILE, RANK3}, Square{CFILE, RANK5}}},
+            __TestTemplateArgs{
+                "checked test case king 4", "5/5/5/5/1pk2/K4 w - -", Square{AFILE, RANK1}, 1,
+                new Square[1]{Square{AFILE, RANK2}}},
         };
 
     for (__TestTemplateArgs arg : args)
