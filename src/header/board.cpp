@@ -345,7 +345,35 @@ namespace minichess_AI
                 mvrank = movableSquares[i].rank;
                 tempp1 = board->GetSquare(Square{mvfile, mvrank});
 
-                if (mvrank - square.rank == temp1)
+                if (mvrank - square.rank == 0)
+                {
+                    if (abs(mvfile - square.file) == 1)
+                    {
+                        if (board->GetEnpassantAblePawnFile() == mvfile &&
+                            mvrank == ((turn == cWhite) ? RANK3 : RANK4) &&
+                            tempp1 == ((turn == cWhite) ? BPAWN : WPAWN))
+                        {
+                            tempp2 = board->GetSquare(Square{mvfile, mvrank + temp1});
+                            if (tempp2 == EMPTYSQ)
+                            {
+                                board->SetSquare(movableSquares[i], EMPTYSQ);
+                                board->SetSquare(Square{mvfile, mvrank + temp1}, pawn);
+                                board->SetSquare(square, EMPTYSQ);
+
+                                if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                                {
+                                    legalmoves[*no_moves] = Square{mvfile, mvrank + temp1};
+                                    (*no_moves)++;
+                                }
+
+                                board->SetSquare(movableSquares[i], tempp2);
+                                board->SetSquare(Square{mvfile, mvrank + temp1}, EMPTYSQ);
+                                board->SetSquare(square, pawn);
+                            }
+                        }
+                    }
+                }
+                else if (mvrank - square.rank == temp1)
                 {
                     switch (abs((int)(mvfile - square.file)))
                     {
@@ -366,29 +394,7 @@ namespace minichess_AI
                         }
                         break;
                     case 1:
-                        if (board->GetEnpassantAblePawnFile() == mvfile &&
-                            mvrank == ((turn == cWhite) ? RANK4 : RANK3) &&
-                            tempp1 == EMPTYSQ)
-                        {
-                            tempp2 = board->GetSquare(Square{mvfile, mvrank - temp1});
-                            if (GetPieceColor(tempp2) == enturn)
-                            {
-                                board->SetSquare(Square{mvfile, mvrank - temp1}, EMPTYSQ);
-                                board->SetSquare(movableSquares[i], pawn);
-                                board->SetSquare(square, EMPTYSQ);
-
-                                if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
-                                {
-                                    legalmoves[*no_moves] = movableSquares[i];
-                                    (*no_moves)++;
-                                }
-
-                                board->SetSquare(Square{mvfile, mvrank - temp1}, tempp2);
-                                board->SetSquare(movableSquares[i], EMPTYSQ);
-                                board->SetSquare(square, pawn);
-                            }
-                        }
-                        else if (GetPieceColor(tempp1) == enturn)
+                        if (GetPieceColor(tempp1) == enturn)
                         {
                             tempp2 = board->GetSquare(movableSquares[i]);
                             board->SetSquare(movableSquares[i], pawn);
@@ -2408,7 +2414,7 @@ namespace minichess_AI
                     temp1 = (checkingHorizontal.rank > kingsq.rank) ? 1 : -1;
                     for (no_movableSquares = 0; no_movableSquares < abs((int)kingsq.rank - (int)checkingHorizontal.rank); no_movableSquares++)
                     {
-                        movableSquares[no_movableSquares] = Square{kingsq.file, kingsq.rank + no_movableSquares * temp1};
+                        movableSquares[no_movableSquares] = Square{kingsq.file, kingsq.rank + (no_movableSquares + 1) * temp1};
                     }
                 }
                 else
@@ -2416,7 +2422,7 @@ namespace minichess_AI
                     temp1 = (checkingHorizontal.file > kingsq.file) ? 1 : -1;
                     for (no_movableSquares = 0; no_movableSquares < abs((int)kingsq.file - (int)checkingHorizontal.file); no_movableSquares++)
                     {
-                        movableSquares[no_movableSquares] = Square{kingsq.file + no_movableSquares * temp1, kingsq.rank};
+                        movableSquares[no_movableSquares] = Square{kingsq.file + (no_movableSquares + 1) * temp1, kingsq.rank};
                     }
                 }
                 checkingPieceType = PT_HORIZONTAL;
@@ -2429,7 +2435,7 @@ namespace minichess_AI
                 for (no_movableSquares = 0; no_movableSquares < abs((int)kingsq.file - (int)checkingDiagonal.file); no_movableSquares++)
                 {
                     movableSquares[no_movableSquares] = Square{
-                        kingsq.file + no_movableSquares * temp1, kingsq.rank + no_movableSquares * temp2};
+                        kingsq.file + (no_movableSquares + 1) * temp1, kingsq.rank + (no_movableSquares + 1) * temp2};
                 }
                 checkingPieceType = PT_DIAGONAL;
             }
@@ -2547,8 +2553,8 @@ namespace minichess_AI
         }
         else if (king.file == EFILE)
         {
-            if (GetSquare(Square{BFILE, king.rank + direction}) == pawn)
-                return Square{BFILE, king.rank + direction};
+            if (GetSquare(Square{DFILE, king.rank + direction}) == pawn)
+                return Square{DFILE, king.rank + direction};
         }
         else
         {
@@ -2608,8 +2614,8 @@ namespace minichess_AI
     {
         if (color == ColorErr)
             return SQUAREERR;
-        File lfile, kfile = king.file;
-        Rank lrank, krank = king.rank;
+        int lfile, kfile = king.file;
+        int lrank, krank = king.rank;
         int i;
         Piece q, r, p;
 
@@ -2630,10 +2636,10 @@ namespace minichess_AI
             lfile = kfile;
             while (RANK1 <= lrank && lrank <= RANK6)
             {
-                p = GetSquare(Square{lfile, lrank});
+                p = GetSquare(Square{(File)lfile, (Rank)lrank});
                 if (p == q || p == r)
                 {
-                    return Square{lfile, lrank};
+                    return Square{(File)lfile, (Rank)lrank};
                 }
                 else if (p != EMPTYSQ)
                 {
@@ -2648,10 +2654,10 @@ namespace minichess_AI
             lfile = kfile + i;
             while (AFILE <= lfile && lfile <= EFILE)
             {
-                p = GetSquare(Square{lfile, lrank});
+                p = GetSquare(Square{(File)lfile, (Rank)lrank});
                 if (p == q || p == r)
                 {
-                    return Square{lfile, lrank};
+                    return Square{(File)lfile, (Rank)lrank};
                 }
                 else if (p != EMPTYSQ)
                 {
