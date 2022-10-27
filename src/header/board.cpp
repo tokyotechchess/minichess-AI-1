@@ -968,9 +968,10 @@ namespace minichess_AI
     {
         Board copy;
         double ret;
-        double retsub;
         Square legalmoves[MAX_LEGALMOVES];
-        int *no_moves;
+        int no_moves;
+        Square legalmove;
+        int promotion_num = 0;
         Piece bestPromotion = EMPTYSQ;
 
         if (depth == depthMax)
@@ -984,8 +985,8 @@ namespace minichess_AI
             {
                 for (Rank r = RANK1; r <= RANK6; r++)
                 {
-                    b.LegalMoves(Square{f, r}, legalmoves[MAX_LEGALMOVES], *no_moves);
-                    for (int i = 0; i < *no_moves; i++)
+                    b.LegalMoves(Square{f, r}, legalmoves[MAX_LEGALMOVES], &no_moves);
+                    for (int i = 0; i < &no_moves; i++)
                     {
                         copy = b;
                         switch (b.GetSquare(Square{f, r}))
@@ -993,56 +994,51 @@ namespace minichess_AI
                         case WPAWN:
                             if (r == RANK5)
                             {
-                                copy.MoveForce(Square{f, r}, legalmoves[i], WQUEEN);
-                                ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
-                                copy = b;
-                                copy.MoveForce(Square{f, r}, legalmoves[i], WKNIGHT);
-                                retsub = alphabeta(copy, alpha, beta, depth + 1, depthMax);
-                                if (retsub > ret)
+                                if (promotion_num == 0)
                                 {
-                                    ret = retsub;
-                                    bestPromotion = WKNIGHT;
+                                    copy.MoveForce(Square{f, r}, legalmoves[i], WQUEEN);
+                                    bestPromotion = WQUEEN;
+                                    promotion_num++;
+                                    i--;
                                 }
                                 else
                                 {
-                                    bestPromotion = WQUEEN;
+                                    copy.MoveForce(Square{f, r}, legalmoves[i], WKNIGHT);
+                                    bestPromotion = WKNIGHT;
+                                    promotion_num--;
                                 }
                             }
                             else
                             {
                                 copy.MoveForce(Square{f, r}, legalmoves[i], EMPTYSQ);
-                                ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
                             }
                             break;
                         case BPAWN:
                             if (r == RANK2)
                             {
-                                copy.MoveForce(Square{f, r}, legalmoves[i], WQUEEN);
-                                ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
-                                copy = b;
-                                copy.MoveForce(Square{f, r}, legalmoves[i], WKNIGHT);
-                                retsub = alphabeta(copy, alpha, beta, depth + 1, depthMax);
-                                if (retsub < ret)
+                                if (promotion_num == 0)
                                 {
-                                    ret = retsub;
-                                    bestPromotion = BKNIGHT;
+                                    copy.MoveForce(Square{f, r}, legalmoves[i], BQUEEN);
+                                    bestPromotion = BQUEEN;
+                                    promotion_num++;
+                                    i--;
                                 }
                                 else
                                 {
-                                    bestPromotion = BQUEEN;
+                                    copy.MoveForce(Square{f, r}, legalmoves[i], BKNIGHT);
+                                    bestPromotion = BKNIGHT;
+                                    promotion_num--;
                                 }
                             }
                             else
                             {
                                 copy.MoveForce(Square{f, r}, legalmoves[i], EMPTYSQ);
-                                ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
                             }
                             break;
                         default:
                             copy.MoveForce(Square{f, r}, legalmoves[i], EMPTYSQ);
-                            ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
                         }
-
+                        ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
                         switch (b.GetTurn())
                         {
                         case cWhite:
