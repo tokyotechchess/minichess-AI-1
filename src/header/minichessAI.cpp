@@ -31,6 +31,7 @@ namespace minichess_AI
                     b.tempLegalMoves(Square{f, r}, legalmoves, &no_moves);
                     for (int i = 0; i < no_moves; i++)
                     {
+                        legalmove = legalmoves[i];
                         copy = b;
                         switch (b.GetSquare(Square{f, r}))
                         {
@@ -39,21 +40,21 @@ namespace minichess_AI
                             {
                                 if (promotion_add)
                                 {
-                                    copy.MoveForce(Square{f, r}, legalmoves[i], WQUEEN);
+                                    copy.MoveForce(Square{f, r}, legalmove, WQUEEN);
                                     bestPromotion = WQUEEN;
                                     promotion_add = false;
                                     i--;
                                 }
                                 else
                                 {
-                                    copy.MoveForce(Square{f, r}, legalmoves[i], WKNIGHT);
+                                    copy.MoveForce(Square{f, r}, legalmove, WKNIGHT);
                                     bestPromotion = WKNIGHT;
                                     promotion_add = true;
                                 }
                             }
                             else
                             {
-                                copy.MoveForce(Square{f, r}, legalmoves[i], EMPTYSQ);
+                                copy.MoveForce(Square{f, r}, legalmove, EMPTYSQ);
                             }
                             break;
                         case BPAWN:
@@ -61,25 +62,25 @@ namespace minichess_AI
                             {
                                 if (promotion_add)
                                 {
-                                    copy.MoveForce(Square{f, r}, legalmoves[i], BQUEEN);
+                                    copy.MoveForce(Square{f, r}, legalmove, BQUEEN);
                                     bestPromotion = BQUEEN;
                                     promotion_add = false;
                                     i--;
                                 }
                                 else
                                 {
-                                    copy.MoveForce(Square{f, r}, legalmoves[i], BKNIGHT);
+                                    copy.MoveForce(Square{f, r}, legalmove, BKNIGHT);
                                     bestPromotion = BKNIGHT;
                                     promotion_add = true;
                                 }
                             }
                             else
                             {
-                                copy.MoveForce(Square{f, r}, legalmoves[i], EMPTYSQ);
+                                copy.MoveForce(Square{f, r}, legalmove, EMPTYSQ);
                             }
                             break;
                         default:
-                            copy.MoveForce(Square{f, r}, legalmoves[i], EMPTYSQ);
+                            copy.MoveForce(Square{f, r}, legalmove, EMPTYSQ);
                         }
                         ret = alphabeta(copy, alpha, beta, depth + 1, depthMax);
                         switch (b.GetTurn())
@@ -91,7 +92,7 @@ namespace minichess_AI
                             {
                                 alpha = ret;
                                 bestMoves_from[depth] = Square{f, r};
-                                bestMoves_to[depth] = legalmoves[i];
+                                bestMoves_to[depth] = legalmove;
                                 bestMovesPromotion[depth] = bestPromotion;
                             }
                             break;
@@ -102,7 +103,7 @@ namespace minichess_AI
                             {
                                 beta = ret;
                                 bestMoves_from[depth] = Square{f, r};
-                                bestMoves_to[depth] = legalmoves[i];
+                                bestMoves_to[depth] = legalmove;
                                 bestMovesPromotion[depth] = bestPromotion;
                             }
                             break;
