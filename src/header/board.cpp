@@ -966,12 +966,12 @@ namespace minichess_AI
 
     double Board::alphabeta(Board b, double alpha, double beta, int depth, int depthMax)
     {
-        Board copy;
+        Board copy = b;
         double ret;
         Square legalmoves[MAX_LEGALMOVES];
         int no_moves;
         Square legalmove;
-        int promotion_num = 0;
+        bool promotion_add = true;
         Piece bestPromotion = EMPTYSQ;
 
         if (depth == depthMax)
@@ -986,7 +986,7 @@ namespace minichess_AI
                 for (Rank r = RANK1; r <= RANK6; r++)
                 {
                     b.LegalMoves(Square{f, r}, legalmoves[MAX_LEGALMOVES], &no_moves);
-                    for (int i = 0; i < &no_moves; i++)
+                    for (int i = 0; i < no_moves; i++)
                     {
                         copy = b;
                         switch (b.GetSquare(Square{f, r}))
@@ -994,18 +994,18 @@ namespace minichess_AI
                         case WPAWN:
                             if (r == RANK5)
                             {
-                                if (promotion_num == 0)
+                                if (promotion_add)
                                 {
                                     copy.MoveForce(Square{f, r}, legalmoves[i], WQUEEN);
                                     bestPromotion = WQUEEN;
-                                    promotion_num++;
+                                    promotion_add = false;
                                     i--;
                                 }
                                 else
                                 {
                                     copy.MoveForce(Square{f, r}, legalmoves[i], WKNIGHT);
                                     bestPromotion = WKNIGHT;
-                                    promotion_num--;
+                                    promotion_add = true;
                                 }
                             }
                             else
@@ -1016,18 +1016,18 @@ namespace minichess_AI
                         case BPAWN:
                             if (r == RANK2)
                             {
-                                if (promotion_num == 0)
+                                if (promotion_add)
                                 {
                                     copy.MoveForce(Square{f, r}, legalmoves[i], BQUEEN);
                                     bestPromotion = BQUEEN;
-                                    promotion_num++;
+                                    promotion_add = false;
                                     i--;
                                 }
                                 else
                                 {
                                     copy.MoveForce(Square{f, r}, legalmoves[i], BKNIGHT);
                                     bestPromotion = BKNIGHT;
-                                    promotion_num--;
+                                    promotion_add = true;
                                 }
                             }
                             else
@@ -1067,6 +1067,32 @@ namespace minichess_AI
                             break;
                         }
                     }
+                }
+            }
+            if (b.GetTurn() == copy.GetTurn())
+            {
+                switch (b.GetTurn())
+                {
+                case cWhite:
+                    if (b.IsChecked(cWhite))
+                    {
+                        return -100000;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                case cBlack:
+                    if (b.IsChecked(cBlack))
+                    {
+                        return 100000;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                default:
+                    break;
                 }
             }
             switch (b.GetTurn())
