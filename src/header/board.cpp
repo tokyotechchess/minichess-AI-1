@@ -959,6 +959,11 @@ namespace minichess_AI
         return mcet::NoErr;
     }
 
+    MCError Board::tempLegalMoves(Square square, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
+    {
+        return mcet::NoErr;
+    }
+
     // check equality between Boards
     bool Board::operator==(const Board &b)
     {
