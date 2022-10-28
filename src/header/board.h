@@ -10,7 +10,7 @@ Class "Board" and its method are defined.
 #include "util/error.h"
 #include "util/util.h"
 #include "piece.h"
-
+using std::string;
 namespace minichess_AI
 {
     // The max length of array 'legalmoves' recieved by Board::LegalMoves(...)
@@ -74,11 +74,11 @@ namespace minichess_AI
         File GetEnpassantAblePawnFile();
         bool GetCastlingPossibility(Color);
         int *GetBoard();
-        std::string GetBoardFEN();
+        string GetBoardFEN();
         Piece GetSquare(Square);
         bool IsChecked(Color);
         MCError SetSquare(Square, Piece);
-        MCError SetBoardFEN(std::string fen);
+        MCError SetBoardFEN(string fen);
         MCError Move(Square, Square, Piece);
         MCError NullMove();
         MCError LegalMoves(Square, Square[MAX_LEGALMOVES], int *);
@@ -92,6 +92,7 @@ namespace minichess_AI
         Square IsCheckedByDiagonal(Square, Color);
         Square IsCheckedByKnight(Square, Color);
         Square SearchPiece(Piece);
+        MCError MoveForce(Square from_square, Square to_square, Piece promotion_piece);
 
         // opeartors
 

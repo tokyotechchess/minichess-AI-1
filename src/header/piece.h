@@ -130,9 +130,16 @@ namespace minichess_AI
     Color GetPieceColor(Piece p);
 
     char ConvPieceToFENChar(Piece p);
+    std::string ConvSquareToPGNString(Square sq);
     inline std::ostream &operator<<(std::ostream &os, const Piece &p)
     {
         os << ConvPieceToFENChar(p);
         return os;
     }
+    inline std::ostream &operator<<(std::ostream &os, const Square &sq)
+    {
+        os << ConvSquareToPGNString(sq);
+        return os;
+    }
+
 }

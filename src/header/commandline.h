@@ -19,6 +19,7 @@ namespace minichess_AI
     {
     public:
         MCError DisplayBoard(Board *b);
+        MCError ChangeSetting(MCCSetting set);
     private:
         MCCSetting setting;
     };

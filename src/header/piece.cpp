@@ -1,5 +1,5 @@
 #include "piece.h"
-
+using std::string;
 namespace minichess_AI
 {
     // definition
@@ -111,5 +111,11 @@ namespace minichess_AI
         }
 
         return ' ';
+    }
+
+    std::string ConvSquareToPGNString(Square sq)
+    {
+        string con = {'a' + (int)sq.file, '1' + (int)sq.rank};
+        return con;
     }
 }

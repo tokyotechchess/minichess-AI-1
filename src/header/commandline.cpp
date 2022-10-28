@@ -16,28 +16,35 @@ namespace minichess_AI
             }
             std::cout << std::endl;
         }
-
-        if (setting.displayCastlingPossibility == true)
+        std::cout << "Turn:";
+        (b->GetTurn() == cWhite) ? std::cout << "White" << std::endl : std::cout << "Black" << std::endl;
+        if (setting.displayCastlingPossibility)
         {
             std::cout << "CastlingPossibility" << std::endl;
-            std::cout << "  White  ";
+            std::cout << "  White:";
             (b->GetCastlingPossibility(cWhite) == true) ? std::cout << "Yes" << std::endl : std::cout << "No" << std::endl;
-            std::cout << "  Black  ";
+            std::cout << "  Black:";
             (b->GetCastlingPossibility(cBlack) == true) ? std::cout << "Yes" << std::endl : std::cout << "No" << std::endl;
         }
-        if (setting.displayEnpassantAbleFile == true)
+        if (setting.displayEnpassantAbleFile)
         {
-            std::cout << "EnpassantAbleFile" << std::endl;
+            std::cout << "EnpassantAbleFile";
             if (b->GetEnpassantAblePawnFile() == FILEERR)
             {
-                std::cout << "  -" << std::endl;
+                std::cout << ":-" << std::endl;
             }
             else
             {
-                std::cout << "  " << char((int)b->GetEnpassantAblePawnFile() + 'a') << std::endl;
+                std::cout << ":" << char((int)b->GetEnpassantAblePawnFile() + 'a') << std::endl;
             }
         }
 
+        return mcet::NoErr;
+    }
+
+    MCError CommandLine::ChangeSetting(MCCSetting set)
+    {
+        setting = set;
         return mcet::NoErr;
     }
 }

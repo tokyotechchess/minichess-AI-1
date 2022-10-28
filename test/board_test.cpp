@@ -33,6 +33,10 @@ void __Test__Board()
     {
         std::cout << e.DisplayError() << std::endl;
     }
+    if ((e = TestMoveForce()) != mcet::NoErr)
+    {
+        std::cout << e.DisplayError() << std::endl;
+    }
 }
 
 // GetSquare
@@ -2200,6 +2204,670 @@ MCError TestLegalMoves()
         e = __TestTemplate(arg);
         if (e != mcet::NoErr)
             return e;
+    }
+}
+
+MCError TestMoveForce()
+{
+
+    Board b, origin, corb;
+    MCError e;
+
+    // Normal Move
+    b.SetBoardFEN("5/5/2K2/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{BFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/1K3/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white king normal move 1");
+    }
+    b.SetBoardFEN("5/5/1K3/5/5/5 w - -");
+    b.MoveForce(Square{BFILE, RANK4}, Square{BFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/1K3/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white king normal move 2");
+    }
+    b.SetBoardFEN("5/1K3/5/5/5/5 w - -");
+    b.MoveForce(Square{BFILE, RANK5}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2K2/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white king normal move 3");
+    }
+    b.SetBoardFEN("5/5/2k2/5/5/5 b - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{BFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/1k3/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black king normal move 1");
+    }
+    b.SetBoardFEN("5/5/1k3/5/5/5 b - -");
+    b.MoveForce(Square{BFILE, RANK4}, Square{BFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/1k3/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black king normal move 2");
+    }
+    b.SetBoardFEN("5/1k3/5/5/5/5 b - -");
+    b.MoveForce(Square{BFILE, RANK5}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2k2/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black king normal move 3");
+    }
+    b.SetBoardFEN("5/5/2P2/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2P2/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white pawn normal move");
+    }
+    b.SetBoardFEN("5/5/2p2/5/5/5 b - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2p2/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black pawn normal move");
+    }
+    b.SetBoardFEN("5/5/2N2/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{BFILE, RANK6}, EMPTYSQ);
+    corb.SetBoardFEN("1N3/5/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white knight normal move 1");
+    }
+    b.SetBoardFEN("1N3/5/5/5/5/5 w - -");
+    b.MoveForce(Square{BFILE, RANK6}, Square{AFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/N4/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white knight normal move 2");
+    }
+    b.SetBoardFEN("5/5/N4/5/5/5 w - -");
+    b.MoveForce(Square{AFILE, RANK4}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2N2/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white knight normal move 3");
+    }
+    b.SetBoardFEN("5/5/2n2/5/5/5 b - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{BFILE, RANK6}, EMPTYSQ);
+    corb.SetBoardFEN("1n3/5/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black knight normal move 1");
+    }
+    b.SetBoardFEN("1n3/5/5/5/5/5 b - -");
+    b.MoveForce(Square{BFILE, RANK6}, Square{AFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/n4/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black knight normal move 2");
+    }
+    b.SetBoardFEN("5/5/n4/5/5/5 b - -");
+    b.MoveForce(Square{AFILE, RANK4}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2n2/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black knight normal move 3");
+    }
+    b.SetBoardFEN("5/5/2B2/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{AFILE, RANK6}, EMPTYSQ);
+    corb.SetBoardFEN("B4/5/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white bishop normal move 1");
+    }
+    b.SetBoardFEN("B4/5/5/5/5/5 w - -");
+    b.MoveForce(Square{AFILE, RANK6}, Square{EFILE, RANK2}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/5/5/4B/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white bishop normal move 2");
+    }
+    b.SetBoardFEN("5/5/5/5/4B/5 w - -");
+    b.MoveForce(Square{EFILE, RANK2}, Square{DFILE, RANK1}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/5/5/5/3B1 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white bishop normal move 3");
+    }
+    b.SetBoardFEN("5/5/2b2/5/5/5 b - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{AFILE, RANK6}, EMPTYSQ);
+    corb.SetBoardFEN("b4/5/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black bishop normal move 1");
+    }
+    b.SetBoardFEN("b4/5/5/5/5/5 b - -");
+    b.MoveForce(Square{AFILE, RANK6}, Square{EFILE, RANK2}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/5/5/4b/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black bishop normal move 2");
+    }
+    b.SetBoardFEN("5/5/5/5/4b/5 b - -");
+    b.MoveForce(Square{EFILE, RANK2}, Square{DFILE, RANK1}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/5/5/5/3b1 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black bishop normal move 3");
+    }
+    b.SetBoardFEN("5/5/2R2/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{AFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/R4/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white rook normal move 1");
+    }
+    b.SetBoardFEN("5/5/R4/5/5/5 w - -");
+    b.MoveForce(Square{AFILE, RANK4}, Square{AFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/R4/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white rook normal move 2");
+    }
+    b.SetBoardFEN("5/R4/5/5/5/5 w - -");
+    b.MoveForce(Square{AFILE, RANK5}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2R2/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white rook normal move 3");
+    }
+    b.SetBoardFEN("5/5/2r2/5/5/5 b - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{AFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/r4/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black rook normal move 1");
+    }
+    b.SetBoardFEN("5/5/r4/5/5/5 b - -");
+    b.MoveForce(Square{AFILE, RANK4}, Square{AFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/r4/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black rook normal move 2");
+    }
+    b.SetBoardFEN("5/r4/5/5/5/5 b - -");
+    b.MoveForce(Square{AFILE, RANK5}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2r2/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black rook normal move 3");
+    }
+    b.SetBoardFEN("5/5/2Q2/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{EFILE, RANK2}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/5/5/4Q/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white queen normal move 1");
+    }
+    b.SetBoardFEN("5/5/5/5/4Q/5 w - -");
+    b.MoveForce(Square{EFILE, RANK2}, Square{EFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/4Q/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white queen normal move 2");
+    }
+    b.SetBoardFEN("5/4Q/5/5/5/5 w - -");
+    b.MoveForce(Square{EFILE, RANK5}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2Q2/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white queen normal move 3");
+    }
+    b.SetBoardFEN("5/5/2q2/5/5/5 b - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{EFILE, RANK2}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/5/5/4q/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black queen normal move 1");
+    }
+    b.SetBoardFEN("5/5/5/5/4q/5 b - -");
+    b.MoveForce(Square{EFILE, RANK2}, Square{EFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/4q/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black queen normal move 2");
+    }
+    b.SetBoardFEN("5/4q/5/5/5/5 b - -");
+    b.MoveForce(Square{EFILE, RANK5}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2q2/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black queen normal move 3");
+    }
+
+    // lose Castling move
+    b.SetBoardFEN("5/5/2K2/5/5/5 w Kk -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2K2/5/5/5/5 b k -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white king lose Castling move 1");
+    }
+    b.SetBoardFEN("5/5/2k2/5/5/5 b Kk -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2k2/5/5/5/5 w K -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black king lose Castling move 1");
+    }
+    b.SetBoardFEN("5/5/2K2/5/5/5 w K -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2K2/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white king lose Castling move 2");
+    }
+    b.SetBoardFEN("5/5/2k2/5/5/5 b k -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2k2/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black king lose Castling move 2");
+    }
+    b.SetBoardFEN("5/5/2R2/5/5/5 w Kk -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2R2/5/5/5/5 b k -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white rook lose Castling move 1");
+    }
+    b.SetBoardFEN("5/5/2r2/5/5/5 b Kk -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2r2/5/5/5/5 w K -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black rook lose Castling move 1");
+    }
+    b.SetBoardFEN("5/5/2R2/5/5/5 w K -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2R2/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white rook lose Castling move 2");
+    }
+    b.SetBoardFEN("5/5/2r2/5/5/5 b k -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2r2/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black rook lose Castling move 2");
+    }
+    b.SetBoardFEN("5/5/5/5/5/K3R w Kk -");
+    b.MoveForce(Square{AFILE, RANK1}, Square{CFILE, RANK1}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/5/5/5/1RK2 b k -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white king Castling move 1");
+    }
+    b.SetBoardFEN("r3k/5/5/5/5/5 b Kk -");
+    b.MoveForce(Square{EFILE, RANK6}, Square{CFILE, RANK6}, EMPTYSQ);
+    corb.SetBoardFEN("2kr1/5/5/5/5/5 w K -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black king Castling move 1");
+    }
+    //コード的にキャスリング権失うのが同じとこで動いてるからKk->kが動いてればOK
+
+    // pawn double move
+    b.SetBoardFEN("5/5/5/5/PPPPP/5 w - -");
+    b.MoveForce(Square{CFILE, RANK2}, Square{CFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/2P2/5/PP1PP/5 b - c5");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white pawn double move 1");
+    }
+    b.SetBoardFEN("5/ppppp/5/5/5/5 b - -");
+    b.MoveForce(Square{CFILE, RANK5}, Square{CFILE, RANK3}, EMPTYSQ);
+    corb.SetBoardFEN("5/pp1pp/5/2p2/5/5 w - c4");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black pawn double move 1");
+    }
+    b.SetBoardFEN("5/5/5/5/PPPPP/5 w - -");
+    b.MoveForce(Square{AFILE, RANK2}, Square{AFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/P4/5/1PPPP/5 b - a5");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white pawn double move 2");
+    }
+    b.SetBoardFEN("5/ppppp/5/5/5/5 b - -");
+    b.MoveForce(Square{AFILE, RANK5}, Square{AFILE, RANK3}, EMPTYSQ);
+    corb.SetBoardFEN("5/1pppp/5/p4/5/5 w - a4");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black pawn double move 2");
+    }
+
+    // take move
+    b.SetBoardFEN("5/1pp2/1pK2/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{BFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/1pp2/1K3/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white king take move 1");
+    }
+    b.SetBoardFEN("5/1pp2/1K3/5/5/5 w - -");
+    b.MoveForce(Square{BFILE, RANK4}, Square{BFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/1Kp2/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white king take move 2");
+    }
+    b.SetBoardFEN("5/1Kp2/5/5/5/5 w - -");
+    b.MoveForce(Square{BFILE, RANK5}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2K2/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white king take move 3");
+    }
+    b.SetBoardFEN("5/1PP2/1Pk2/5/5/5 b - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{BFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/1PP2/1k3/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black king take move 1");
+    }
+    b.SetBoardFEN("5/1PP2/1k3/5/5/5 b - -");
+    b.MoveForce(Square{BFILE, RANK4}, Square{BFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/1kP2/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black king take move 2");
+    }
+    b.SetBoardFEN("5/1kP2/5/5/5/5 b - -");
+    b.MoveForce(Square{BFILE, RANK5}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2k2/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black king take move 3");
+    }
+    b.SetBoardFEN("5/1p3/2P2/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{BFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/1P3/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white pawn take move");
+    }
+    b.SetBoardFEN("5/1P3/2p2/5/5/5 b - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{BFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/1p3/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black pawn take move");
+    }
+    b.SetBoardFEN("1p3/2p2/p1N2/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{BFILE, RANK6}, EMPTYSQ);
+    corb.SetBoardFEN("1N3/2p2/p4/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white knight take move 1");
+    }
+    b.SetBoardFEN("1N3/2p2/p4/5/5/5 w - -");
+    b.MoveForce(Square{BFILE, RANK6}, Square{AFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/2p2/N4/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white knight take move 2");
+    }
+    b.SetBoardFEN("5/2p2/N4/5/5/5 w - -");
+    b.MoveForce(Square{AFILE, RANK4}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2N2/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white knight take move 3");
+    }
+    b.SetBoardFEN("1P3/2P2/P1n2/5/5/5 b - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{BFILE, RANK6}, EMPTYSQ);
+    corb.SetBoardFEN("1n3/2P2/P4/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black knight take move 1");
+    }
+    b.SetBoardFEN("1n3/2P2/P4/5/5/5 b - -");
+    b.MoveForce(Square{BFILE, RANK6}, Square{AFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/2P2/n4/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black knight take move 2");
+    }
+    b.SetBoardFEN("5/2P2/n4/5/5/5 b - -");
+    b.MoveForce(Square{AFILE, RANK4}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2n2/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black knight take move 3");
+    }
+    b.SetBoardFEN("p4/5/2B2/5/4p/3p1 w - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{AFILE, RANK6}, EMPTYSQ);
+    corb.SetBoardFEN("B4/5/5/5/4p/3p1 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white bishop take move 1");
+    }
+    b.SetBoardFEN("B4/5/5/5/4p/3p1 w - -");
+    b.MoveForce(Square{AFILE, RANK6}, Square{EFILE, RANK2}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/5/5/4B/3p1 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white bishop take move 2");
+    }
+    b.SetBoardFEN("5/5/5/5/4B/3p1 w - -");
+    b.MoveForce(Square{EFILE, RANK2}, Square{DFILE, RANK1}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/5/5/5/3B1 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white bishop take move 3");
+    }
+    b.SetBoardFEN("P4/5/2b2/5/4P/3P1 b - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{AFILE, RANK6}, EMPTYSQ);
+    corb.SetBoardFEN("b4/5/5/5/4P/3P1 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black bishop take move 1");
+    }
+    b.SetBoardFEN("b4/5/5/5/4P/3P1 b - -");
+    b.MoveForce(Square{AFILE, RANK6}, Square{EFILE, RANK2}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/5/5/4b/3P1 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black bishop take move 2");
+    }
+    b.SetBoardFEN("5/5/5/5/4b/3P1 b - -");
+    b.MoveForce(Square{EFILE, RANK2}, Square{DFILE, RANK1}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/5/5/5/3b1 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black bishop take move 3");
+    }
+    b.SetBoardFEN("5/p1p2/p1R2/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{AFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/p1p2/R4/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white rook take move 1");
+    }
+    b.SetBoardFEN("5/p1p2/R4/5/5/5 w - -");
+    b.MoveForce(Square{AFILE, RANK4}, Square{AFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/R1p2/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white rook take move 2");
+    }
+    b.SetBoardFEN("5/R1p2/5/5/5/5 w - -");
+    b.MoveForce(Square{AFILE, RANK5}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2R2/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white rook take move 3");
+    }
+    b.SetBoardFEN("5/P1P2/P1r2/5/5/5 b - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{AFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/P1P2/r4/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black rook take move 1");
+    }
+    b.SetBoardFEN("5/P1P2/r4/5/5/5 b - -");
+    b.MoveForce(Square{AFILE, RANK4}, Square{AFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/r1P2/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black rook take move 2");
+    }
+    b.SetBoardFEN("5/r1P2/5/5/5/5 b - -");
+    b.MoveForce(Square{AFILE, RANK5}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2r2/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black rook take move 3");
+    }
+    b.SetBoardFEN("5/2p1p/2Q2/5/4p/5 w - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{EFILE, RANK2}, EMPTYSQ);
+    corb.SetBoardFEN("5/2p1p/5/5/4Q/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white queen take move 1");
+    }
+    b.SetBoardFEN("5/2p1p/5/5/4Q/5 w - -");
+    b.MoveForce(Square{EFILE, RANK2}, Square{EFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2p1Q/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white queen take move 2");
+    }
+    b.SetBoardFEN("5/2p1Q/5/5/5/5 w - -");
+    b.MoveForce(Square{EFILE, RANK5}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2Q2/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white queen take move 3");
+    }
+    b.SetBoardFEN("5/2P1P/2q2/5/4P/5 b - -");
+    b.MoveForce(Square{CFILE, RANK4}, Square{EFILE, RANK2}, EMPTYSQ);
+    corb.SetBoardFEN("5/2P1P/5/5/4q/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black queen take move 1");
+    }
+    b.SetBoardFEN("5/2P1P/5/5/4q/5 b - -");
+    b.MoveForce(Square{EFILE, RANK2}, Square{EFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2P1q/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black queen take move 2");
+    }
+    b.SetBoardFEN("5/2P1q/5/5/5/5 b - -");
+    b.MoveForce(Square{EFILE, RANK5}, Square{CFILE, RANK5}, EMPTYSQ);
+    corb.SetBoardFEN("5/2q2/5/5/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black queen take move 3");
+    }
+
+    // anpassant take move
+    b.SetBoardFEN("5/5/5/1pP2/5/5 w - b");
+    b.MoveForce(Square{CFILE, RANK3}, Square{BFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/1P3/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white pawn anppasant take move 1");
+    }
+    b.SetBoardFEN("5/5/1Pp2/5/5/5 b - b");
+    b.MoveForce(Square{CFILE, RANK4}, Square{BFILE, RANK3}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/5/1p3/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black pawn anppasant take move 1");
+    }
+    b.SetBoardFEN("5/5/5/3Pp/5/5 w - e");
+    b.MoveForce(Square{DFILE, RANK3}, Square{EFILE, RANK4}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/4P/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white pawn anppasant take move 2");
+    }
+    b.SetBoardFEN("5/5/3pP/5/5/5 b - e");
+    b.MoveForce(Square{DFILE, RANK4}, Square{EFILE, RANK3}, EMPTYSQ);
+    corb.SetBoardFEN("5/5/5/4p/5/5 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black pawn anppasant take move 2");
+    }
+
+    // promotion move
+    b.SetBoardFEN("5/2P2/5/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK5}, Square{CFILE, RANK6}, WQUEEN);
+    corb.SetBoardFEN("2Q2/5/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white pawn promotion move 1");
+    }
+    b.SetBoardFEN("5/5/5/5/2p2/5 b - -");
+    b.MoveForce(Square{CFILE, RANK2}, Square{CFILE, RANK1}, BQUEEN);
+    corb.SetBoardFEN("5/5/5/5/5/2q2 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black pawn promotion move 1");
+    }
+    b.SetBoardFEN("5/2P2/5/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK5}, Square{CFILE, RANK6}, WROOK);
+    corb.SetBoardFEN("2R2/5/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white pawn promotion move 2");
+    }
+    b.SetBoardFEN("5/5/5/5/2p2/5 b - -");
+    b.MoveForce(Square{CFILE, RANK2}, Square{CFILE, RANK1}, BROOK);
+    corb.SetBoardFEN("5/5/5/5/5/2r2 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black pawn promotion move 2");
+    }
+    b.SetBoardFEN("5/2P2/5/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK5}, Square{CFILE, RANK6}, WBISHOP);
+    corb.SetBoardFEN("2B2/5/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white pawn promotion move 3");
+    }
+    b.SetBoardFEN("5/5/5/5/2p2/5 b - -");
+    b.MoveForce(Square{CFILE, RANK2}, Square{CFILE, RANK1}, BBISHOP);
+    corb.SetBoardFEN("5/5/5/5/5/2b2 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black pawn promotion move 3");
+    }
+    b.SetBoardFEN("5/2P2/5/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK5}, Square{CFILE, RANK6}, WKNIGHT);
+    corb.SetBoardFEN("2N2/5/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white pawn promotion move 4");
+    }
+    b.SetBoardFEN("5/5/5/5/2p2/5 b - -");
+    b.MoveForce(Square{CFILE, RANK2}, Square{CFILE, RANK1}, BKNIGHT);
+    corb.SetBoardFEN("5/5/5/5/5/2n2 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black pawn promotion move 4");
+    }
+    b.SetBoardFEN("1p3/2P2/5/5/5/5 w - -");
+    b.MoveForce(Square{CFILE, RANK5}, Square{BFILE, RANK6}, WQUEEN);
+    corb.SetBoardFEN("1Q3/5/5/5/5/5 b - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in white pawn promotion move 5");
+    }
+    b.SetBoardFEN("5/5/5/5/2p2/1P3 b - -");
+    b.MoveForce(Square{CFILE, RANK2}, Square{BFILE, RANK1}, BQUEEN);
+    corb.SetBoardFEN("5/5/5/5/5/1q3 w - -");
+    if (b != corb)
+    {
+        return mcet::genTestErr("MoveForce doesn't work correctly in black pawn promotion move 5");
     }
 
     return mcet::NoErr;
