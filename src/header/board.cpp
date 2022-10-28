@@ -3114,62 +3114,16 @@ namespace minichess_AI
     {
         Square legalmoves[MAX_LEGALMOVES];
         int no_moves;
-        switch (turn)
+        for (int f = 0; f < 5; f++)
         {
-        case cWhite:
-            LegalMoves(SearchPiece(WKING), legalmoves, &no_moves);
-            if (no_moves == 0)
+            for (int r = 0; r < 6; r++)
             {
-                for (Rank r = RANK1; r >= RANK6; r++)
-                {
-                    for (File f = AFILE; f <= EFILE; f++)
-                    {
-                        if (6 >= (int)GetSquare(Square{f, r}) >= 2)
-                        {
-                            LegalMoves(Square{f, r}, legalmoves, &no_moves);
-                            if (no_moves != 0)
-                            {
-                                return false;
-                            }
-                        }
-                    }
-                }
-                return true;
+                LegalMoves(Square{(File)f, (Rank)r}, legalmoves, &no_moves);
+                if (no_moves != 0)
+                    return false;
             }
-            else
-            {
-                return false;
-            }
-            break;
-        case cBlack:
-            LegalMoves(SearchPiece(BKING), legalmoves, &no_moves);
-            if (no_moves == 0)
-            {
-                for (Rank r = RANK1; r >= RANK6; r++)
-                {
-                    for (File f = AFILE; f <= EFILE; f++)
-                    {
-                        if (14 >= (int)GetSquare(Square{f, r}) >= 10)
-                        {
-                            LegalMoves(Square{f, r}, legalmoves, &no_moves);
-                            if (no_moves != 0)
-                            {
-                                return false;
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-            break;
-        default:
-            return false;
-            break;
         }
+        return true;
     }
 
     // check equality between Boards
