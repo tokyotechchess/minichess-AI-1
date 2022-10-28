@@ -964,6 +964,11 @@ namespace minichess_AI
         return mcet::NoErr;
     }
 
+    bool Board::IsMated()
+    {
+        return true;
+    }
+
     // check equality between Boards
     bool Board::operator==(const Board &b)
     {

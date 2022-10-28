@@ -83,6 +83,7 @@ namespace minichess_AI
         MCError NullMove();
         MCError MoveForce(Square from_square, Square to_square, Piece promotion_piece);
         MCError tempLegalMoves(Square, Square[MAX_LEGALMOVES], int *);
+        bool IsMated();
         // opeartors
 
         bool operator==(const Board &b);
