@@ -3110,7 +3110,6 @@ namespace minichess_AI
         return mcet::NoErr;
     }
 
-
     bool Board::IsMated()
     {
         Square legalmoves[MAX_LEGALMOVES];
@@ -3118,11 +3117,29 @@ namespace minichess_AI
         switch (turn)
         {
         case cWhite:
-            b.LegalMoves(SearchPiece(WKING), legalmoves, &no_moves);
+            LegalMoves(SearchPiece(WKING), legalmoves, &no_moves);
+            if (no_moves == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
             break;
         case cBlack:
-
+            LegalMoves(SearchPiece(BKING), legalmoves, &no_moves);
+            if (no_moves == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            break;
         default:
+            return false;
             break;
         }
     }
