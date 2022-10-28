@@ -1069,11 +1069,11 @@ namespace minichess_AI
                     }
                 }
             }
-            if (b.GetTurn() == copy.GetTurn())
+            switch (b.GetTurn())
             {
-                switch (b.GetTurn())
+            case cWhite:
+                if (copy.GetTurn() == cWhite)
                 {
-                case cWhite:
                     if (b.IsChecked(cWhite))
                     {
                         return -100000;
@@ -1082,7 +1082,14 @@ namespace minichess_AI
                     {
                         return 0;
                     }
-                case cBlack:
+                }
+                else
+                {
+                    return alpha;
+                }
+            case cBlack:
+                if (copy.GetTurn() == cBlack)
+                {
                     if (b.IsChecked(cBlack))
                     {
                         return 100000;
@@ -1091,20 +1098,14 @@ namespace minichess_AI
                     {
                         return 0;
                     }
-                default:
-                    break;
                 }
-            }
-            switch (b.GetTurn())
-            {
-            case cWhite:
-                return alpha;
-            case cBlack:
-                return beta;
+                else
+                {
+                    return beta;
+                }
             default:
                 break;
             }
-
             return 0;
         }
     }
