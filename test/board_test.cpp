@@ -2046,6 +2046,30 @@ MCError TestLegalMoves()
             __TestTemplateArgs{
                 "checked test case knight 8", "5/1n3/3B1/5/3K1/k4 b - -", Square{BFILE, RANK5}, 2,
                 new Square[2]{Square{DFILE, RANK4}, Square{CFILE, RANK3}}},
+            __TestTemplateArgs{
+                "checked test case bishop 1", "5/5/2k1n/2B2/3K1/5 w - -", Square{CFILE, RANK3}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case bishop 2", "5/b4/2k2/5/2KN1/5 b - -", Square{AFILE, RANK5}, 1,
+                new Square[1]{Square{DFILE, RANK2}}},
+            __TestTemplateArgs{
+                "checked test case bishop 3", "5/3k1/4p/3KB/5/5 w - -", Square{EFILE, RANK3}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case bishop 4", "5/2k1b/3P1/2K2/5/5 b - -", Square{EFILE, RANK5}, 1,
+                new Square[1]{Square{DFILE, RANK4}}},
+            __TestTemplateArgs{
+                "checked test case bishop 5", "4B/3q1/5/1K3/5/1k3 w - -", Square{EFILE, RANK6}, 1,
+                new Square[1]{Square{DFILE, RANK5}}},
+            __TestTemplateArgs{
+                "checked test case bishop 6", "2B2/5/k1b1R/5/2K2/5 b - -", Square{CFILE, RANK4}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case bishop 7", "5/5/3k1/5/2B2/1K2q w - -", Square{CFILE, RANK2}, 1,
+                new Square[1]{Square{DFILE, RANK1}}},
+            __TestTemplateArgs{
+                "checked test case bishop 8", "2b2/5/3R1/5/3k1/1K3 b - -", Square{CFILE, RANK6}, 0,
+                new Square[0]{}},
         };
 
     for (__TestTemplateArgs arg : args)
