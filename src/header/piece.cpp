@@ -107,7 +107,7 @@ namespace minichess_AI
 
     std::string ConvSquareToPGNString(Square sq)
     {
-        string con = {(int)sq.file + 'a', (int)sq.rank + '1'};
+        string con = {'a' + (int)sq.file, '1' + (int)sq.rank};
         return con;
     }
 }
