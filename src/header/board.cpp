@@ -334,10 +334,34 @@ namespace minichess_AI
             Color turn = board->GetTurn();
             Color enturn = turn;
             enturn++;
-            int temp1 = (turn == cWhite) ? 1 : -1;
+            int temp1 = (turn == cWhite) ? 1 : -1, lined_fdir, lined_rdir, tempf2, tempr2;
+            bool skip, lined;
             File mvfile;
             Rank mvrank;
-            Piece tempp1, tempp2, pawn = (turn == cWhite) ? WPAWN : BPAWN;
+            Piece tempp1, tempp2, tempp3, pawn = (turn == cWhite) ? WPAWN : BPAWN;
+            Piece checkablePiece1 = (turn == cWhite) ? BQUEEN : WQUEEN, checkablePiece2;
+
+            if (square.file == kingsq.file)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = 0;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = 0;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BBISHOP : WBISHOP;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
 
             for (int i = 0; i < no_movableSquares; i++)
             {
@@ -360,7 +384,28 @@ namespace minichess_AI
                                 board->SetSquare(Square{mvfile, mvrank + temp1}, pawn);
                                 board->SetSquare(square, EMPTYSQ);
 
-                                if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                                if (lined)
+                                {
+                                    tempf2 = (int)kingsq.file + lined_fdir;
+                                    tempr2 = (int)kingsq.rank + lined_rdir;
+                                    while (AFILE <= tempf2 && tempf2 <= EFILE && RANK1 <= tempr2 && tempr2 <= RANK6)
+                                    {
+                                        tempp3 = board->GetSquare(Square{(File)tempf2, (Rank)tempr2});
+                                        if (tempp3 == checkablePiece1 || tempp3 == checkablePiece2)
+                                        {
+                                            skip = true;
+                                            break;
+                                        }
+                                        else if (tempp3 != EMPTYSQ)
+                                        {
+                                            break;
+                                        }
+                                        tempf2 += lined_fdir;
+                                        tempr2 += lined_rdir;
+                                    }
+                                }
+
+                                if (!skip && IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                                 {
                                     legalmoves[*no_moves] = Square{mvfile, mvrank + temp1};
                                     (*no_moves)++;
@@ -383,7 +428,28 @@ namespace minichess_AI
                             board->SetSquare(square, EMPTYSQ);
                             board->SetSquare(movableSquares[i], pawn);
 
-                            if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                            if (lined)
+                            {
+                                tempf2 = (int)kingsq.file + lined_fdir;
+                                tempr2 = (int)kingsq.rank + lined_rdir;
+                                while (AFILE <= tempf2 && tempf2 <= EFILE && RANK1 <= tempr2 && tempr2 <= RANK6)
+                                {
+                                    tempp3 = board->GetSquare(Square{(File)tempf2, (Rank)tempr2});
+                                    if (tempp3 == checkablePiece1 || tempp3 == checkablePiece2)
+                                    {
+                                        skip = true;
+                                        break;
+                                    }
+                                    else if (tempp3 != EMPTYSQ)
+                                    {
+                                        break;
+                                    }
+                                    tempf2 += lined_fdir;
+                                    tempr2 += lined_rdir;
+                                }
+                            }
+
+                            if (!skip && IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                             {
                                 legalmoves[*no_moves] = movableSquares[i];
                                 (*no_moves)++;
@@ -400,7 +466,28 @@ namespace minichess_AI
                             board->SetSquare(movableSquares[i], pawn);
                             board->SetSquare(square, EMPTYSQ);
 
-                            if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                            if (lined)
+                            {
+                                tempf2 = (int)kingsq.file + lined_fdir;
+                                tempr2 = (int)kingsq.rank + lined_rdir;
+                                while (AFILE <= tempf2 && tempf2 <= EFILE && RANK1 <= tempr2 && tempr2 <= RANK6)
+                                {
+                                    tempp3 = board->GetSquare(Square{(File)tempf2, (Rank)tempr2});
+                                    if (tempp3 == checkablePiece1 || tempp3 == checkablePiece2)
+                                    {
+                                        skip = true;
+                                        break;
+                                    }
+                                    else if (tempp3 != EMPTYSQ)
+                                    {
+                                        break;
+                                    }
+                                    tempf2 += lined_fdir;
+                                    tempr2 += lined_rdir;
+                                }
+                            }
+
+                            if (!skip && IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                             {
                                 legalmoves[*no_moves] = movableSquares[i];
                                 (*no_moves)++;
@@ -803,9 +890,54 @@ namespace minichess_AI
         MCError LegalMovesKnight1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
                                          int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
         {
-            int i, temp1, temp2;
+            int i, temp1, temp2, lined_fdir, lined_rdir, tempf1, tempr1;
+            bool lined;
             Color turn = board->GetTurn();
             Piece knight = (turn == cWhite) ? WKNIGHT : BKNIGHT, tempp1;
+            Piece checkablePiece1 = (turn == cWhite) ? BQUEEN : WQUEEN, checkablePiece2;
+
+            if (square.file == kingsq.file)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = 0;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = 0;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BBISHOP : BROOK;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+
+            if (lined)
+            {
+                tempf1 = square.file + lined_fdir;
+                tempr1 = square.rank + lined_rdir;
+                while (AFILE <= tempf1 && tempf1 <= EFILE && RANK1 <= tempr1 && tempr1 <= RANK6)
+                {
+                    tempp1 = board->GetSquare(Square{(File)tempf1, (Rank)tempr1});
+                    if (tempp1 == checkablePiece1 || tempp1 == checkablePiece2)
+                    {
+                        *no_moves = 0;
+                        return mcet::NoErr;
+                    }
+                    else if (tempp1 != EMPTYSQ)
+                    {
+                        break;
+                    }
+                    tempf1 += lined_fdir;
+                    tempr1 += lined_rdir;
+                }
+            }
 
             for (i = 0; i < no_movableSquares; i++)
             {
@@ -1234,12 +1366,35 @@ namespace minichess_AI
         MCError LegalMovesRook1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
                                        int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
         {
-            int i, temp1, temp2, fdir, rdir;
-            bool skip;
+            int i, temp1, temp2, fdir, rdir, lined_fdir, lined_rdir, tempf2, tempr2;
+            bool skip, lined;
             Color turn = board->GetTurn();
-            Piece rook = (turn == cWhite) ? WROOK : BROOK, tempp1;
+            Piece rook = (turn == cWhite) ? WROOK : BROOK, tempp1, tempp2;
+            Piece checkablePiece1 = (turn == cWhite) ? BQUEEN : WQUEEN, checkablePiece2;
             File tempf1;
             Rank tempr1;
+
+            if (square.file == kingsq.file)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = 0;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = 0;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BBISHOP : WBISHOP;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
 
             for (i = 0; i < no_movableSquares; i++)
             {
@@ -1289,7 +1444,28 @@ namespace minichess_AI
                     board->SetSquare(movableSquares[i], rook);
                     board->SetSquare(square, EMPTYSQ);
 
-                    if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                    if (lined)
+                    {
+                        tempf2 = (int)kingsq.file + lined_fdir;
+                        tempr2 = (int)kingsq.rank + lined_rdir;
+                        while (AFILE <= tempf2 && tempf2 <= EFILE && RANK1 <= tempr2 && tempr2 <= RANK6)
+                        {
+                            tempp2 = board->GetSquare(Square{(File)tempf2, (Rank)tempr2});
+                            if (tempp2 == checkablePiece1 || tempp2 == checkablePiece2)
+                            {
+                                skip = true;
+                                break;
+                            }
+                            else if (tempp2 != EMPTYSQ)
+                            {
+                                break;
+                            }
+                            tempf2 += lined_fdir;
+                            tempr2 += lined_rdir;
+                        }
+                    }
+
+                    if (!skip && IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                     {
                         legalmoves[*no_moves] = movableSquares[i];
                         (*no_moves)++;
@@ -1449,12 +1625,35 @@ namespace minichess_AI
         MCError LegalMovesQueen1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
                                         int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
         {
-            int i, fdir, rdir, temp1, temp2;
-            bool skip;
+            int i, fdir, rdir, temp1, temp2, lined_fdir, lined_rdir, tempf2, tempr2;
+            bool skip, lined;
             Color turn = board->GetTurn();
-            Piece queen = (turn == cWhite) ? WQUEEN : BQUEEN, tempp1;
+            Piece queen = (turn == cWhite) ? WQUEEN : BQUEEN, tempp1, tempp2;
+            Piece checkablePiece1 = (turn == cWhite) ? BQUEEN : WQUEEN, checkablePiece2;
             File tempf1;
             Rank tempr1;
+
+            if (square.file == kingsq.file)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = 0;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = 0;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BBISHOP : WBISHOP;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
 
             for (i = 0; i < no_movableSquares; i++)
             {
@@ -1496,7 +1695,28 @@ namespace minichess_AI
                     board->SetSquare(movableSquares[i], queen);
                     board->SetSquare(square, EMPTYSQ);
 
-                    if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                    if (lined)
+                    {
+                        tempf2 = (int)kingsq.file + lined_fdir;
+                        tempr2 = (int)kingsq.rank + lined_rdir;
+                        while (AFILE <= tempf2 && tempf2 <= EFILE && RANK1 <= tempr2 && tempr2 <= RANK6)
+                        {
+                            tempp2 = board->GetSquare(Square{(File)tempf2, (Rank)tempr2});
+                            if (tempp2 == checkablePiece1 || tempp2 == checkablePiece2)
+                            {
+                                skip = true;
+                                break;
+                            }
+                            else if (tempp2 != EMPTYSQ)
+                            {
+                                break;
+                            }
+                            tempf2 += lined_fdir;
+                            tempr2 += lined_rdir;
+                        }
+                    }
+
+                    if (!skip && IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                     {
                         legalmoves[*no_moves] = movableSquares[i];
                         (*no_moves)++;
