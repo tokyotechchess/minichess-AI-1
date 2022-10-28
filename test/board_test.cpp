@@ -2205,6 +2205,8 @@ MCError TestLegalMoves()
         if (e != mcet::NoErr)
             return e;
     }
+
+    return mcet::NoErr;
 }
 
 MCError TestMoveForce()
