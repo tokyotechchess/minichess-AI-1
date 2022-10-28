@@ -758,7 +758,8 @@ namespace minichess_AI
                 {
                     if (board->GetSquare(Square{EFILE, RANK1}) == WROOK)
                     {
-                        if (!(isAttacked[AFILE][RANK1] || isAttacked[BFILE][RANK1] || isAttacked[CFILE][RANK1]))
+                        if (!(isAttacked[AFILE][RANK1] || isAttacked[BFILE][RANK1] || isAttacked[CFILE][RANK1]) &&
+                            board->GetSquare(Square{DFILE, RANK1}) == EMPTYSQ)
                         {
                             legalmoves[*no_moves] = Square{CFILE, RANK1};
                             (*no_moves)++;
@@ -769,7 +770,8 @@ namespace minichess_AI
                 {
                     if (board->GetSquare(Square{AFILE, RANK6}) == BROOK)
                     {
-                        if (!(isAttacked[EFILE][RANK6] || isAttacked[DFILE][RANK6] || isAttacked[CFILE][RANK6]))
+                        if (!(isAttacked[EFILE][RANK6] || isAttacked[DFILE][RANK6] || isAttacked[CFILE][RANK6]) &&
+                            board->GetSquare(Square{BFILE, RANK6}) == EMPTYSQ)
                         {
                             legalmoves[*no_moves] = Square{CFILE, RANK6};
                             (*no_moves)++;
