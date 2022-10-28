@@ -1678,7 +1678,7 @@ namespace minichess_AI
                     tempf1 = square.file + fdir;
                     tempr1 = square.rank + rdir;
 
-                    while (tempf1 != movableSquares[i].file && tempr1 != movableSquares[i].rank)
+                    while (tempf1 != movableSquares[i].file || tempr1 != movableSquares[i].rank)
                     {
                         if (board->GetSquare(Square{tempf1, tempr1}) != EMPTYSQ)
                         {
