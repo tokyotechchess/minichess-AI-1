@@ -6,6 +6,7 @@
 #include "util/util.h"
 #include "piece.h"
 #include "board.h"
+#include "minichessAI.h"
 
 namespace minichess_AI
 {
