@@ -2022,6 +2022,30 @@ MCError TestLegalMoves()
             __TestTemplateArgs{
                 "chekced test case king 8", "5/2n2/1k2R/5/3P1/K4 b - -", Square{BFILE, RANK4}, 4,
                 new Square[4]{Square{AFILE, RANK5}, Square{BFILE, RANK5}, Square{AFILE, RANK3}, Square{BFILE, RANK3}}},
+            __TestTemplateArgs{
+                "checked test case knight 1", "5/2k2/2p2/1K3/2N2/5 w - -", Square{CFILE, RANK2}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case knight 2", "5/5/2nk1/4P/2K2/5 b - -", Square{CFILE, RANK4}, 1,
+                new Square[1]{Square{EFILE, RANK3}}},
+            __TestTemplateArgs{
+                "checked test case knight 3", "5/5/2kn1/5/2K2/3N1 w - -", Square{DFILE, RANK1}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case knight 4", "5/3k1/rn3/3N1/2K2/2R2 w - -", Square{DFILE, RANK3}, 1,
+                new Square[1]{Square{BFILE, RANK4}}},
+            __TestTemplateArgs{
+                "checked test case knight 5", "5/3k1/5/5/1K2r/3N1 w - -", Square{DFILE, RANK1}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case knight 6", "5/3kn/5/5/1n2K/3Q1 b - -", Square{BFILE, RANK2}, 2,
+                new Square[2]{Square{DFILE, RANK1}, Square{DFILE, RANK3}}},
+            __TestTemplateArgs{
+                "checked test case knight 7", "5/1q3/5/k4/4K/3N1 w - -", Square{DFILE, RANK1}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case knight 8", "5/1n3/3B1/5/3K1/k4 b - -", Square{BFILE, RANK5}, 2,
+                new Square[2]{Square{DFILE, RANK4}, Square{CFILE, RANK3}}},
         };
 
     for (__TestTemplateArgs arg : args)
