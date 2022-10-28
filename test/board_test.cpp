@@ -2136,6 +2136,19 @@ MCError TestLegalMoves()
             __TestTemplateArgs{
                 "double checked test case king 4", "5/1n3/5/1RK2/1q2k/2r2 w - -", Square{CFILE, RANK3}, 2,
                 new Square[2]{Square{BFILE, RANK4}, Square{BFILE, RANK2}}},
+            __TestTemplateArgs{
+                "double checked test case not king 1", "5/3KN/1k2P/1q3/3r1/5 w - -", Square{EFILE, RANK5}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "double checked test case not king 2", "5/k4/r4/1N3/5/1K2B b - -", Square{AFILE, RANK4}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "double checked test case not king 3", "5/k1r2/5/1p3/B1K2/5 w - -", Square{AFILE, RANK2}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "double checked test case not king 4", "2Q2/5/k3n/2Np1/5/2K2 b - -", Square{EFILE, RANK4}, 0,
+                new Square[0]{}},
+
         };
 
     for (__TestTemplateArgs arg : args)
