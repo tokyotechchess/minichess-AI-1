@@ -985,13 +985,35 @@ namespace minichess_AI
         MCError LegalMovesBishop1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
                                          int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
         {
-
-            int i, temp1, temp2, fdir, rdir;
-            bool skip;
+            int i, temp1, temp2, fdir, rdir, lined_fdir, lined_rdir, tempf2, tempr2;
+            bool skip, lined;
             Color turn = board->GetTurn();
-            Piece bishop = (turn == cWhite) ? WBISHOP : BBISHOP, tempp1;
+            Piece bishop = (turn == cWhite) ? WBISHOP : BBISHOP, tempp1, tempp2;
+            Piece checkablePiece1 = (turn == cWhite) ? BQUEEN : WQUEEN, checkablePiece2;
             File tempf1;
             Rank tempr1;
+
+            if (square.file == kingsq.file)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = 0;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = 0;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BBISHOP : WBISHOP;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
 
             for (i = 0; i < no_movableSquares; i++)
             {
@@ -1023,7 +1045,28 @@ namespace minichess_AI
                     board->SetSquare(movableSquares[i], bishop);
                     board->SetSquare(square, EMPTYSQ);
 
-                    if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                    if (lined)
+                    {
+                        tempf2 = (int)kingsq.file + lined_fdir;
+                        tempr2 = (int)kingsq.rank + lined_rdir;
+                        while (AFILE <= tempf2 && tempf2 <= EFILE && RANK1 <= tempr2 && tempr2 <= RANK6)
+                        {
+                            tempp2 = board->GetSquare(Square{(File)tempf2, (Rank)tempr2});
+                            if (tempp2 == checkablePiece1 || tempp2 == checkablePiece2)
+                            {
+                                skip = true;
+                                break;
+                            }
+                            else if (tempp2 != EMPTYSQ)
+                            {
+                                break;
+                            }
+                            tempf2 += lined_fdir;
+                            tempr2 += lined_rdir;
+                        }
+                    }
+
+                    if (!skip && IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
                     {
                         legalmoves[*no_moves] = movableSquares[i];
                         (*no_moves)++;
