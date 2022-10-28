@@ -7,10 +7,6 @@ namespace minichess_AI
         return 0;
     }
 
-    MCError minichess_AI::tempLegalMoves(Square square, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
-    {
-        return mcet::NoErr;
-    }
 
     double minichessAI::alphabeta(Board b, double alpha, double beta, int depth, int depthMax)
     {
