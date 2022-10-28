@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(TARGET_source_file
 ./test_main.cpp
 ./board_test.cpp
+./util_util_test.cpp
 )
 
 set(minichessAI_source_file
