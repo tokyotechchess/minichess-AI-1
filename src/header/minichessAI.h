@@ -15,6 +15,7 @@ namespace minichess_AI
         Square bestMoves_from[MAX_BESTMOVES];
         Square bestMoves_to[MAX_BESTMOVES];
         Piece bestMovesPromotion[MAX_BESTMOVES];
+        Board now_analyzed;
 
     public:
         double tempEvaluator(Board b);
