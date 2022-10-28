@@ -2,11 +2,10 @@
 using std::string;
 namespace minichess_AI
 {
-        double minichessAI::tempEvaluator(Board b)
+    double minichessAI::tempEvaluator(Board b)
     {
         return 0;
     }
-
 
     double minichessAI::alphabeta(Board b, double alpha, double beta, int depth, int depthMax)
     {

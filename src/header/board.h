@@ -13,9 +13,9 @@ Class "Board" and its method are defined.
 using std::string;
 namespace minichess_AI
 {
-        // The max length of array 'legalmoves' recieved by Board::LegalMoves(...)
+    // The max length of array 'legalmoves' recieved by Board::LegalMoves(...)
     constexpr int MAX_LEGALMOVES = 17;
-    
+
     class Board
     {
     private:
