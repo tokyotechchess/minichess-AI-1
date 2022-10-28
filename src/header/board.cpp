@@ -335,7 +335,7 @@ namespace minichess_AI
             Color enturn = turn;
             enturn++;
             int temp1 = (turn == cWhite) ? 1 : -1, lined_fdir, lined_rdir, tempf2, tempr2;
-            bool skip, lined;
+            bool skip = false, lined = false;
             File mvfile;
             Rank mvrank;
             Piece tempp1, tempp2, tempp3, pawn = (turn == cWhite) ? WPAWN : BPAWN;
@@ -365,6 +365,7 @@ namespace minichess_AI
 
             for (int i = 0; i < no_movableSquares; i++)
             {
+                skip = false;
                 mvfile = movableSquares[i].file;
                 mvrank = movableSquares[i].rank;
                 tempp1 = board->GetSquare(Square{mvfile, mvrank});
@@ -1426,7 +1427,7 @@ namespace minichess_AI
 
                     tempf1 = square.file + fdir;
                     tempr1 = square.rank + rdir;
-                    while (movableSquares[i].file != tempf1 && movableSquares[i].rank != tempr1)
+                    while (movableSquares[i].file != tempf1 || movableSquares[i].rank != tempr1)
                     {
                         if (board->GetSquare(Square{tempf1, tempr1}) != EMPTYSQ)
                         {
