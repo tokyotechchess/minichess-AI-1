@@ -107,7 +107,7 @@ namespace minichess_AI
     Piece ConvFENCharToPiece(char c);
 
     char ConvPieceToFENChar(Piece p);
-    string ConvSquareToPGNString(Square sq);
+    std::string ConvSquareToPGNString(Square sq);
     inline std::ostream &operator<<(std::ostream &os, const Piece &p)
     {
         os << ConvPieceToFENChar(p);
