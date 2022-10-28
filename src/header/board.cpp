@@ -709,7 +709,7 @@ namespace minichess_AI
                             break;
                         }
                     }
-                    else if (GetPieceColor(p) == turn)
+                    else if (GetPieceColor(p) == turn && p != king)
                     {
                         isAttacked[i][j] = true;
                     }
@@ -767,7 +767,7 @@ namespace minichess_AI
                 }
                 else if (turn == cBlack && square == Square{EFILE, RANK6})
                 {
-                    if (board->GetSquare(Square{AFILE, RANK6}) == WROOK)
+                    if (board->GetSquare(Square{AFILE, RANK6}) == BROOK)
                     {
                         if (!(isAttacked[EFILE][RANK6] || isAttacked[DFILE][RANK6] || isAttacked[CFILE][RANK6]))
                         {
