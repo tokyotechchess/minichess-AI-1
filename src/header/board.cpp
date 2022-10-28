@@ -990,7 +990,7 @@ namespace minichess_AI
             {
                 for (Rank r = RANK1; r <= RANK6; r++)
                 {
-                    b.tempLegalMoves(Square{f, r}, legalmoves[MAX_LEGALMOVES], &no_moves);
+                    b.tempLegalMoves(Square{f, r}, legalmoves, &no_moves);
                     for (int i = 0; i < no_moves; i++)
                     {
                         copy = b;
