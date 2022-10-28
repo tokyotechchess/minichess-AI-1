@@ -964,6 +964,11 @@ namespace minichess_AI
         return 0;
     }
 
+    MCError Board::tempLegalMoves(Square square, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
+    {
+        return mcet::NoErr;
+    }
+
     double Board::alphabeta(Board b, double alpha, double beta, int depth, int depthMax)
     {
         Board copy = b;
@@ -985,7 +990,7 @@ namespace minichess_AI
             {
                 for (Rank r = RANK1; r <= RANK6; r++)
                 {
-                    b.LegalMoves(Square{f, r}, legalmoves[MAX_LEGALMOVES], &no_moves);
+                    b.tempLegalMoves(Square{f, r}, legalmoves[MAX_LEGALMOVES], &no_moves);
                     for (int i = 0; i < no_moves; i++)
                     {
                         copy = b;

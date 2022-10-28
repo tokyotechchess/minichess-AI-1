@@ -91,6 +91,7 @@ namespace minichess_AI
         MCError NullMove();
         MCError MoveForce(Square from_square, Square to_square, Piece promotion_piece);
         double tempEvaluator(Board b);
+        MCError tempLegalMoves(Square square, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
         double alphabeta(Board b, double alpha, double beta, int depth, int depthMax);
 
         // opeartors
