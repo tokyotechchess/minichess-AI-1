@@ -2175,6 +2175,24 @@ MCError TestLegalMoves()
             __TestTemplateArgs{
                 "castling test case 4", "rn2k/ppppp/5/5/PPPPP/K2NR b Kk -", Square{EFILE, RANK6}, 1,
                 new Square[1]{Square{DFILE, RANK6}}},
+            __TestTemplateArgs{
+                "castling test case 5", "r2bk/ppppp/5/5/PPPPP/KB2R w Kk -", Square{AFILE, RANK1}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "castling test case 6", "r2bk/ppppp/5/5/PPPPP/KB2R b Kk -", Square{EFILE, RANK6}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "castling test case 7", "r3k/p3p/4B/b4/P3P/K3R w Kk -", Square{AFILE, RANK1}, 1,
+                new Square[1]{Square{BFILE, RANK1}}},
+            __TestTemplateArgs{
+                "castling test case 8", "r3k/p3p/4B/b4/P3P/K3R b Kk -", Square{EFILE, RANK6}, 1,
+                new Square[1]{Square{DFILE, RANK6}}},
+            __TestTemplateArgs{
+                "castling test case 9", "r3k/p3p/5/5/P3P/K3R w - -", Square{AFILE, RANK1}, 2,
+                new Square[2]{Square{BFILE, RANK1}, Square{BFILE, RANK2}}},
+            __TestTemplateArgs{
+                "castling test case 10", "r3k/p3p/5/5/P3P/K3R b - -", Square{EFILE, RANK6}, 2,
+                new Square[2]{Square{DFILE, RANK6}, Square{DFILE, RANK5}}},
         };
 
     for (__TestTemplateArgs arg : args)
