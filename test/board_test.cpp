@@ -4,6 +4,8 @@ test board.h
 
 #include "board_test.h"
 
+using std::string;
+
 void __Test__Board()
 {
     MCError e;
@@ -24,6 +26,10 @@ void __Test__Board()
         std::cout << e.DisplayError() << std::endl;
     }
     if ((e = TestMove()) != mcet::NoErr)
+    {
+        std::cout << e.DisplayError() << std::endl;
+    }
+    if ((e = TestLegalMoves()) != mcet::NoErr)
     {
         std::cout << e.DisplayError() << std::endl;
     }
@@ -1682,6 +1688,523 @@ MCError TestMove()
         return e;
     if (b != corb)
         return mcet::genTestErr("Move doesn't work correctly in play game test case 2 : 6. ... Qd4");
+
+    return mcet::NoErr;
+}
+
+MCError TestLegalMoves()
+{
+    MCError e;
+
+    struct __TestTemplateArgs
+    {
+        string testname;
+        string FEN;
+        Square square;
+        int cor_no_moves;
+        Square *cor_legalmoves;
+    };
+
+    MCError (*__TestTemplate)(__TestTemplateArgs) = [](__TestTemplateArgs args) -> MCError
+    {
+        Board b;
+        MCError e;
+        Square lms[MAX_LEGALMOVES];
+        int no_mvs;
+
+        e = b.SetBoardFEN(args.FEN);
+        if (e != mcet::NoErr)
+            return e;
+        e = b.LegalMoves(args.square, lms, &no_mvs);
+        if (e != mcet::NoErr)
+            return e;
+        if (no_mvs != args.cor_no_moves)
+            return mcet::genTestErr("LegalMoves is wrong about no_moves in " + args.testname);
+        else if (!SameAsSet(lms, args.cor_legalmoves, no_mvs))
+            return mcet::genTestErr("LegalMoves is wrong about legalmoves in " + args.testname);
+
+        return mcet::NoErr;
+    };
+
+    __TestTemplateArgs args[] =
+        {
+            // no other pieces
+
+            __TestTemplateArgs{
+                "no other pieces test case 1", "4k/5/2B2/5/5/K4 w - -", Square{CFILE, RANK4}, 8,
+                new Square[8]{Square{AFILE, RANK6}, Square{AFILE, RANK2}, Square{BFILE, RANK5}, Square{BFILE, RANK3},
+                              Square{DFILE, RANK5}, Square{DFILE, RANK3}, Square{EFILE, RANK6}, Square{EFILE, RANK2}}},
+            __TestTemplateArgs{
+                "no other pieces test case 2", "4k/5/2b2/5/5/K4 b - -", Square{CFILE, RANK4}, 7,
+                new Square[7]{Square{AFILE, RANK6}, Square{AFILE, RANK2}, Square{BFILE, RANK5}, Square{BFILE, RANK3},
+                              Square{DFILE, RANK5}, Square{DFILE, RANK3}, Square{EFILE, RANK2}}},
+            __TestTemplateArgs{
+                "no other pieces test case 3", "4k/5/5/3K1/5/5 w - -", Square{DFILE, RANK3}, 8,
+                new Square[8]{Square{CFILE, RANK2}, Square{CFILE, RANK3}, Square{CFILE, RANK4}, Square{DFILE, RANK2},
+                              Square{DFILE, RANK4}, Square{EFILE, RANK2}, Square{EFILE, RANK3}, Square{EFILE, RANK4}}},
+            __TestTemplateArgs{
+                "no other pieces test case 4", "4k/5/5/3K1/5/5 b - -", Square{EFILE, RANK6}, 3,
+                new Square[3]{Square{DFILE, RANK6}, Square{DFILE, RANK5}, Square{EFILE, RANK5}}},
+            __TestTemplateArgs{
+                "no other pieces test case 5", "4k/5/2N2/5/5/K4 w - -", Square{CFILE, RANK4}, 8,
+                new Square[8]{Square{BFILE, RANK6}, Square{DFILE, RANK6}, Square{AFILE, RANK5}, Square{EFILE, RANK5},
+                              Square{AFILE, RANK3}, Square{EFILE, RANK3}, Square{BFILE, RANK2}, Square{DFILE, RANK2}}},
+            __TestTemplateArgs{
+                "no other pieces test case 6", "4k/5/3n1/5/5/K4 b - -", Square{DFILE, RANK4}, 5,
+                new Square[5]{Square{CFILE, RANK6}, Square{BFILE, RANK5}, Square{BFILE, RANK3}, Square{CFILE, RANK2},
+                              Square{EFILE, RANK2}}},
+            __TestTemplateArgs{
+                "no other pieces test case 7", "4k/5/2B2/5/5/K4 w - -", Square{CFILE, RANK4}, 8,
+                new Square[8]{Square{BFILE, RANK5}, Square{DFILE, RANK5}, Square{AFILE, RANK6}, Square{EFILE, RANK6},
+                              Square{BFILE, RANK3}, Square{DFILE, RANK3}, Square{AFILE, RANK2}, Square{EFILE, RANK2}}},
+            __TestTemplateArgs{
+                "no other pieces test case 8", "4k/3b1/5/5/5/K4 b - -", Square{DFILE, RANK5}, 5,
+                new Square[5]{Square{CFILE, RANK6}, Square{EFILE, RANK4}, Square{CFILE, RANK4}, Square{BFILE, RANK3},
+                              Square{AFILE, RANK2}}},
+            __TestTemplateArgs{
+                "no other pieces test case 9", "4k/5/5/R4/5/K4 w - -", Square{AFILE, RANK3}, 8,
+                new Square[8]{Square{AFILE, RANK4}, Square{AFILE, RANK5}, Square{AFILE, RANK6}, Square{AFILE, RANK2},
+                              Square{BFILE, RANK3}, Square{CFILE, RANK3}, Square{DFILE, RANK3}, Square{EFILE, RANK3}}},
+            __TestTemplateArgs{
+                "no other pieces test case 10", "4k/5/2r2/5/5/K4 b - -", Square{CFILE, RANK4}, 9,
+                new Square[9]{Square{CFILE, RANK5}, Square{CFILE, RANK6}, Square{CFILE, RANK3}, Square{CFILE, RANK2},
+                              Square{CFILE, RANK1}, Square{AFILE, RANK4}, Square{BFILE, RANK4}, Square{DFILE, RANK4},
+                              Square{EFILE, RANK4}}},
+            __TestTemplateArgs{
+                "no other pieces test case 11", "4k/5/5/5/5/K2Q1 w - -", Square{DFILE, RANK1}, 12,
+                new Square[12]{Square{DFILE, RANK2}, Square{DFILE, RANK3}, Square{DFILE, RANK4}, Square{DFILE, RANK5},
+                               Square{DFILE, RANK6}, Square{BFILE, RANK1}, Square{CFILE, RANK1}, Square{EFILE, RANK1},
+                               Square{EFILE, RANK2}, Square{CFILE, RANK2}, Square{BFILE, RANK3}, Square{AFILE, RANK4}}},
+            __TestTemplateArgs{
+                "no other pieces test case 12", "4k/5/5/2q2/5/K4 b - -", Square{CFILE, RANK3}, 17,
+                new Square[17]{Square{CFILE, RANK1}, Square{CFILE, RANK2}, Square{CFILE, RANK4}, Square{CFILE, RANK5},
+                               Square{CFILE, RANK6}, Square{AFILE, RANK3}, Square{BFILE, RANK3}, Square{DFILE, RANK3},
+                               Square{EFILE, RANK3}, Square{BFILE, RANK2}, Square{DFILE, RANK2}, Square{AFILE, RANK1},
+                               Square{EFILE, RANK1}, Square{BFILE, RANK4}, Square{DFILE, RANK4}, Square{AFILE, RANK5},
+                               Square{EFILE, RANK5}}},
+
+            // with other pieces
+
+            __TestTemplateArgs{
+                "with other pieces test case pawn 1", "3q1/1n1kp/pP1p1/P2QP/1KN2/5 w - -", Square{EFILE, RANK3}, 2,
+                new Square[2]{Square{EFILE, RANK4}, Square{DFILE, RANK4}}},
+            __TestTemplateArgs{
+                "with other pieces test case pawn 2", "r4/q2k1/1p1p1/1Pp2/1BPP1/1KN1R w - c3", Square{BFILE, RANK3}, 1,
+                new Square[1]{Square{CFILE, RANK4}}},
+            __TestTemplateArgs{
+                "with other pieces test case pawn 3", "2k2/5/3p1/2N1n/1P3/1K3 b - -", Square{DFILE, RANK4}, 2,
+                new Square[2]{Square{CFILE, RANK3}, Square{DFILE, RANK3}}},
+            __TestTemplateArgs{
+                "with other pieces test case pawn 4", "4k/5/K1P2/1p3/1pNR1/Q1b2 b - c4", Square{BFILE, RANK2}, 2,
+                new Square[2]{Square{AFILE, RANK1}, Square{BFILE, RANK1}}},
+            __TestTemplateArgs{
+                "with other pieces test case king 1", "1q3/1N2k/2K2/4r/5/5 w - -", Square{CFILE, RANK4}, 1,
+                new Square[1]{Square{BFILE, RANK4}}},
+            __TestTemplateArgs{
+                "with other pieces test case king 2", "1b1k1/5/3n1/1PK2/5/5 w - -", Square{CFILE, RANK3}, 5,
+                new Square[5]{Square{BFILE, RANK2}, Square{BFILE, RANK4}, Square{CFILE, RANK4}, Square{DFILE, RANK2},
+                              Square{DFILE, RANK3}}},
+            __TestTemplateArgs{
+                "with other pieces test case king 3", "5/5/1Pkq1/3P1/1RP2/1K3 b - -", Square{CFILE, RANK4}, 3,
+                new Square[3]{Square{BFILE, RANK5}, Square{CFILE, RANK3}, Square{DFILE, RANK5}}},
+            __TestTemplateArgs{
+                "with other pieces test case king 4", "2nn1/2Q2/4k/2K2/5/5 b - -", Square{EFILE, RANK4}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "with other pieces test case knight 1", "5/1k3/2nP1/1K2b/2N2/5 w - -", Square{CFILE, RANK2}, 5,
+                new Square[5]{Square{BFILE, RANK4}, Square{AFILE, RANK3}, Square{AFILE, RANK1}, Square{EFILE, RANK1},
+                              Square{EFILE, RANK3}}},
+            __TestTemplateArgs{
+                "with other pieces test case knight 2", "5/2K2/1p1PN/1k1q1/3r1/5 w - -", Square{EFILE, RANK4}, 3,
+                new Square[3]{Square{DFILE, RANK6}, Square{CFILE, RANK3}, Square{DFILE, RANK2}}},
+            __TestTemplateArgs{
+                "with other pieces test case knight 3", "5/2n2/2P2/1K1k1/N4/5 b - -", Square{CFILE, RANK5}, 5,
+                new Square[5]{Square{AFILE, RANK6}, Square{AFILE, RANK4}, Square{BFILE, RANK3}, Square{EFILE, RANK4},
+                              Square{EFILE, RANK6}}},
+            __TestTemplateArgs{
+                "with other pieces test case knight 4", "5/5/5/1k1N1/2q2/n1Q1K b - -", Square{AFILE, RANK1}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "with other pieces test case bishop 1", "K4/P3r/5/2Bk1/2nN1/5 w - -", Square{CFILE, RANK3}, 5,
+                new Square[5]{Square{BFILE, RANK2}, Square{AFILE, RANK1}, Square{BFILE, RANK4}, Square{DFILE, RANK4},
+                              Square{EFILE, RANK5}}},
+            __TestTemplateArgs{
+                "with other pieces test case bishop 2", "2k2/p1n2/1p3/B4/1R3/K1n2 w - -", Square{AFILE, RANK3}, 1,
+                new Square[1]{Square{BFILE, RANK4}}},
+            __TestTemplateArgs{
+                "with other pieces test case bishop 3", "5/2k1B/5/P2K1/2N2/b4 b - -", Square{AFILE, RANK1}, 4,
+                new Square[4]{Square{BFILE, RANK2}, Square{CFILE, RANK3}, Square{DFILE, RANK4}, Square{EFILE, RANK5}}},
+            __TestTemplateArgs{
+                "with other pieces test case bishop 4", "n4/5/2k2/3b1/2N2/K4 b - -", Square{DFILE, RANK3}, 3,
+                new Square[3]{Square{CFILE, RANK2}, Square{EFILE, RANK2}, Square{EFILE, RANK4}}},
+            __TestTemplateArgs{
+                "with other pieces test case rook 1", "3k1/2b2/5/2R1n/1KP2/5 w - -", Square{CFILE, RANK3}, 6,
+                new Square[6]{Square{AFILE, RANK3}, Square{BFILE, RANK3}, Square{DFILE, RANK3}, Square{EFILE, RANK3},
+                              Square{CFILE, RANK4}, Square{CFILE, RANK5}}},
+            __TestTemplateArgs{
+                "with other pieces test case rook 2", "R2r1/1k3/5/B4/2K2/5 w - -", Square{AFILE, RANK6}, 5,
+                new Square[5]{Square{AFILE, RANK5}, Square{AFILE, RANK4}, Square{BFILE, RANK6}, Square{CFILE, RANK6},
+                              Square{DFILE, RANK6}}},
+            __TestTemplateArgs{
+                "with ohter pieces test case rook 3", "5/2qrk/5/1K1Q1/5/5 b - -", Square{DFILE, RANK5}, 3,
+                new Square[3]{Square{DFILE, RANK6}, Square{DFILE, RANK4}, Square{DFILE, RANK3}}},
+            __TestTemplateArgs{
+                "with other pieces test case rook 4", "r4/1b1k1/5/1N3/2K2/1Q3 b - -", Square{AFILE, RANK6}, 9,
+                new Square[9]{Square{AFILE, RANK5}, Square{AFILE, RANK4}, Square{AFILE, RANK3}, Square{AFILE, RANK2},
+                              Square{AFILE, RANK1}, Square{BFILE, RANK6}, Square{CFILE, RANK6}, Square{DFILE, RANK6},
+                              Square{EFILE, RANK6}}},
+            __TestTemplateArgs{
+                "with other pieces test case queen 1", "5/1k1nN/2b2/5/1K2Q/3R1 w - -", Square{EFILE, RANK2}, 7,
+                new Square[7]{Square{EFILE, RANK1}, Square{EFILE, RANK3}, Square{EFILE, RANK4}, Square{DFILE, RANK2},
+                              Square{CFILE, RANK2}, Square{DFILE, RANK3}, Square{CFILE, RANK4}}},
+            __TestTemplateArgs{
+                "with other pieces test case queen 2", "rb1k1/4n/2Q2/1NN2/4P/2K2 w - -", Square{CFILE, RANK4}, 11,
+                new Square[11]{Square{AFILE, RANK6}, Square{AFILE, RANK4}, Square{BFILE, RANK5}, Square{BFILE, RANK4},
+                               Square{CFILE, RANK6}, Square{CFILE, RANK5}, Square{DFILE, RANK5}, Square{DFILE, RANK4},
+                               Square{DFILE, RANK3}, Square{EFILE, RANK6}, Square{EFILE, RANK4}}},
+            __TestTemplateArgs{
+                "with other pieces test case queen 3", "1k3/5/1n1q1/2B1n/1K1R1/2Q2 b - -", Square{DFILE, RANK4}, 9,
+                new Square[9]{Square{CFILE, RANK5}, Square{CFILE, RANK4}, Square{CFILE, RANK3}, Square{DFILE, RANK6},
+                              Square{DFILE, RANK5}, Square{DFILE, RANK3}, Square{DFILE, RANK2}, Square{EFILE, RANK5},
+                              Square{EFILE, RANK4}}},
+            __TestTemplateArgs{
+                "with other pieces test case queen 4", "n3q/1r1kN/5/2P2/K4/5 b - -", Square{EFILE, RANK6}, 4,
+                new Square[4]{Square{EFILE, RANK5}, Square{BFILE, RANK6}, Square{CFILE, RANK6}, Square{DFILE, RANK6}}},
+
+            // pinned
+
+            __TestTemplateArgs{
+                "pinned test case pawn 1", "5/3nk/5/2b2/KP2r/5 w - -", Square{BFILE, RANK2}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "pinned test case pawn 2", "r4/2k2/5/1b3/P4/K2R1 w - -", Square{AFILE, RANK2}, 2,
+                new Square[2]{Square{AFILE, RANK3}, Square{AFILE, RANK4}}},
+            __TestTemplateArgs{
+                "pinned test case pawn 3", "1k3/2p2/1NbB/5/2K2/5 b - -", Square{CFILE, RANK5}, 1,
+                new Square[1]{Square{DFILE, RANK4}}},
+            __TestTemplateArgs{
+                "pinned test case pawn 4", "5/5/3k1/2p2/1n1p1/QK3 b - -", Square{CFILE, RANK3}, 1,
+                new Square[1]{Square{CFILE, RANK2}}},
+            __TestTemplateArgs{
+                "pinned test case pawn 5", "4k/4p/3B1/4n/4Q/K3R b - -", Square{EFILE, RANK5}, 2,
+                new Square[2]{Square{DFILE, RANK4}, Square{EFILE, RANK4}}},
+            __TestTemplateArgs{
+                "pinned test case pawn 6", "k4/4b/5/2P2/1N3/K4 w - -", Square{CFILE, RANK3}, 1,
+                new Square[1]{Square{CFILE, RANK4}}},
+            __TestTemplateArgs{
+                "pinned test case pawn 7", "2k2/5/2p2/2PN1/5/K1R2 b - -", Square{CFILE, RANK4}, 1,
+                new Square[1]{Square{DFILE, RANK3}}},
+            __TestTemplateArgs{
+                "pinned test case pawn 8", "1k3/1r3/2n2/1P3/1B3/1K3 w - -", Square{BFILE, RANK3}, 2,
+                new Square[2]{Square{BFILE, RANK4}, Square{CFILE, RANK4}}},
+            __TestTemplateArgs{
+                "pinned test case pawn 9", "5/Rpp1k/5/1K3/5/5 b - -", Square{CFILE, RANK5}, 2,
+                new Square[2]{Square{CFILE, RANK4}, Square{CFILE, RANK3}}},
+            __TestTemplateArgs{
+                "pinned test case pawn 10", "4k/3N1/2p2/5/B4/4K b - -", Square{CFILE, RANK4}, 1,
+                new Square[1]{Square{CFILE, RANK3}}},
+            __TestTemplateArgs{
+                "pinned test case knight 1", "5/1k1b1/5/1N3/K1N2/5 w - -", Square{BFILE, RANK3}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "pinned test case knight 2", "5/1k3/3K1/3N1/5/3r1 w - -", Square{CFILE, RANK3}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "pinned test case knight 3", "5/5/1k1nQ/5/5/2K2 b - -", Square{DFILE, RANK4}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "pinned test case knight 4", "Q2n1/1n3/5/P2R1/4k/2K2 b - -", Square{BFILE, RANK5}, 3,
+                new Square[3]{Square{AFILE, RANK3}, Square{CFILE, RANK3}, Square{DFILE, RANK4}}},
+            __TestTemplateArgs{
+                "pinned test case bishop 1", "2r1k/5/3p1/2B2/2K2/5 w - -", Square{CFILE, RANK3}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "pinned test case bishop 2", "4k/5/1K3/2B2/5/4q w - -", Square{CFILE, RANK3}, 2,
+                new Square[2]{Square{DFILE, RANK2}, Square{EFILE, RANK1}}},
+            __TestTemplateArgs{
+                "pinned test case bishop 3", "5/5/5/Rb1k1/5/2K2 b - -", Square{BFILE, RANK3}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "pinned test case bishop 4", "2k2/2P2/2b2/5/2R2/2K2 b - -", Square{CFILE, RANK4}, 8,
+                new Square[8]{Square{AFILE, RANK6}, Square{AFILE, RANK2}, Square{BFILE, RANK5}, Square{BFILE, RANK3},
+                              Square{DFILE, RANK5}, Square{DFILE, RANK3}, Square{EFILE, RANK6}, Square{EFILE, RANK2}}},
+            __TestTemplateArgs{
+                "pinned test case bishop 5", "2r2/1kP2/3P1/2B2/1n1K1/5 w - -", Square{CFILE, RANK3}, 3,
+                new Square[3]{Square{BFILE, RANK2}, Square{BFILE, RANK4}, Square{AFILE, RANK5}}},
+            __TestTemplateArgs{
+                "pinned test case rook 1", "5/3k1/5/b1p2/1R3/2K2 w - -", Square{BFILE, RANK2}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "pinned test case rook 2", "5/5/5/5/3bk/KR2q w - -", Square{BFILE, RANK1}, 3,
+                new Square[3]{Square{CFILE, RANK1}, Square{DFILE, RANK1}, Square{EFILE, RANK1}}},
+            __TestTemplateArgs{
+                "pinned test case rook 3", "5/3k1/1n1P1/3r1/3R1/K4 b - -", Square{DFILE, RANK3}, 6,
+                new Square[6]{Square{AFILE, RANK3}, Square{BFILE, RANK3}, Square{CFILE, RANK3}, Square{EFILE, RANK3},
+                              Square{DFILE, RANK2}, Square{DFILE, RANK4}}},
+            __TestTemplateArgs{
+                "pinned test case rook 4", "2b2/k4/1n3/2r2/5/3KQ b - - ", Square{CFILE, RANK3}, 8,
+                new Square[8]{Square{AFILE, RANK3}, Square{BFILE, RANK3}, Square{DFILE, RANK3}, Square{EFILE, RANK3},
+                              Square{CFILE, RANK1}, Square{CFILE, RANK2}, Square{CFILE, RANK4}, Square{CFILE, RANK5}}},
+            __TestTemplateArgs{
+                "pinned test case rook 5", "5/k4/1r3/1r3/N2B1/5 b - -", Square{BFILE, RANK4}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "pinned test case queen 1", "k4/q4/3b1/4B/3Q1/4K w - -", Square{DFILE, RANK2}, 3,
+                new Square[3]{Square{CFILE, RANK3}, Square{BFILE, RANK4}, Square{AFILE, RANK5}}},
+            __TestTemplateArgs{
+                "pinned test case queen 2", "5/5/5/1KQ1r/3p1/3k1 w - -", Square{CFILE, RANK3}, 2,
+                new Square[2]{Square{DFILE, RANK3}, Square{EFILE, RANK3}}},
+            __TestTemplateArgs{
+                "pinned test case queen 3", "5/k4/3p1/2q2/3B1/4K b - -", Square{CFILE, RANK3}, 2,
+                new Square[2]{Square{DFILE, RANK2}, Square{BFILE, RANK4}}},
+            __TestTemplateArgs{
+                "pinned test case queen 4", "2n2/5/5/1kqpR/5/2K2 b - -", Square{CFILE, RANK3}, 12,
+                new Square[12]{
+                    Square{AFILE, RANK5}, Square{CFILE, RANK5}, Square{EFILE, RANK5}, Square{BFILE, RANK4},
+                    Square{CFILE, RANK4}, Square{DFILE, RANK4}, Square{AFILE, RANK1}, Square{CFILE, RANK1},
+                    Square{EFILE, RANK1}, Square{BFILE, RANK2}, Square{CFILE, RANK2}, Square{DFILE, RANK2}}},
+            __TestTemplateArgs{
+                "pinned test case queen 5", "5/5/kb3/2r2/3Q1/4K w - -", Square{DFILE, RANK2}, 12,
+                new Square[12]{
+                    Square{DFILE, RANK1}, Square{DFILE, RANK3}, Square{DFILE, RANK4}, Square{DFILE, RANK5},
+                    Square{DFILE, RANK6}, Square{AFILE, RANK2}, Square{BFILE, RANK2}, Square{CFILE, RANK2},
+                    Square{EFILE, RANK2}, Square{CFILE, RANK1}, Square{EFILE, RANK3}, Square{CFILE, RANK3}}},
+
+            // check test
+
+            __TestTemplateArgs{
+                "checked test case pawn 1", "k4/5/1r1n1/2P2/2K2/5 w - -", Square{CFILE, RANK3}, 1,
+                new Square[1]{Square{DFILE, RANK4}}},
+            __TestTemplateArgs{
+                "checked test case pawn 2", "k4/5/1r3/2P1n/2K2/5 w - -", Square{CFILE, RANK3}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case pawn 3", "5/2pk1/5/3K1/Q4/5 b - -", Square{CFILE, RANK5}, 1,
+                new Square[1]{Square{CFILE, RANK4}}},
+            __TestTemplateArgs{
+                "checked test case pawn 4", "5/2k2/5/1b3/1P2N/3K1 w - -", Square{BFILE, RANK2}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case pawn 5", "5/1k3/5/1K2r/3P1/5 w - -", Square{DFILE, RANK2}, 2,
+                new Square[2]{Square{EFILE, RANK3}, Square{DFILE, RANK3}}},
+            __TestTemplateArgs{
+                "checked test case pawn 6", "5/3p1/3Q1/K4/3k1/3n1 b - -", Square{DFILE, RANK5}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test caes pawn 7", "5/5/3kp/2P2/3K1/5 b - -", Square{EFILE, RANK4}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case pawn 8", "5/5/5/k2pP/4K/5 w - d3", Square{EFILE, RANK3}, 1,
+                new Square[1]{Square{DFILE, RANK4}}},
+            __TestTemplateArgs{
+                "checked test case pawn 9", "5/2k2/5/3p1/2KP1/5 w - d3", Square{DFILE, RANK2}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case king 1", "5/2k2/4q/5/2K2/5 w - -", Square{CFILE, RANK2}, 6,
+                new Square[6]{Square{BFILE, RANK3}, Square{CFILE, RANK3}, Square{BFILE, RANK2}, Square{DFILE, RANK2},
+                              Square{CFILE, RANK1}, Square{DFILE, RANK1}}},
+            __TestTemplateArgs{
+                "checked test case king 2", "5/2k2/5/3K1/2R2/5 b - -", Square{CFILE, RANK5}, 5,
+                new Square[5]{Square{BFILE, RANK6}, Square{BFILE, RANK5}, Square{BFILE, RANK4}, Square{DFILE, RANK6},
+                              Square{DFILE, RANK5}}},
+            __TestTemplateArgs{
+                "checked test case king 3", "5/3N1/1k3/3K1/5/5 b - -", Square{BFILE, RANK4}, 6,
+                new Square[6]{Square{AFILE, RANK5}, Square{AFILE, RANK4}, Square{AFILE, RANK3}, Square{BFILE, RANK5},
+                              Square{BFILE, RANK3}, Square{CFILE, RANK5}}},
+            __TestTemplateArgs{
+                "checked test case king 4", "5/5/5/5/1pk2/K4 w - -", Square{AFILE, RANK1}, 1,
+                new Square[1]{Square{AFILE, RANK2}}},
+            __TestTemplateArgs{
+                "checked test case king 5", "5/k1q2/5/1K3/5/2n2 w - -", Square{BFILE, RANK3}, 1,
+                new Square[1]{Square{BFILE, RANK2}}},
+            __TestTemplateArgs{
+                "checked test case king 6", "5/3b1/1K3/3k1/1B2P/4R b - -", Square{DFILE, RANK3}, 4,
+                new Square[4]{Square{CFILE, RANK2}, Square{DFILE, RANK2}, Square{EFILE, RANK4}, Square{EFILE, RANK3}}},
+            __TestTemplateArgs{
+                "checked test case king 7", "5/2k1B/1b1n1/2K2/1P3/5 w - -", Square{CFILE, RANK3}, 1,
+                new Square[1]{Square{DFILE, RANK3}}},
+            __TestTemplateArgs{
+                "chekced test case king 8", "5/2n2/1k2R/5/3P1/K4 b - -", Square{BFILE, RANK4}, 4,
+                new Square[4]{Square{AFILE, RANK5}, Square{BFILE, RANK5}, Square{AFILE, RANK3}, Square{BFILE, RANK3}}},
+            __TestTemplateArgs{
+                "checked test case knight 1", "5/2k2/2p2/1K3/2N2/5 w - -", Square{CFILE, RANK2}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case knight 2", "5/5/2nk1/4P/2K2/5 b - -", Square{CFILE, RANK4}, 1,
+                new Square[1]{Square{EFILE, RANK3}}},
+            __TestTemplateArgs{
+                "checked test case knight 3", "5/5/2kn1/5/2K2/3N1 w - -", Square{DFILE, RANK1}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case knight 4", "5/3k1/rn3/3N1/2K2/2R2 w - -", Square{DFILE, RANK3}, 1,
+                new Square[1]{Square{BFILE, RANK4}}},
+            __TestTemplateArgs{
+                "checked test case knight 5", "5/3k1/5/5/1K2r/3N1 w - -", Square{DFILE, RANK1}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case knight 6", "5/3kn/5/5/1n2K/3Q1 b - -", Square{BFILE, RANK2}, 2,
+                new Square[2]{Square{DFILE, RANK1}, Square{DFILE, RANK3}}},
+            __TestTemplateArgs{
+                "checked test case knight 7", "5/1q3/5/k4/4K/3N1 w - -", Square{DFILE, RANK1}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case knight 8", "5/1n3/3B1/5/3K1/k4 b - -", Square{BFILE, RANK5}, 2,
+                new Square[2]{Square{DFILE, RANK4}, Square{CFILE, RANK3}}},
+            __TestTemplateArgs{
+                "checked test case bishop 1", "5/5/2k1n/2B2/3K1/5 w - -", Square{CFILE, RANK3}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case bishop 2", "5/b4/2k2/5/2KN1/5 b - -", Square{AFILE, RANK5}, 1,
+                new Square[1]{Square{DFILE, RANK2}}},
+            __TestTemplateArgs{
+                "checked test case bishop 3", "5/3k1/4p/3KB/5/5 w - -", Square{EFILE, RANK3}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case bishop 4", "5/2k1b/3P1/2K2/5/5 b - -", Square{EFILE, RANK5}, 1,
+                new Square[1]{Square{DFILE, RANK4}}},
+            __TestTemplateArgs{
+                "checked test case bishop 5", "4B/3q1/5/1K3/5/1k3 w - -", Square{EFILE, RANK6}, 1,
+                new Square[1]{Square{DFILE, RANK5}}},
+            __TestTemplateArgs{
+                "checked test case bishop 6", "2B2/5/k1b1R/5/2K2/5 b - -", Square{CFILE, RANK4}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case bishop 7", "5/5/3k1/5/2B2/1K2q w - -", Square{CFILE, RANK2}, 1,
+                new Square[1]{Square{DFILE, RANK1}}},
+            __TestTemplateArgs{
+                "checked test case bishop 8", "2b2/5/3R1/5/3k1/1K3 b - -", Square{CFILE, RANK6}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case rook 1", "5/5/3k1/2p2/1K3/4R w - -", Square{EFILE, RANK1}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case rook 2", "5/5/2k2/r2P1/4K/5 b - -", Square{AFILE, RANK3}, 1,
+                new Square[1]{Square{DFILE, RANK3}}},
+            __TestTemplateArgs{
+                "checked test case rook 3", "5/3k1/3n1/5/2R1K/5 w - -", Square{CFILE, RANK2}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case rook 4", "5/5/3k1/1Nr2/4K/B4 b - -", Square{CFILE, RANK3}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case rook 5", "5/5/3k1/3n1/5/3RK w - -", Square{DFILE, RANK1}, 1,
+                new Square[1]{Square{DFILE, RANK3}}},
+            __TestTemplateArgs{
+                "checked test case rook 6", "5/5/kb3/5/1R3/4K w - -", Square{BFILE, RANK2}, 2,
+                new Square[2]{Square{BFILE, RANK4}, Square{DFILE, RANK2}}},
+            __TestTemplateArgs{
+                "checked test case rook 7", "5/r4/k4/5/n4/3QK b - -", Square{AFILE, RANK5}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case rook 8", "5/5/5/1k2b/5/R1r1K w - -", Square{AFILE, RANK1}, 1,
+                new Square[1]{Square{CFILE, RANK1}}},
+            __TestTemplateArgs{
+                "checked test case rook 9", "5/1b3/1k2r/5/5/1Q1K1 b - -", Square{EFILE, RANK4}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case queen 1", "1Q3/5/2k2/2p2/1K3/5 w - -", Square{BFILE, RANK6}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case queen 2", "5/1qk2/1P3/5/1K3/5 b - -", Square{BFILE, RANK5}, 1,
+                new Square[1]{Square{BFILE, RANK4}}},
+            __TestTemplateArgs{
+                "checked test case queen 3", "5/5/3k1/K2q1/5/1Q3 w - -", Square{BFILE, RANK1}, 2,
+                new Square[2]{Square{BFILE, RANK3}, Square{DFILE, RANK3}}},
+            __TestTemplateArgs{
+                "checked test case queen 4", "3k1/5/2K2/3R1/3q1/5 b - -", Square{DFILE, RANK2}, 1,
+                new Square[1]{Square{DFILE, RANK3}}},
+            __TestTemplateArgs{
+                "checked test case queen 5", "5/2kn1/5/rQK2/5/5 w - -", Square{BFILE, RANK3}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "checked test case queen 6", "5/5/3K1/1k3/q2N1/5 b - -", Square{AFILE, RANK2}, 1,
+                new Square[1]{Square{DFILE, RANK2}}},
+            __TestTemplateArgs{
+                "checked test case queen 7", "2q2/5/3K1/1k3/5/3B1 b - -", Square{CFILE, RANK6}, 1,
+                new Square[1]{Square{CFILE, RANK2}}},
+            __TestTemplateArgs{
+                "checked test case queen 8", "Q4/3K1/q4/3k1/5/5 b - -", Square{AFILE, RANK4}, 3,
+                new Square[3]{Square{AFILE, RANK6}, Square{BFILE, RANK5}, Square{CFILE, RANK4}}},
+
+            // double check test
+
+            __TestTemplateArgs{
+                "double checked test case king 1", "2k2/3r1/Q4/2R2/5/1K3 b - -", Square{CFILE, RANK6}, 2,
+                new Square[2]{Square{BFILE, RANK6}, Square{DFILE, RANK6}}},
+            __TestTemplateArgs{
+                "double checked test case king 2", "5/5/1B3/3KN/5/4k b - -", Square{EFILE, RANK1}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "double checked test case king 3", "5/1N1B1/3kP/1K1nB/5/2r2 b - -", Square{DFILE, RANK4}, 2,
+                new Square[2]{Square{EFILE, RANK3}, Square{EFILE, RANK5}}},
+            __TestTemplateArgs{
+                "double checked test case king 4", "5/1n3/5/1RK2/1q2k/2r2 w - -", Square{CFILE, RANK3}, 2,
+                new Square[2]{Square{BFILE, RANK4}, Square{BFILE, RANK2}}},
+            __TestTemplateArgs{
+                "double checked test case not king 1", "5/3KN/1k2P/1q3/3r1/5 w - -", Square{EFILE, RANK5}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "double checked test case not king 2", "5/k4/r4/1N3/5/1K2B b - -", Square{AFILE, RANK4}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "double checked test case not king 3", "5/k1r2/5/1p3/B1K2/5 w - -", Square{AFILE, RANK2}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "double checked test case not king 4", "2Q2/5/k3n/2Np1/5/2K2 b - -", Square{EFILE, RANK4}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "double checked test case not king 5", "5/2Q2/1k2n/2BN1/2K2/5 b - -", Square{EFILE, RANK4}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "double checked test case not king 6", "5/2kb1/1N3/1K3/2q2/3p1 w - -", Square{BFILE, RANK4}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "double checked test case not king 7", "5/1rk2/5/1K1q1/4B/5 w - -", Square{EFILE, RANK2}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "double checked test case not king 8", "1q3/5/Rk1Q1/5/1K3/5 b - -", Square{BFILE, RANK6}, 0,
+                new Square[0]{}},
+
+            // castling test
+
+            __TestTemplateArgs{
+                "castling test case 1", "r3k/ppppp/5/5/PPPPP/K3R w Kk -", Square{AFILE, RANK1}, 2,
+                new Square[2]{Square{BFILE, RANK1}, Square{CFILE, RANK1}}},
+            __TestTemplateArgs{
+                "castling test case 2", "r3k/ppppp/5/5/PPPPP/K3R b Kk -", Square{EFILE, RANK6}, 2,
+                new Square[2]{Square{DFILE, RANK6}, Square{CFILE, RANK6}}},
+            __TestTemplateArgs{
+                "castling test case 3", "rn2k/ppppp/5/5/PPPPP/K2NR w Kk -", Square{AFILE, RANK1}, 1,
+                new Square[1]{Square{BFILE, RANK1}}},
+            __TestTemplateArgs{
+                "castling test case 4", "rn2k/ppppp/5/5/PPPPP/K2NR b Kk -", Square{EFILE, RANK6}, 1,
+                new Square[1]{Square{DFILE, RANK6}}},
+            __TestTemplateArgs{
+                "castling test case 5", "r2bk/ppppp/5/5/PPPPP/KB2R w Kk -", Square{AFILE, RANK1}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "castling test case 6", "r2bk/ppppp/5/5/PPPPP/KB2R b Kk -", Square{EFILE, RANK6}, 0,
+                new Square[0]{}},
+            __TestTemplateArgs{
+                "castling test case 7", "r3k/p3p/4B/b4/P3P/K3R w Kk -", Square{AFILE, RANK1}, 1,
+                new Square[1]{Square{BFILE, RANK1}}},
+            __TestTemplateArgs{
+                "castling test case 8", "r3k/p3p/4B/b4/P3P/K3R b Kk -", Square{EFILE, RANK6}, 1,
+                new Square[1]{Square{DFILE, RANK6}}},
+            __TestTemplateArgs{
+                "castling test case 9", "r3k/p3p/5/5/P3P/K3R w - -", Square{AFILE, RANK1}, 2,
+                new Square[2]{Square{BFILE, RANK1}, Square{BFILE, RANK2}}},
+            __TestTemplateArgs{
+                "castling test case 10", "r3k/p3p/5/5/P3P/K3R b - -", Square{EFILE, RANK6}, 2,
+                new Square[2]{Square{DFILE, RANK6}, Square{DFILE, RANK5}}},
+        };
+
+    for (__TestTemplateArgs arg : args)
+    {
+        e = __TestTemplate(arg);
+        if (e != mcet::NoErr)
+            return e;
+    }
 
     return mcet::NoErr;
 }

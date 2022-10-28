@@ -2,6 +2,1738 @@
 using std::string;
 namespace minichess_AI
 {
+    // supporters
+
+    namespace
+    {
+        Square IsCheckedByPieceType(Board *board, PieceType piecetype, Square kingsq, Color color)
+        {
+            switch (piecetype)
+            {
+            case PT_KING:
+                return board->IsCheckedByKing(kingsq, color);
+            case PT_PAWN:
+                return board->IsCheckedByPawn(kingsq, color);
+            case PT_KNIGHT:
+                return board->IsCheckedByKnight(kingsq, color);
+            case PT_HORIZONTAL:
+                return board->IsCheckedByHorizontal(kingsq, color);
+            case PT_DIAGONAL:
+                return board->IsCheckedByDiagonal(kingsq, color);
+            default:
+                return SQUAREERR;
+            }
+
+            return SQUAREERR;
+        }
+
+        MCError LMP0C_NotTake(Board *board, Square square, Square legalmoves[MAX_LEGALMOVES], int *count, int temp1)
+        {
+            Rank tempr1;
+            if (board->GetSquare(Square{square.file, square.rank + 1 * temp1}) == EMPTYSQ)
+            {
+                legalmoves[*count] = Square{square.file, square.rank + 1 * temp1};
+                (*count)++;
+                tempr1 = (board->GetTurn() == cWhite) ? RANK2 : RANK5;
+                if (square.rank == tempr1 && board->GetSquare(Square{square.file, square.rank + 2 * temp1}) == EMPTYSQ)
+                {
+                    legalmoves[*count] = Square{square.file, square.rank + 2 * temp1};
+                    (*count)++;
+                }
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LMP0C_Take(Board *board, Square square, Square legalmoves[MAX_LEGALMOVES], int *no_moves, int temp1, Color turn)
+        {
+            File tempf1;
+            Color enturn = turn;
+            enturn++;
+            if (square.file != AFILE)
+            {
+                if (GetPieceColor(board->GetSquare(Square{square.file - 1, square.rank + temp1})) == enturn)
+                {
+                    legalmoves[*no_moves] = Square{square.file - 1, square.rank + temp1};
+                    (*no_moves)++;
+                }
+            }
+            if (square.file != EFILE)
+            {
+                if (GetPieceColor(board->GetSquare(Square{square.file + 1, square.rank + temp1})) == enturn)
+                {
+                    legalmoves[*no_moves] = Square{square.file + 1, square.rank + temp1};
+                    (*no_moves)++;
+                }
+            }
+            if (square.rank == (turn == cWhite) ? RANK3 : RANK4)
+            {
+                if ((tempf1 = board->GetEnpassantAblePawnFile()) != FILEERR)
+                {
+                    if (abs((int)(tempf1 - square.file)) == 1)
+                    {
+                        if (
+                            (board->GetSquare(Square{tempf1, square.rank}) == ((turn == cWhite) ? BPAWN : WPAWN)) &&
+                            (board->GetSquare(Square{tempf1, square.rank + temp1}) == EMPTYSQ))
+                        {
+                            legalmoves[*no_moves] = Square{tempf1, square.rank + temp1};
+                            (*no_moves)++;
+                        }
+                    }
+                }
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LegalMovesPawn0Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
+        {
+            int i, rdir, fdir, temp1;
+            bool able;
+            Rank tempr1;
+            File tempf1;
+            Piece roo, bis, que, tempp1;
+            Color turn = board->GetTurn();
+
+            if ((turn == cWhite) ? (square.rank == RANK6) : (square.rank == RANK1))
+            {
+                *no_moves = 0;
+                return mcet::NoErr;
+            }
+
+            temp1 = (turn == cWhite) ? 1 : -1;
+
+            if (kingsq.file == square.file)
+            {
+                // same file as king's one
+
+                // not take
+
+                LMP0C_NotTake(board, square, legalmoves, no_moves, temp1);
+
+                // take
+
+                able = false;
+                rdir = (kingsq.rank < square.rank) ? 1 : -1;
+                if (turn == cWhite)
+                {
+                    roo = BROOK;
+                    que = BQUEEN;
+                }
+                else
+                {
+                    roo = WROOK;
+                    que = WQUEEN;
+                }
+
+                // king <- here -> pawn
+                for (Rank r = kingsq.rank + rdir;; r += rdir)
+                {
+                    if (r == square.rank)
+                        break;
+                    if (board->GetSquare(Square{square.file, r}) != EMPTYSQ)
+                    {
+                        able = true;
+                        break;
+                    }
+                }
+
+                // king --- pawn -> here
+                if (!able)
+                {
+                    for (Rank r = square.rank + rdir;; r += rdir)
+                    {
+                        tempp1 = board->GetSquare(Square{square.file, r});
+                        if (tempp1 == roo || tempp1 == que)
+                        {
+                            break;
+                        }
+                        else if (tempp1 != EMPTYSQ)
+                        {
+                            able = true;
+                            break;
+                        }
+                        if (r == RANK1 && r == RANK6)
+                        {
+                            able = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (able)
+                {
+                    LMP0C_Take(board, square, legalmoves, no_moves, temp1, turn);
+                }
+            }
+            else if (kingsq.rank == square.rank)
+            {
+                // same rank as king's
+
+                // find whether pinned
+
+                if (square.file != AFILE && square.file != EFILE)
+                {
+                    able = false;
+                    fdir = (kingsq.file < square.file) ? 1 : -1;
+                    if (turn == cWhite)
+                    {
+                        roo = BROOK;
+                        que = BQUEEN;
+                    }
+                    else
+                    {
+                        roo = WROOK;
+                        que = WQUEEN;
+                    }
+
+                    // king <- here -> pawn
+                    for (File f = kingsq.file + fdir;; f += fdir)
+                    {
+                        if (f == square.file)
+                            break;
+                        if (board->GetSquare(Square{f, square.rank}) != EMPTYSQ)
+                        {
+                            able = true;
+                            break;
+                        }
+                    }
+
+                    // king --- pawn -> here
+                    if (!able)
+                    {
+                        for (File f = square.file + fdir;; f += fdir)
+                        {
+                            tempp1 = board->GetSquare(Square{f, square.rank});
+                            if (tempp1 == roo || tempp1 == que)
+                            {
+                                able = false;
+                                break;
+                            }
+                            else if (tempp1 != EMPTYSQ)
+                            {
+                                able = true;
+                                break;
+                            }
+                            if (f == AFILE || f == EFILE)
+                            {
+                                able = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    able = true;
+                }
+
+                if (able)
+                {
+                    // not take
+
+                    LMP0C_NotTake(board, square, legalmoves, no_moves, temp1);
+
+                    // take
+
+                    LMP0C_Take(board, square, legalmoves, no_moves, temp1, turn);
+                }
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                fdir = (kingsq.file < square.file) ? 1 : -1;
+                rdir = (kingsq.rank < square.rank) ? 1 : -1;
+
+                able = false;
+
+                // king <- here -> pawn
+                tempf1 = kingsq.file + fdir;
+                tempr1 = kingsq.rank + rdir;
+                while (true)
+                {
+                    if (tempf1 == square.file && tempr1 == square.rank)
+                        break;
+                    if (board->GetSquare(Square{tempf1, tempr1}) != EMPTYSQ)
+                    {
+                        able = true;
+                        break;
+                    }
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                }
+
+                i = 0;
+
+                if (!able)
+                {
+                    able = true;
+                    tempf1 = square.file;
+                    tempr1 = square.rank;
+                    if (turn == cWhite)
+                    {
+                        bis = BBISHOP;
+                        que = BQUEEN;
+                    }
+                    else
+                    {
+                        bis = WBISHOP;
+                        que = WQUEEN;
+                    }
+
+                    while (tempf1 != AFILE && tempf1 != EFILE && tempr1 != RANK1 && tempr1 != RANK6)
+                    {
+                        i++;
+                        tempf1 += fdir;
+                        tempr1 += rdir;
+                        tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                        if (tempp1 == bis || tempp1 == que)
+                        {
+                            able = false;
+                            break;
+                        }
+                        else if (tempp1 != EMPTYSQ)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                if (able)
+                {
+                    // not take
+
+                    LMP0C_NotTake(board, square, legalmoves, no_moves, temp1);
+
+                    // take
+
+                    LMP0C_Take(board, square, legalmoves, no_moves, temp1, turn);
+                }
+                else if (i == 1)
+                {
+                    legalmoves[*no_moves] = Square{tempf1, tempr1};
+                    (*no_moves)++;
+                }
+            }
+            else
+            {
+                // not take
+
+                LMP0C_NotTake(board, square, legalmoves, no_moves, temp1);
+
+                // take
+
+                LMP0C_Take(board, square, legalmoves, no_moves, temp1, turn);
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LegalMovesPawn1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
+                                       int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
+        {
+            Color turn = board->GetTurn();
+            Color enturn = turn;
+            enturn++;
+            int temp1 = (turn == cWhite) ? 1 : -1, lined_fdir, lined_rdir, tempf2, tempr2;
+            bool skip = false, lined = false;
+            File mvfile;
+            Rank mvrank;
+            Piece tempp1, tempp2, tempp3, pawn = (turn == cWhite) ? WPAWN : BPAWN;
+            Piece checkablePiece1 = (turn == cWhite) ? BQUEEN : WQUEEN, checkablePiece2;
+
+            if (square.file == kingsq.file)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = 0;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = 0;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BBISHOP : WBISHOP;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+
+            for (int i = 0; i < no_movableSquares; i++)
+            {
+                skip = false;
+                mvfile = movableSquares[i].file;
+                mvrank = movableSquares[i].rank;
+                tempp1 = board->GetSquare(Square{mvfile, mvrank});
+
+                if (mvrank - square.rank == 0)
+                {
+                    if (abs(mvfile - square.file) == 1)
+                    {
+                        if (board->GetEnpassantAblePawnFile() == mvfile &&
+                            mvrank == ((turn == cWhite) ? RANK3 : RANK4) &&
+                            tempp1 == ((turn == cWhite) ? BPAWN : WPAWN))
+                        {
+                            tempp2 = board->GetSquare(Square{mvfile, mvrank + temp1});
+                            if (tempp2 == EMPTYSQ)
+                            {
+                                board->SetSquare(movableSquares[i], EMPTYSQ);
+                                board->SetSquare(Square{mvfile, mvrank + temp1}, pawn);
+                                board->SetSquare(square, EMPTYSQ);
+
+                                if (lined)
+                                {
+                                    tempf2 = (int)kingsq.file + lined_fdir;
+                                    tempr2 = (int)kingsq.rank + lined_rdir;
+                                    while (AFILE <= tempf2 && tempf2 <= EFILE && RANK1 <= tempr2 && tempr2 <= RANK6)
+                                    {
+                                        tempp3 = board->GetSquare(Square{(File)tempf2, (Rank)tempr2});
+                                        if (tempp3 == checkablePiece1 || tempp3 == checkablePiece2)
+                                        {
+                                            skip = true;
+                                            break;
+                                        }
+                                        else if (tempp3 != EMPTYSQ)
+                                        {
+                                            break;
+                                        }
+                                        tempf2 += lined_fdir;
+                                        tempr2 += lined_rdir;
+                                    }
+                                }
+
+                                if (!skip && IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                                {
+                                    legalmoves[*no_moves] = Square{mvfile, mvrank + temp1};
+                                    (*no_moves)++;
+                                }
+
+                                board->SetSquare(movableSquares[i], tempp2);
+                                board->SetSquare(Square{mvfile, mvrank + temp1}, EMPTYSQ);
+                                board->SetSquare(square, pawn);
+                            }
+                        }
+                    }
+                }
+                else if (mvrank - square.rank == temp1)
+                {
+                    switch (abs((int)(mvfile - square.file)))
+                    {
+                    case 0:
+                        if (tempp1 == EMPTYSQ)
+                        {
+                            board->SetSquare(square, EMPTYSQ);
+                            board->SetSquare(movableSquares[i], pawn);
+
+                            if (lined)
+                            {
+                                tempf2 = (int)kingsq.file + lined_fdir;
+                                tempr2 = (int)kingsq.rank + lined_rdir;
+                                while (AFILE <= tempf2 && tempf2 <= EFILE && RANK1 <= tempr2 && tempr2 <= RANK6)
+                                {
+                                    tempp3 = board->GetSquare(Square{(File)tempf2, (Rank)tempr2});
+                                    if (tempp3 == checkablePiece1 || tempp3 == checkablePiece2)
+                                    {
+                                        skip = true;
+                                        break;
+                                    }
+                                    else if (tempp3 != EMPTYSQ)
+                                    {
+                                        break;
+                                    }
+                                    tempf2 += lined_fdir;
+                                    tempr2 += lined_rdir;
+                                }
+                            }
+
+                            if (!skip && IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                            {
+                                legalmoves[*no_moves] = movableSquares[i];
+                                (*no_moves)++;
+                            }
+
+                            board->SetSquare(square, pawn);
+                            board->SetSquare(movableSquares[i], EMPTYSQ);
+                        }
+                        break;
+                    case 1:
+                        if (GetPieceColor(tempp1) == enturn)
+                        {
+                            tempp2 = board->GetSquare(movableSquares[i]);
+                            board->SetSquare(movableSquares[i], pawn);
+                            board->SetSquare(square, EMPTYSQ);
+
+                            if (lined)
+                            {
+                                tempf2 = (int)kingsq.file + lined_fdir;
+                                tempr2 = (int)kingsq.rank + lined_rdir;
+                                while (AFILE <= tempf2 && tempf2 <= EFILE && RANK1 <= tempr2 && tempr2 <= RANK6)
+                                {
+                                    tempp3 = board->GetSquare(Square{(File)tempf2, (Rank)tempr2});
+                                    if (tempp3 == checkablePiece1 || tempp3 == checkablePiece2)
+                                    {
+                                        skip = true;
+                                        break;
+                                    }
+                                    else if (tempp3 != EMPTYSQ)
+                                    {
+                                        break;
+                                    }
+                                    tempf2 += lined_fdir;
+                                    tempr2 += lined_rdir;
+                                }
+                            }
+
+                            if (!skip && IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                            {
+                                legalmoves[*no_moves] = movableSquares[i];
+                                (*no_moves)++;
+                            }
+
+                            board->SetSquare(movableSquares[i], EMPTYSQ);
+                            board->SetSquare(square, pawn);
+                        }
+                    }
+                }
+                else if (mvrank - square.rank == temp1 * 2)
+                {
+                    if (mvrank == ((turn == cWhite) ? RANK4 : RANK3) && mvfile == square.file)
+                    {
+                        if (
+                            tempp1 == EMPTYSQ &&
+                            board->GetSquare(Square{mvfile, (turn == cWhite) ? RANK3 : RANK4}) == EMPTYSQ)
+                        {
+                            board->SetSquare(movableSquares[i], pawn);
+                            board->SetSquare(square, EMPTYSQ);
+
+                            if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                            {
+                                legalmoves[*no_moves] = movableSquares[i];
+                                (*no_moves)++;
+                            }
+
+                            board->SetSquare(movableSquares[i], EMPTYSQ);
+                            board->SetSquare(square, pawn);
+                        }
+                    }
+                }
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LegalMovesKing(Board *board, Square square, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
+        {
+            bool isAttacked[5][6];
+            int i, j, k, m, n, l, r, b, f, temp1, temp2;
+            Color turn = board->GetTurn();
+            Color enturn = turn;
+            enturn++;
+            Piece p, tempp, king = (turn == cWhite) ? WKING : BKING;
+
+            // init
+            for (i = 0; i < 5; i++)
+            {
+                for (j = 0; j < 6; j++)
+                {
+                    isAttacked[i][j] = false;
+                }
+            }
+
+            // search attacked squares
+            for (i = 0; i < 5; i++)
+            {
+                for (j = 0; j < 6; j++)
+                {
+                    p = board->GetSquare(Square{(File)i, (Rank)j});
+                    if (GetPieceColor(p) == enturn)
+                    {
+                        switch (p)
+                        {
+                        case WKING:
+                        case BKING:
+                            l = -1;
+                            r = 1;
+                            b = -1;
+                            f = 1;
+
+                            if (i == AFILE)
+                                l = 1;
+                            else if (i == EFILE)
+                                r = -1;
+                            if (j == RANK1)
+                                b = 1;
+                            else if (j == RANK6)
+                                f = -1;
+
+                            for (k = b; k <= f; k += 2)
+                            {
+                                for (m = (l == -1) ? -1 : 0; m <= (r == 1) ? 1 : 0; m++)
+                                {
+                                    isAttacked[i + m][j + k] = true;
+                                }
+                            }
+                            for (k = l; k <= r; k += 2)
+                            {
+                                isAttacked[i + k][j] = true;
+                            }
+                            break;
+                        case WPAWN:
+                        case BPAWN:
+                            if (j != ((enturn == cWhite) ? RANK6 : RANK1))
+                            {
+                                temp1 = (enturn == cWhite) ? 1 : -1;
+                                if (i != AFILE)
+                                {
+                                    isAttacked[i - 1][j + temp1] = true;
+                                }
+                                if (i != EFILE)
+                                {
+                                    isAttacked[i + 1][j + temp1] = true;
+                                }
+                            }
+                            break;
+                        case WKNIGHT:
+                        case BKNIGHT:
+                            for (k = 0; k <= 1; k++)
+                            {
+                                for (m = 0; m <= 1; m++)
+                                {
+                                    for (n = 0; n <= 1; n++)
+                                    {
+                                        temp1 = i + (1 + k) * (2 * m - 1);
+                                        temp2 = j + (2 - k) * (2 * n - 1);
+                                        if (
+                                            AFILE <= temp1 && temp1 <= EFILE && RANK1 <= temp2 && temp2 <= RANK6)
+                                        {
+                                            isAttacked[temp1][temp2] = true;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case WBISHOP:
+                        case BBISHOP:
+                            for (k = -1; k <= 1; k += 2)
+                            {
+                                for (m = -1; m <= 1; m += 2)
+                                {
+                                    for (n = 1;; n++)
+                                    {
+                                        temp1 = i + k * n;
+                                        temp2 = j + m * n;
+                                        if (temp1 < AFILE || EFILE < temp1 || temp2 < RANK1 || RANK6 < temp2)
+                                            break;
+                                        tempp = board->GetSquare(Square{(File)temp1, (Rank)temp2});
+                                        if (tempp != king && tempp != EMPTYSQ)
+                                        {
+                                            isAttacked[temp1][temp2] = true;
+                                            break;
+                                        }
+                                        isAttacked[temp1][temp2] = true;
+                                    }
+                                }
+                            }
+                            break;
+                        case WROOK:
+                        case BROOK:
+                            for (k = 0; k <= 1; k++)
+                            {
+                                for (m = -1; m <= 1; m += 2)
+                                {
+                                    for (n = m;; n += m)
+                                    {
+                                        temp1 = i + k * n;
+                                        temp2 = j + (1 - k) * n;
+                                        if (temp1 < AFILE || EFILE < temp1 || temp2 < RANK1 || RANK6 < temp2)
+                                            break;
+                                        tempp = board->GetSquare(Square{(File)temp1, (Rank)temp2});
+                                        if (tempp != king && tempp != EMPTYSQ)
+                                        {
+                                            isAttacked[temp1][temp2] = true;
+                                            break;
+                                        }
+                                        isAttacked[temp1][temp2] = true;
+                                    }
+                                }
+                            }
+                            break;
+                        case WQUEEN:
+                        case BQUEEN:
+                            for (k = -1; k <= 1; k += 2)
+                            {
+                                for (m = -1; m <= 1; m += 2)
+                                {
+                                    for (n = 1;; n++)
+                                    {
+                                        temp1 = i + k * n;
+                                        temp2 = j + m * n;
+                                        if (temp1 < AFILE || EFILE < temp1 || temp2 < RANK1 || RANK6 < temp2)
+                                            break;
+                                        tempp = board->GetSquare(Square{(File)temp1, (Rank)temp2});
+                                        if (tempp != king && tempp != EMPTYSQ)
+                                        {
+                                            isAttacked[temp1][temp2] = true;
+                                            break;
+                                        }
+                                        isAttacked[temp1][temp2] = true;
+                                    }
+                                }
+                            }
+                            for (k = 0; k <= 1; k++)
+                            {
+                                for (m = -1; m <= 1; m += 2)
+                                {
+                                    for (n = m;; n += m)
+                                    {
+                                        temp1 = i + k * n;
+                                        temp2 = j + (1 - k) * n;
+                                        if (temp1 < AFILE || EFILE < temp1 || temp2 < RANK1 || RANK6 < temp2)
+                                            break;
+                                        tempp = board->GetSquare(Square{(File)temp1, (Rank)temp2});
+                                        if (tempp != king && tempp != EMPTYSQ)
+                                        {
+                                            isAttacked[temp1][temp2] = true;
+                                            break;
+                                        }
+                                        isAttacked[temp1][temp2] = true;
+                                    }
+                                }
+                            }
+                            break;
+                        case EMPTYSQ:
+                            break;
+                        }
+                    }
+                    else if (GetPieceColor(p) == turn && p != king)
+                    {
+                        isAttacked[i][j] = true;
+                    }
+                }
+            }
+
+            // search legal moves
+
+            l = -1;
+            r = 1;
+            b = -1;
+            f = 1;
+
+            if (square.file == AFILE)
+                l = 1;
+            else if (square.file == EFILE)
+                r = -1;
+            if (square.rank == RANK1)
+                b = 1;
+            else if (square.rank == RANK6)
+                f = -1;
+
+            for (k = b; k <= f; k += 2)
+            {
+                for (m = (l == -1) ? -1 : 0; m <= (r == 1) ? 1 : 0; m++)
+                {
+                    if (!isAttacked[square.file + m][square.rank + k])
+                    {
+                        legalmoves[*no_moves] = Square{File(square.file + m), Rank(square.rank + k)};
+                        (*no_moves)++;
+                    }
+                }
+            }
+            for (k = l; k <= r; k += 2)
+            {
+                if (!isAttacked[square.file + k][square.rank])
+                {
+                    legalmoves[*no_moves] = Square{File(square.file + k), Rank(square.rank)};
+                    (*no_moves)++;
+                }
+            }
+
+            if (board->GetCastlingPossibility(turn))
+            {
+                if (turn == cWhite && square == Square{AFILE, RANK1})
+                {
+                    if (board->GetSquare(Square{EFILE, RANK1}) == WROOK)
+                    {
+                        if (!(isAttacked[AFILE][RANK1] || isAttacked[BFILE][RANK1] || isAttacked[CFILE][RANK1]) &&
+                            board->GetSquare(Square{DFILE, RANK1}) == EMPTYSQ)
+                        {
+                            legalmoves[*no_moves] = Square{CFILE, RANK1};
+                            (*no_moves)++;
+                        }
+                    }
+                }
+                else if (turn == cBlack && square == Square{EFILE, RANK6})
+                {
+                    if (board->GetSquare(Square{AFILE, RANK6}) == BROOK)
+                    {
+                        if (!(isAttacked[EFILE][RANK6] || isAttacked[DFILE][RANK6] || isAttacked[CFILE][RANK6]) &&
+                            board->GetSquare(Square{BFILE, RANK6}) == EMPTYSQ)
+                        {
+                            legalmoves[*no_moves] = Square{CFILE, RANK6};
+                            (*no_moves)++;
+                        }
+                    }
+                }
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LegalMovesKnight0Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
+        {
+            bool able = true, check = true;
+            int fdir, rdir, i, j, k, temp1, temp2;
+            File tempf1;
+            Rank tempr1;
+            Color turn = board->GetTurn();
+            Piece checkableP1, checkableP2, tempp1;
+
+            if (turn == cWhite)
+            {
+                checkableP1 = BQUEEN;
+            }
+            else
+            {
+                checkableP1 = WQUEEN;
+            }
+
+            if (square.file == kingsq.file)
+            {
+                fdir = 0;
+                rdir = (square.rank > kingsq.rank) ? 1 : -1;
+                checkableP2 = (turn == cWhite) ? BROOK : WROOK;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                fdir = (square.file > kingsq.file) ? 1 : -1;
+                rdir = 0;
+                checkableP2 = (turn == cWhite) ? BROOK : WROOK;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                fdir = (square.file > kingsq.file) ? 1 : -1;
+                rdir = (square.rank > kingsq.rank) ? 1 : -1;
+                checkableP2 = (turn == cWhite) ? BBISHOP : WBISHOP;
+            }
+            else
+            {
+                check = false;
+            }
+
+            // king <- here -> knight
+            if (check)
+            {
+                tempf1 = kingsq.file;
+                tempr1 = kingsq.rank;
+                while (true)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    if (tempf1 == square.file && tempr1 == square.rank)
+                        break;
+                    if (board->GetSquare(Square{tempf1, tempr1}) != EMPTYSQ)
+                    {
+                        check = false;
+                        break;
+                    }
+                }
+            }
+
+            if (check)
+            {
+                tempf1 = square.file;
+                tempr1 = square.rank;
+                while (AFILE < tempf1 && tempf1 < EFILE && RANK1 < tempr1 && tempr1 < RANK6)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                    if (tempp1 == checkableP1 || tempp1 == checkableP2)
+                    {
+                        able = false;
+                    }
+                    else if (tempp1 != EMPTYSQ)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            if (able)
+            {
+                for (i = 0; i <= 1; i++)
+                {
+                    for (j = 0; j <= 1; j++)
+                    {
+                        for (k = 0; k <= 1; k++)
+                        {
+                            temp1 = (int)square.file + (i + 1) * (2 * j - 1);
+                            temp2 = (int)square.rank + (2 - i) * (2 * k - 1);
+
+                            if (AFILE <= temp1 && temp1 <= EFILE && RANK1 <= temp2 && temp2 <= RANK6)
+                            {
+                                if (GetPieceColor(board->GetSquare(Square{(File)temp1, (Rank)temp2})) != turn)
+                                {
+                                    legalmoves[*no_moves] = Square{(File)temp1, (Rank)temp2};
+                                    (*no_moves)++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LegalMovesKnight1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
+                                         int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
+        {
+            int i, temp1, temp2, lined_fdir, lined_rdir, tempf1, tempr1;
+            bool lined;
+            Color turn = board->GetTurn();
+            Piece knight = (turn == cWhite) ? WKNIGHT : BKNIGHT, tempp1;
+            Piece checkablePiece1 = (turn == cWhite) ? BQUEEN : WQUEEN, checkablePiece2;
+
+            if (square.file == kingsq.file)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = 0;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = 0;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BBISHOP : BROOK;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+
+            if (lined)
+            {
+                tempf1 = square.file + lined_fdir;
+                tempr1 = square.rank + lined_rdir;
+                while (AFILE <= tempf1 && tempf1 <= EFILE && RANK1 <= tempr1 && tempr1 <= RANK6)
+                {
+                    tempp1 = board->GetSquare(Square{(File)tempf1, (Rank)tempr1});
+                    if (tempp1 == checkablePiece1 || tempp1 == checkablePiece2)
+                    {
+                        *no_moves = 0;
+                        return mcet::NoErr;
+                    }
+                    else if (tempp1 != EMPTYSQ)
+                    {
+                        break;
+                    }
+                    tempf1 += lined_fdir;
+                    tempr1 += lined_rdir;
+                }
+            }
+
+            for (i = 0; i < no_movableSquares; i++)
+            {
+                temp1 = (int)square.file - (int)movableSquares[i].file;
+                temp2 = (int)square.rank - (int)movableSquares[i].rank;
+                if (abs(temp1) + abs(temp2) == 3 && abs(temp1) != 0 && abs(temp2) != 0)
+                {
+                    tempp1 = board->GetSquare(movableSquares[i]);
+                    board->SetSquare(movableSquares[i], knight);
+                    board->SetSquare(square, EMPTYSQ);
+
+                    if (IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                    {
+                        legalmoves[*no_moves] = movableSquares[i];
+                        (*no_moves)++;
+                    }
+
+                    board->SetSquare(movableSquares[i], tempp1);
+                    board->SetSquare(square, knight);
+                }
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LegalMovesBishop0Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
+        {
+            bool check = true, diag = false, hori = false, limited = false;
+            int fdir, rdir, i, j, end = 0;
+            Color turn = board->GetTurn();
+            Piece checkableP1, checkableP2, tempp1, king;
+            File tempf1;
+            Rank tempr1;
+
+            if (turn == cWhite)
+            {
+                king = WKING;
+                checkableP1 = BQUEEN;
+            }
+            else
+            {
+                king = BKING;
+                checkableP1 = WQUEEN;
+            }
+
+            if (square.file == kingsq.file)
+            {
+                fdir = 0;
+                rdir = (square.rank > kingsq.rank) ? 1 : -1;
+                checkableP2 = (turn == cWhite) ? BROOK : WROOK;
+                hori = true;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                fdir = (square.file > kingsq.file) ? 1 : -1;
+                rdir = 0;
+                checkableP2 = (turn == cWhite) ? BROOK : WROOK;
+                hori = true;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                fdir = (square.file > kingsq.file) ? 1 : -1;
+                rdir = (square.rank > kingsq.rank) ? 1 : -1;
+                checkableP2 = (turn == cWhite) ? BBISHOP : WBISHOP;
+                diag = true;
+            }
+            else
+            {
+                check = false;
+            }
+
+            // king <- here -> bishop
+            if (check)
+            {
+                tempf1 = kingsq.file;
+                tempr1 = kingsq.rank;
+                while (true)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    if (tempf1 == square.file && tempr1 == square.rank)
+                        break;
+                    tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                    if (tempp1 == king)
+                        break;
+                    else if (tempp1 != EMPTYSQ)
+                    {
+                        check = false;
+                        break;
+                    }
+                    end++;
+                }
+            }
+
+            // king --- bishop -> here
+            if (check)
+            {
+                tempf1 = square.file;
+                tempr1 = square.rank;
+                while (AFILE <= (int)tempf1 + fdir && (int)tempf1 + fdir <= EFILE &&
+                       RANK1 <= (int)tempr1 + rdir && (int)tempr1 + rdir <= RANK6)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                    if (tempp1 == checkableP1 || tempp1 == checkableP2)
+                    {
+                        end++;
+                        if (hori)
+                        {
+                            return mcet::NoErr;
+                        }
+                        else
+                        {
+                            limited = true;
+                            break;
+                        }
+                    }
+                    else if (tempp1 != EMPTYSQ)
+                    {
+                        break;
+                    }
+                    end++;
+                }
+            }
+
+            if (limited)
+            {
+                tempf1 = kingsq.file;
+                tempr1 = kingsq.rank;
+                i = 0;
+                while (i < end)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    if (tempf1 == square.file && tempr1 == square.rank)
+                        continue;
+                    i++;
+                    legalmoves[*no_moves] = Square{tempf1, tempr1};
+                    (*no_moves)++;
+                }
+            }
+            else
+            {
+                for (i = -1; i <= 1; i += 2)
+                {
+                    for (j = -1; j <= 1; j += 2)
+                    {
+                        tempf1 = square.file;
+                        tempr1 = square.rank;
+                        while (AFILE + (1 - i) / 2 <= tempf1 && tempf1 <= EFILE - (1 + i) / 2 &&
+                               RANK1 + (1 - j) / 2 <= tempr1 && tempr1 <= RANK6 - (1 + j) / 2)
+                        {
+                            tempf1 += i;
+                            tempr1 += j;
+                            tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                            if (GetPieceColor(tempp1) == turn)
+                            {
+                                break;
+                            }
+                            else if (GetPieceColor(tempp1) == !turn)
+                            {
+                                legalmoves[*no_moves] = Square{tempf1, tempr1};
+                                (*no_moves)++;
+                                break;
+                            }
+                            legalmoves[*no_moves] = Square{tempf1, tempr1};
+                            (*no_moves)++;
+                        }
+                    }
+                }
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LegalMovesBishop1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
+                                         int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
+        {
+            int i, temp1, temp2, fdir, rdir, lined_fdir, lined_rdir, tempf2, tempr2;
+            bool skip, lined;
+            Color turn = board->GetTurn();
+            Piece bishop = (turn == cWhite) ? WBISHOP : BBISHOP, tempp1, tempp2;
+            Piece checkablePiece1 = (turn == cWhite) ? BQUEEN : WQUEEN, checkablePiece2;
+            File tempf1;
+            Rank tempr1;
+
+            if (square.file == kingsq.file)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = 0;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = 0;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BBISHOP : WBISHOP;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+
+            for (i = 0; i < no_movableSquares; i++)
+            {
+                temp1 = (int)square.file - (int)movableSquares[i].file;
+                temp2 = (int)square.rank - (int)movableSquares[i].rank;
+                if (abs(temp1) == abs(temp2))
+                {
+                    fdir = (temp1 < 0) ? 1 : -1;
+                    rdir = (temp2 < 0) ? 1 : -1;
+                    tempf1 = square.file + fdir;
+                    tempr1 = square.rank + rdir;
+                    skip = false;
+
+                    while (tempf1 != movableSquares[i].file)
+                    {
+                        if (board->GetSquare(Square{tempf1, tempr1}) != EMPTYSQ)
+                        {
+                            skip = true;
+                            break;
+                        }
+                        tempf1 += fdir;
+                        tempr1 += rdir;
+                    }
+
+                    if (skip)
+                        continue;
+
+                    tempp1 = board->GetSquare(movableSquares[i]);
+                    board->SetSquare(movableSquares[i], bishop);
+                    board->SetSquare(square, EMPTYSQ);
+
+                    if (lined)
+                    {
+                        tempf2 = (int)kingsq.file + lined_fdir;
+                        tempr2 = (int)kingsq.rank + lined_rdir;
+                        while (AFILE <= tempf2 && tempf2 <= EFILE && RANK1 <= tempr2 && tempr2 <= RANK6)
+                        {
+                            tempp2 = board->GetSquare(Square{(File)tempf2, (Rank)tempr2});
+                            if (tempp2 == checkablePiece1 || tempp2 == checkablePiece2)
+                            {
+                                skip = true;
+                                break;
+                            }
+                            else if (tempp2 != EMPTYSQ)
+                            {
+                                break;
+                            }
+                            tempf2 += lined_fdir;
+                            tempr2 += lined_rdir;
+                        }
+                    }
+
+                    if (!skip && IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                    {
+                        legalmoves[*no_moves] = movableSquares[i];
+                        (*no_moves)++;
+                    }
+
+                    board->SetSquare(movableSquares[i], tempp1);
+                    board->SetSquare(square, bishop);
+                }
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LegalMovesRook0Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
+        {
+            bool check = true, diag = false, hori = false, limited = false;
+            int fdir, rdir, i, j, end = 0;
+            Color turn = board->GetTurn();
+            Piece checkableP1, checkableP2, tempp1, king;
+            File tempf1;
+            Rank tempr1;
+
+            if (turn == cWhite)
+            {
+                king = WKING;
+                checkableP1 = BQUEEN;
+            }
+            else
+            {
+                king = BKING;
+                checkableP1 = WQUEEN;
+            }
+
+            if (square.file == kingsq.file)
+            {
+                fdir = 0;
+                rdir = (square.rank > kingsq.rank) ? 1 : -1;
+                checkableP2 = (turn == cWhite) ? BROOK : WROOK;
+                hori = true;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                fdir = (square.file > kingsq.file) ? 1 : -1;
+                rdir = 0;
+                checkableP2 = (turn == cWhite) ? BROOK : WROOK;
+                hori = true;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                fdir = (square.file > kingsq.file) ? 1 : -1;
+                rdir = (square.rank > kingsq.rank) ? 1 : -1;
+                checkableP2 = (turn == cWhite) ? BBISHOP : WBISHOP;
+                diag = true;
+            }
+            else
+            {
+                check = false;
+            }
+
+            // king <- here -> rook
+            if (check)
+            {
+                tempf1 = kingsq.file;
+                tempr1 = kingsq.rank;
+                while (true)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    if (tempf1 == square.file && tempr1 == square.rank)
+                        break;
+                    tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                    if (tempp1 == king)
+                        break;
+                    else if (tempp1 != EMPTYSQ)
+                    {
+                        check = false;
+                        break;
+                    }
+                    end++;
+                }
+            }
+
+            // king --- rook -> here
+            if (check)
+            {
+                tempf1 = square.file;
+                tempr1 = square.rank;
+                while (AFILE <= (int)tempf1 + fdir && (int)tempf1 + fdir <= EFILE &&
+                       RANK1 <= (int)tempr1 + rdir && (int)tempr1 + rdir <= RANK6)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                    if (tempp1 == checkableP1 || tempp1 == checkableP2)
+                    {
+                        end++;
+                        if (diag)
+                        {
+                            return mcet::NoErr;
+                        }
+                        else
+                        {
+                            limited = true;
+                            break;
+                        }
+                    }
+                    else if (tempp1 != EMPTYSQ)
+                    {
+                        break;
+                    }
+                    end++;
+                }
+            }
+
+            if (limited)
+            {
+                tempf1 = kingsq.file;
+                tempr1 = kingsq.rank;
+                i = 0;
+                while (i < end)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    if (tempf1 == square.file && tempr1 == square.rank)
+                        continue;
+                    i++;
+                    legalmoves[*no_moves] = Square{tempf1, tempr1};
+                    (*no_moves)++;
+                }
+            }
+            else
+            {
+                for (i = 0; i <= 1; i++)
+                {
+                    for (j = -1; j <= 1; j += 2)
+                    {
+                        tempf1 = square.file;
+                        tempr1 = square.rank;
+                        while ((i == 1) ? (AFILE + (1 - j) / 2 <= tempf1 && tempf1 <= EFILE - (1 + j) / 2)
+                                        : (RANK1 + (1 - j) / 2 <= tempr1 && tempr1 <= RANK6 - (1 + j) / 2))
+                        {
+                            tempf1 += i * j;
+                            tempr1 += (1 - i) * j;
+                            tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                            if (GetPieceColor(tempp1) == turn)
+                            {
+                                break;
+                            }
+                            else if (GetPieceColor(tempp1) == !turn)
+                            {
+                                legalmoves[*no_moves] = Square{tempf1, tempr1};
+                                (*no_moves)++;
+                                break;
+                            }
+                            legalmoves[*no_moves] = Square{tempf1, tempr1};
+                            (*no_moves)++;
+                        }
+                    }
+                }
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LegalMovesRook1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
+                                       int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
+        {
+            int i, temp1, temp2, fdir, rdir, lined_fdir, lined_rdir, tempf2, tempr2;
+            bool skip, lined;
+            Color turn = board->GetTurn();
+            Piece rook = (turn == cWhite) ? WROOK : BROOK, tempp1, tempp2;
+            Piece checkablePiece1 = (turn == cWhite) ? BQUEEN : WQUEEN, checkablePiece2;
+            File tempf1;
+            Rank tempr1;
+
+            if (square.file == kingsq.file)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = 0;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = 0;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BBISHOP : WBISHOP;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+
+            for (i = 0; i < no_movableSquares; i++)
+            {
+                temp1 = (int)square.file - (int)movableSquares[i].file;
+                temp2 = (int)square.rank - (int)movableSquares[i].rank;
+                if (temp1 == 0 || temp2 == 0)
+                {
+                    skip = false;
+                    if (temp1 > 0)
+                    {
+                        fdir = -1;
+                        rdir = 0;
+                    }
+                    else if (temp1 < 0)
+                    {
+                        fdir = 1;
+                        rdir = 0;
+                    }
+                    else if (temp2 > 0)
+                    {
+                        fdir = 0;
+                        rdir = -1;
+                    }
+                    else
+                    {
+                        fdir = 0;
+                        rdir = 1;
+                    }
+
+                    tempf1 = square.file + fdir;
+                    tempr1 = square.rank + rdir;
+                    while (movableSquares[i].file != tempf1 || movableSquares[i].rank != tempr1)
+                    {
+                        if (board->GetSquare(Square{tempf1, tempr1}) != EMPTYSQ)
+                        {
+                            skip = true;
+                            break;
+                        }
+                        tempf1 += fdir;
+                        tempr1 += rdir;
+                    }
+
+                    if (skip)
+                        continue;
+
+                    tempp1 = board->GetSquare(movableSquares[i]);
+                    board->SetSquare(movableSquares[i], rook);
+                    board->SetSquare(square, EMPTYSQ);
+
+                    if (lined)
+                    {
+                        tempf2 = (int)kingsq.file + lined_fdir;
+                        tempr2 = (int)kingsq.rank + lined_rdir;
+                        while (AFILE <= tempf2 && tempf2 <= EFILE && RANK1 <= tempr2 && tempr2 <= RANK6)
+                        {
+                            tempp2 = board->GetSquare(Square{(File)tempf2, (Rank)tempr2});
+                            if (tempp2 == checkablePiece1 || tempp2 == checkablePiece2)
+                            {
+                                skip = true;
+                                break;
+                            }
+                            else if (tempp2 != EMPTYSQ)
+                            {
+                                break;
+                            }
+                            tempf2 += lined_fdir;
+                            tempr2 += lined_rdir;
+                        }
+                    }
+
+                    if (!skip && IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                    {
+                        legalmoves[*no_moves] = movableSquares[i];
+                        (*no_moves)++;
+                    }
+
+                    board->SetSquare(movableSquares[i], tempp1);
+                    board->SetSquare(square, rook);
+                }
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LegalMovesQueen0Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
+        {
+            bool check = true, limited = false;
+            int fdir, rdir, i, j, end = 0;
+            Color turn = board->GetTurn();
+            Piece checkableP1, checkableP2, tempp1, king;
+            File tempf1;
+            Rank tempr1;
+
+            if (turn == cWhite)
+            {
+                king = WKING;
+                checkableP1 = BQUEEN;
+            }
+            else
+            {
+                king = BKING;
+                checkableP1 = WQUEEN;
+            }
+
+            if (square.file == kingsq.file)
+            {
+                fdir = 0;
+                rdir = (square.rank > kingsq.rank) ? 1 : -1;
+                checkableP2 = (turn == cWhite) ? BROOK : WROOK;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                fdir = (square.file > kingsq.file) ? 1 : -1;
+                rdir = 0;
+                checkableP2 = (turn == cWhite) ? BROOK : WROOK;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                fdir = (square.file > kingsq.file) ? 1 : -1;
+                rdir = (square.rank > kingsq.rank) ? 1 : -1;
+                checkableP2 = (turn == cWhite) ? BBISHOP : WBISHOP;
+            }
+            else
+            {
+                check = false;
+            }
+
+            // king <- here -> queen
+            if (check)
+            {
+                tempf1 = kingsq.file;
+                tempr1 = kingsq.rank;
+                while (true)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    if (tempf1 == square.file && tempr1 == square.rank)
+                        break;
+                    tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                    if (tempp1 == king)
+                        break;
+                    else if (tempp1 != EMPTYSQ)
+                    {
+                        check = false;
+                        break;
+                    }
+                    end++;
+                }
+            }
+
+            // king --- queen -> here
+            if (check)
+            {
+                tempf1 = square.file;
+                tempr1 = square.rank;
+                while (AFILE <= tempf1 + fdir && tempf1 + fdir <= EFILE &&
+                       RANK1 <= tempr1 + rdir && tempr1 + rdir <= RANK6)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                    if (tempp1 == checkableP1 || tempp1 == checkableP2)
+                    {
+                        end++;
+                        limited = true;
+                        break;
+                    }
+                    else if (tempp1 != EMPTYSQ)
+                    {
+                        break;
+                    }
+                    end++;
+                }
+            }
+
+            if (limited)
+            {
+                tempf1 = kingsq.file;
+                tempr1 = kingsq.rank;
+                i = 0;
+                while (i < end)
+                {
+                    tempf1 += fdir;
+                    tempr1 += rdir;
+                    if (tempf1 == square.file && tempr1 == square.rank)
+                        continue;
+                    i++;
+                    legalmoves[*no_moves] = Square{tempf1, tempr1};
+                    (*no_moves)++;
+                }
+            }
+            else
+            {
+                for (i = -1; i <= 1; i++)
+                {
+                    for (j = -1; j <= 1; j++)
+                    {
+                        if (i == 0 && j == 0)
+                            continue;
+                        tempf1 = square.file;
+                        tempr1 = square.rank;
+                        while (AFILE + i * (i - 1) / 2 <= tempf1 && tempf1 <= EFILE - i * (i + 1) / 2 &&
+                               RANK1 + j * (j - 1) / 2 <= tempr1 && tempr1 <= RANK6 - j * (j + 1) / 2)
+                        {
+                            tempf1 += i;
+                            tempr1 += j;
+                            tempp1 = board->GetSquare(Square{tempf1, tempr1});
+                            if (GetPieceColor(tempp1) == turn)
+                            {
+                                break;
+                            }
+                            else if (GetPieceColor(tempp1) == !turn)
+                            {
+                                legalmoves[*no_moves] = Square{tempf1, tempr1};
+                                (*no_moves)++;
+                                break;
+                            }
+                            legalmoves[*no_moves] = Square{tempf1, tempr1};
+                            (*no_moves)++;
+                        }
+                    }
+                }
+            }
+
+            return mcet::NoErr;
+        }
+
+        MCError LegalMovesQueen1Checked(Board *board, Square square, Square kingsq, Square legalmoves[MAX_LEGALMOVES],
+                                        int *no_moves, Square movableSquares[5], int no_movableSquares, PieceType checkingPieceType)
+        {
+            int i, fdir, rdir, temp1, temp2, lined_fdir, lined_rdir, tempf2, tempr2;
+            bool skip, lined;
+            Color turn = board->GetTurn();
+            Piece queen = (turn == cWhite) ? WQUEEN : BQUEEN, tempp1, tempp2;
+            Piece checkablePiece1 = (turn == cWhite) ? BQUEEN : WQUEEN, checkablePiece2;
+            File tempf1;
+            Rank tempr1;
+
+            if (square.file == kingsq.file)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = 0;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+            else if (square.rank == kingsq.rank)
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BROOK : WROOK;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = 0;
+            }
+            else if (abs((int)square.file - (int)kingsq.file) == abs((int)square.rank - (int)kingsq.rank))
+            {
+                lined = true;
+                checkablePiece2 = (turn == cWhite) ? BBISHOP : WBISHOP;
+                lined_fdir = (square.file > kingsq.file) ? 1 : -1;
+                lined_rdir = (square.rank > kingsq.rank) ? 1 : -1;
+            }
+
+            for (i = 0; i < no_movableSquares; i++)
+            {
+                temp1 = (int)square.file - (int)movableSquares[i].file;
+                temp2 = (int)square.rank - (int)movableSquares[i].rank;
+                if (temp1 == 0 || temp2 == 0 || abs(temp1) == abs(temp2))
+                {
+                    skip = false;
+                    if (temp1 > 0)
+                        fdir = -1;
+                    else if (temp1 < 0)
+                        fdir = 1;
+                    else
+                        fdir = 0;
+                    if (temp2 > 0)
+                        rdir = -1;
+                    else if (temp2 < 0)
+                        rdir = 1;
+                    else
+                        rdir = 0;
+                    tempf1 = square.file + fdir;
+                    tempr1 = square.rank + rdir;
+
+                    while (tempf1 != movableSquares[i].file || tempr1 != movableSquares[i].rank)
+                    {
+                        if (board->GetSquare(Square{tempf1, tempr1}) != EMPTYSQ)
+                        {
+                            skip = true;
+                            break;
+                        }
+                        tempf1 += fdir;
+                        tempr1 += rdir;
+                    }
+
+                    if (skip)
+                        continue;
+
+                    tempp1 = board->GetSquare(movableSquares[i]);
+                    board->SetSquare(movableSquares[i], queen);
+                    board->SetSquare(square, EMPTYSQ);
+
+                    if (lined)
+                    {
+                        tempf2 = (int)kingsq.file + lined_fdir;
+                        tempr2 = (int)kingsq.rank + lined_rdir;
+                        while (AFILE <= tempf2 && tempf2 <= EFILE && RANK1 <= tempr2 && tempr2 <= RANK6)
+                        {
+                            tempp2 = board->GetSquare(Square{(File)tempf2, (Rank)tempr2});
+                            if (tempp2 == checkablePiece1 || tempp2 == checkablePiece2)
+                            {
+                                skip = true;
+                                break;
+                            }
+                            else if (tempp2 != EMPTYSQ)
+                            {
+                                break;
+                            }
+                            tempf2 += lined_fdir;
+                            tempr2 += lined_rdir;
+                        }
+                    }
+
+                    if (!skip && IsCheckedByPieceType(board, checkingPieceType, kingsq, turn) == SQUAREERR)
+                    {
+                        legalmoves[*no_moves] = movableSquares[i];
+                        (*no_moves)++;
+                    }
+
+                    board->SetSquare(movableSquares[i], tempp1);
+                    board->SetSquare(square, queen);
+                }
+            }
+
+            return mcet::NoErr;
+        }
+    }
+
     // definitions
 
     // initilize board
@@ -887,10 +2619,429 @@ namespace minichess_AI
         return mcet::NoErr;
     }
 
+    // search all legal moves
+    // recieve the squares where the piece in the specified square can move.
+    // the 5-th argument is the number of legal moves.
+    // the length of legalmoves is 'MAX_LEGALMOVES'.
+    // promotions are not counted.
+    MCError Board::LegalMoves(Square square, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
+    {
+        *no_moves = 0;
+
+        File file = square.file;
+        Rank rank = square.rank;
+        Piece p = GetSquare(Square{file, rank});
+
+        if (turn != GetPieceColor(p))
+        {
+            return mcet::NoErr;
+        }
+
+        int i, j;
+
+        // search king
+        Piece squares[5][6];
+        Piece king = (turn == cWhite) ? WKING : BKING;
+        Square kingsq = SearchPiece(king);
+
+        // search checked
+        Square checkingPawn,
+            checkingKing, checkingKnight, checkingHorizontal, checkingDiagonal;
+        int no_checkingPieces = 0;
+        Square movableSquares[5]; // the square where 'p' can move if p != king
+        PieceType checkingPieceType = PT_EMPTY;
+        int no_movableSquares = 0;
+        int temp1, temp2;
+
+        if (p != king)
+        {
+            if ((checkingPawn = IsCheckedByPawn(kingsq, turn)) != SQUAREERR)
+            {
+                no_checkingPieces++;
+                no_movableSquares = 1;
+                movableSquares[0] = checkingPawn;
+                checkingPieceType = PT_PAWN;
+            }
+            if ((checkingKing = IsCheckedByKing(kingsq, turn)) != SQUAREERR)
+            {
+                no_checkingPieces++;
+                no_movableSquares = 1;
+                movableSquares[0] = checkingKing;
+                checkingPieceType = PT_KING;
+            }
+            if ((checkingKnight = IsCheckedByKnight(kingsq, turn)) != SQUAREERR)
+            {
+                no_checkingPieces++;
+                no_movableSquares = 1;
+                movableSquares[0] = checkingKnight;
+                checkingPieceType = PT_KNIGHT;
+            }
+            if ((checkingHorizontal = IsCheckedByHorizontal(kingsq, turn)) != SQUAREERR)
+            {
+                no_checkingPieces++;
+                if (checkingHorizontal.file == kingsq.file)
+                {
+                    temp1 = (checkingHorizontal.rank > kingsq.rank) ? 1 : -1;
+                    for (no_movableSquares = 0; no_movableSquares < abs((int)kingsq.rank - (int)checkingHorizontal.rank); no_movableSquares++)
+                    {
+                        movableSquares[no_movableSquares] = Square{kingsq.file, kingsq.rank + (no_movableSquares + 1) * temp1};
+                    }
+                }
+                else
+                {
+                    temp1 = (checkingHorizontal.file > kingsq.file) ? 1 : -1;
+                    for (no_movableSquares = 0; no_movableSquares < abs((int)kingsq.file - (int)checkingHorizontal.file); no_movableSquares++)
+                    {
+                        movableSquares[no_movableSquares] = Square{kingsq.file + (no_movableSquares + 1) * temp1, kingsq.rank};
+                    }
+                }
+                checkingPieceType = PT_HORIZONTAL;
+            }
+            if ((checkingDiagonal = IsCheckedByDiagonal(kingsq, turn)) != SQUAREERR)
+            {
+                no_checkingPieces++;
+                temp1 = (checkingDiagonal.file > kingsq.file) ? 1 : -1;
+                temp2 = (checkingDiagonal.rank > kingsq.rank) ? 1 : -1;
+                for (no_movableSquares = 0; no_movableSquares < abs((int)kingsq.file - (int)checkingDiagonal.file); no_movableSquares++)
+                {
+                    movableSquares[no_movableSquares] = Square{
+                        kingsq.file + (no_movableSquares + 1) * temp1, kingsq.rank + (no_movableSquares + 1) * temp2};
+                }
+                checkingPieceType = PT_DIAGONAL;
+            }
+
+            if (no_checkingPieces >= 2)
+            {
+                *no_moves = 0;
+                return mcet::NoErr;
+            }
+        }
+
+        MCError err;
+
+        switch (p)
+        {
+        case WPAWN:
+        case BPAWN:
+            if (no_checkingPieces == 0)
+            {
+                // not checked
+                return LegalMovesPawn0Checked(this, square, kingsq, legalmoves, no_moves);
+            }
+            else
+            {
+                // checked
+                return LegalMovesPawn1Checked(this, square, kingsq, legalmoves, no_moves,
+                                              movableSquares, no_movableSquares, checkingPieceType);
+            }
+            break;
+        case WKING:
+        case BKING:
+            return LegalMovesKing(this, square, legalmoves, no_moves);
+            break;
+        case WQUEEN:
+        case BQUEEN:
+            if (no_checkingPieces == 0)
+            {
+                // not checked
+                return LegalMovesQueen0Checked(this, square, kingsq, legalmoves, no_moves);
+            }
+            else
+            {
+                // checked
+                return LegalMovesQueen1Checked(this, square, kingsq, legalmoves, no_moves,
+                                               movableSquares, no_movableSquares, checkingPieceType);
+            }
+            break;
+        case WBISHOP:
+        case BBISHOP:
+            if (no_checkingPieces == 0)
+            {
+                // not checked
+                return LegalMovesBishop0Checked(this, square, kingsq, legalmoves, no_moves);
+            }
+            else
+            {
+                // checked
+                return LegalMovesBishop1Checked(this, square, kingsq, legalmoves, no_moves,
+                                                movableSquares, no_movableSquares, checkingPieceType);
+            }
+            break;
+        case WKNIGHT:
+        case BKNIGHT:
+            if (no_checkingPieces == 0)
+            {
+                // not checked
+                return LegalMovesKnight0Checked(this, square, kingsq, legalmoves, no_moves);
+            }
+            else
+            {
+                // checked
+                return LegalMovesKnight1Checked(this, square, kingsq, legalmoves, no_moves,
+                                                movableSquares, no_movableSquares, checkingPieceType);
+            }
+            break;
+        case WROOK:
+        case BROOK:
+            if (no_checkingPieces == 0)
+            {
+                // not checked
+                return LegalMovesRook0Checked(this, square, kingsq, legalmoves, no_moves);
+            }
+            else
+            {
+                return LegalMovesRook1Checked(this, square, kingsq, legalmoves, no_moves,
+                                              movableSquares, no_movableSquares, checkingPieceType);
+            }
+            break;
+        case EMPTYSQ:
+            break;
+        }
+
+        return mcet::NoErr;
+    }
+
+    // judge whether checked by pawn
+    // variable 'king' is the king square, and 'color' is the color
+    // return the square of checking king
+    Square Board::IsCheckedByPawn(Square king, Color color)
+    {
+        if (color == ColorErr)
+            return SQUAREERR;
+        int direction = (color == cWhite) ? 1 : -1;
+        Rank first = (color == cWhite) ? RANK1 : RANK6;
+        Piece pawn = (color == cWhite) ? BPAWN : WPAWN;
+        if (king.rank == first)
+        {
+            return SQUAREERR;
+        }
+
+        if (king.file == AFILE)
+        {
+            if (GetSquare(Square{BFILE, king.rank + direction}) == pawn)
+                return Square{BFILE, king.rank + direction};
+        }
+        else if (king.file == EFILE)
+        {
+            if (GetSquare(Square{DFILE, king.rank + direction}) == pawn)
+                return Square{DFILE, king.rank + direction};
+        }
+        else
+        {
+            if (GetSquare(Square{king.file - 1, king.rank + direction}) == pawn)
+                return Square{king.file - 1, king.rank + direction};
+            if (GetSquare(Square{king.file + 1, king.rank + direction}) == pawn)
+                return Square{king.file + 1, king.rank + direction};
+        }
+
+        return SQUAREERR;
+    }
+
+    // judge whether checked by king
+    // variable 'king' is the "judged" king square, and 'color' is the color
+    // return the square of checking king
+    Square Board::IsCheckedByKing(Square king, Color color)
+    {
+        if (color == ColorErr)
+            return SQUAREERR;
+        int l = -1, r = 1, b = -1, f = 1;
+        File file = king.file;
+        Rank rank = king.rank;
+        Piece ok = (color == cWhite) ? BKING : WKING;
+
+        if (file == AFILE)
+            l = 1;
+        else if (file == EFILE)
+            r = -1;
+        if (rank == RANK1)
+            b = 1;
+        else if (rank == RANK6)
+            f = -1;
+
+        int i, j;
+
+        for (i = b; i <= f; i += 2)
+        {
+            for (j = (l == -1) ? -1 : 0; j <= (r == 1) ? 1 : 0; j++)
+            {
+                if (GetSquare(Square{file + j, rank + i}) == ok)
+                    return Square{file + j, rank + i};
+            }
+        }
+        for (j = l; j <= r; j += 2)
+        {
+            if (GetSquare(Square{file + j, rank}) == ok)
+                return Square{file + j, rank};
+        }
+
+        return SQUAREERR;
+    }
+
+    // judge whether checked by horizontal pieces (Rook, Queen)
+    // variable 'king' is the "judged" king square, and 'color' is the color
+    // return the square of checking king
+    Square Board::IsCheckedByHorizontal(Square king, Color color)
+    {
+        if (color == ColorErr)
+            return SQUAREERR;
+        int lfile, kfile = king.file;
+        int lrank, krank = king.rank;
+        int i;
+        Piece q, r, p;
+
+        if (color == cWhite)
+        {
+            q = BQUEEN;
+            r = BROOK;
+        }
+        else
+        {
+            q = WQUEEN;
+            r = WROOK;
+        }
+
+        for (i = -1; i <= 1; i += 2)
+        {
+            lrank = krank + i;
+            lfile = kfile;
+            while (RANK1 <= lrank && lrank <= RANK6)
+            {
+                p = GetSquare(Square{(File)lfile, (Rank)lrank});
+                if (p == q || p == r)
+                {
+                    return Square{(File)lfile, (Rank)lrank};
+                }
+                else if (p != EMPTYSQ)
+                {
+                    break;
+                }
+                lrank += i;
+            }
+        }
+        for (i = -1; i <= 1; i += 2)
+        {
+            lrank = krank;
+            lfile = kfile + i;
+            while (AFILE <= lfile && lfile <= EFILE)
+            {
+                p = GetSquare(Square{(File)lfile, (Rank)lrank});
+                if (p == q || p == r)
+                {
+                    return Square{(File)lfile, (Rank)lrank};
+                }
+                else if (p != EMPTYSQ)
+                {
+                    break;
+                }
+                lfile += i;
+            }
+        }
+
+        return SQUAREERR;
+    }
+
+    // judge whether checked by diagonal pieces (Bishop, Queen)
+    // variable 'king' is the "judged" king square, and 'color' is the color
+    // return the square of checking king
+    Square Board::IsCheckedByDiagonal(Square king, Color color)
+    {
+        if (color == ColorErr)
+            return SQUAREERR;
+
+        int dfile, kfile = king.file;
+        int drank, krank = king.rank;
+        Piece q, b, p;
+        int i, j;
+
+        if (color == cWhite)
+        {
+            q = BQUEEN;
+            b = BBISHOP;
+        }
+        else
+        {
+            q = WQUEEN;
+            b = WBISHOP;
+        }
+
+        for (i = -1; i <= 1; i += 2)
+        {
+            for (j = -1; j <= 1; j += 2)
+            {
+                drank = krank + i;
+                dfile = kfile + j;
+                while (RANK1 <= drank && drank <= RANK6 && AFILE <= dfile && dfile <= EFILE)
+                {
+                    p = GetSquare(Square{(File)dfile, (Rank)drank});
+                    if (p == q || p == b)
+                    {
+                        return Square{(File)dfile, (Rank)drank};
+                    }
+                    else if (p != EMPTYSQ)
+                    {
+                        break;
+                    }
+                    drank += i;
+                    dfile += j;
+                }
+            }
+        }
+
+        return SQUAREERR;
+    }
+
+    // judge whether checked by knight
+    // variable 'king' is the "judged" king square, and 'color' is the color
+    // return the square of checking king
+    Square Board::IsCheckedByKnight(Square king, Color color)
+    {
+        if (color == ColorErr)
+            return SQUAREERR;
+
+        File nfile, kfile = king.file;
+        Rank nrank, krank = king.rank;
+        Piece n = (color == cWhite) ? BKNIGHT : WKNIGHT;
+        int i, j, k;
+
+        for (i = 0; i <= 1; i++)
+        {
+            for (j = 0; j <= 1; j++)
+            {
+                for (k = 0; k <= 1; k++)
+                {
+                    nfile = kfile + (1 + i) * (2 * j - 1);
+                    nrank = krank + (2 - i) * (2 * k - 1);
+                    if (GetSquare(Square{nfile, nrank}) == n)
+                    {
+                        return Square{nfile, nrank};
+                    }
+                }
+            }
+        }
+
+        return SQUAREERR;
+    }
+
+    // search the specified piece and get all the squares of board
+    Square Board::SearchPiece(Piece piece)
+    {
+        int i, j;
+
+        for (i = 0; i < 5; i++)
+        {
+            for (j = 0; j < 6; j++)
+            {
+                if (GetSquare(Square{(File)i, (Rank)j}) == piece)
+                    return Square{(File)i, (Rank)j};
+            }
+        }
+
+        return SQUAREERR;
+    }
+
     MCError Board::MoveForce(Square from_square, Square to_square, Piece promotion_piece)
     {
         Piece p = GetSquare(from_square);
-
         switch (p)
         {
         case WPAWN:

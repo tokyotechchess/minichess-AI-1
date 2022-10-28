@@ -70,6 +70,14 @@ namespace minichess_AI
         return EMPTYSQ;
     }
 
+    // get piece color
+    Color GetPieceColor(Piece p)
+    {
+        if (p == EMPTYSQ)
+            return ColorErr;
+        return ((p & 0b1000) == 0) ? cWhite : cBlack;
+    }
+
     char ConvPieceToFENChar(Piece p)
     {
         switch (p)
@@ -107,7 +115,7 @@ namespace minichess_AI
 
     std::string ConvSquareToPGNString(Square sq)
     {
-        string con = {'a' + (int)sq.file, '1' + (int)sq.rank};
+        string con = {static_cast<char>('a' + (int)sq.file), static_cast<char>('1' + (int)sq.rank)};
         return con;
     }
 }

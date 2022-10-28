@@ -81,6 +81,17 @@ namespace minichess_AI
         MCError SetBoardFEN(string fen);
         MCError Move(Square, Square, Piece);
         MCError NullMove();
+        MCError LegalMoves(Square, Square[MAX_LEGALMOVES], int *);
+
+        // support methods
+        // arguments or return value can be unnatural
+
+        Square IsCheckedByPawn(Square, Color);
+        Square IsCheckedByKing(Square, Color);
+        Square IsCheckedByHorizontal(Square, Color);
+        Square IsCheckedByDiagonal(Square, Color);
+        Square IsCheckedByKnight(Square, Color);
+        Square SearchPiece(Piece);
         MCError MoveForce(Square from_square, Square to_square, Piece promotion_piece);
         MCError tempLegalMoves(Square, Square[MAX_LEGALMOVES], int *);
         // opeartors

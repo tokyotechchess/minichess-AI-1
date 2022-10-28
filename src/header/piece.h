@@ -43,6 +43,19 @@ namespace minichess_AI
         BBISHOP,
     };
 
+    enum PieceType : int
+    {
+        PT_EMPTY = 0,
+        PT_KING,
+        PT_PAWN,
+        PT_QUEEN,
+        PT_ROOK,
+        PT_KNIGHT,
+        PT_BISHOP,
+        PT_HORIZONTAL,
+        PT_DIAGONAL,
+    };
+
     enum RankWeight : int
     {
         RANK1W = 0b1,
@@ -83,6 +96,9 @@ namespace minichess_AI
         Rank rank;
     };
 
+    // Error Square
+    constexpr Square SQUAREERR = Square{FILEERR, RANKERR};
+
     // Color
     // ToDo: piece.h に宣言するのは変かもしれないので, もう少し良いヘッダがあったらそこに移す
     // increment meaning is switching Color; cWhite++ == cBlack, cBlack++ == cWhite
@@ -90,6 +106,7 @@ namespace minichess_AI
     {
         cWhite,
         cBlack,
+        ColorErr,
     };
 
     // enable increment
@@ -101,10 +118,16 @@ namespace minichess_AI
     inline int operator*(Piece p, RankWeight rw) { return (rw * p); }
 
     // change turn
-    inline Color operator++(Color &c, int) { return (c = Color(1 - (int)c)); }
+    inline Color operator++(Color &c, int) { return ((c == ColorErr) ? ColorErr : (c = Color(1 - (int)c))); }
+    inline Color operator!(Color c) { return ((c == ColorErr) ? ColorErr : Color(1 - (int)c)); }
+
+    // Square equality
+    inline bool operator==(Square s1, const Square s2) { return ((s1.file == s2.file) && (s1.rank == s2.rank)); }
+    inline bool operator!=(Square s1, const Square s2) { return !(s1 == s2); }
 
     int ConvRankToWeight(Rank);
     Piece ConvFENCharToPiece(char c);
+    Color GetPieceColor(Piece p);
 
     char ConvPieceToFENChar(Piece p);
     std::string ConvSquareToPGNString(Square sq);
