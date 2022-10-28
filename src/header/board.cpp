@@ -3120,6 +3120,20 @@ namespace minichess_AI
             LegalMoves(SearchPiece(WKING), legalmoves, &no_moves);
             if (no_moves == 0)
             {
+                for (Rank r = RANK1; r >= RANK6; r++)
+                {
+                    for (File f = AFILE; f <= EFILE; f++)
+                    {
+                        if (6 >= (int)GetSquare(Square{f, r}) >= 2)
+                        {
+                            LegalMoves(Square{f, r}, legalmoves, &no_moves);
+                            if (no_moves != 0)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
                 return true;
             }
             else
@@ -3131,6 +3145,20 @@ namespace minichess_AI
             LegalMoves(SearchPiece(BKING), legalmoves, &no_moves);
             if (no_moves == 0)
             {
+                for (Rank r = RANK1; r >= RANK6; r++)
+                {
+                    for (File f = AFILE; f <= EFILE; f++)
+                    {
+                        if (14 >= (int)GetSquare(Square{f, r}) >= 10)
+                        {
+                            LegalMoves(Square{f, r}, legalmoves, &no_moves);
+                            if (no_moves != 0)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
                 return true;
             }
             else
