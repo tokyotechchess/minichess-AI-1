@@ -964,7 +964,7 @@ namespace minichess_AI
         return 0;
     }
 
-    MCError Board::tempLegalMoves(Square square, Square legalmoves, int *no_moves)
+    MCError Board::tempLegalMoves(Square square, Square legalmoves[MAX_LEGALMOVES], int *no_moves)
     {
         return mcet::NoErr;
     }
