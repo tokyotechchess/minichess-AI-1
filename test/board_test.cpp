@@ -2160,6 +2160,15 @@ MCError TestLegalMoves()
             __TestTemplateArgs{
                 "double checked test case not king 8", "1q3/5/Rk1Q1/5/1K3/5 b - -", Square{BFILE, RANK6}, 0,
                 new Square[0]{}},
+
+            // castling test
+
+            __TestTemplateArgs{
+                "castling test case 1", "r3k/ppppp/5/5/PPPPP/K3R w Kk -", Square{AFILE, RANK1}, 2,
+                new Square[2]{Square{BFILE, RANK1}, Square{CFILE, RANK1}}},
+            __TestTemplateArgs{
+                "castling test case 2", "r3k/ppppp/5/5/PPPPP/K3R b Kk -", Square{EFILE, RANK6}, 2,
+                new Square[2]{Square{DFILE, RANK6}, Square{CFILE, RANK6}}},
         };
 
     for (__TestTemplateArgs arg : args)
