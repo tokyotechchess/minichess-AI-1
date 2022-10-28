@@ -93,7 +93,7 @@ namespace minichess_AI
         Square IsCheckedByKnight(Square, Color);
         Square SearchPiece(Piece);
         MCError MoveForce(Square from_square, Square to_square, Piece promotion_piece);
-        MCError tempLegalMoves(Square, Square[MAX_LEGALMOVES], int *);
+
         // opeartors
 
         bool operator==(const Board &b);
