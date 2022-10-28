@@ -13,13 +13,6 @@ Class "Board" and its method are defined.
 using std::string;
 namespace minichess_AI
 {
-    //chessの最長手数は228らしい
-    constexpr int MAX_BESTMOVES = 228;
-
-    // The max length of array 'legalmoves' recieved by Board::LegalMoves(...)
-    constexpr int MAX_LEGALMOVES = 17;
-
-
     class Board
     {
     private:
@@ -66,10 +59,6 @@ namespace minichess_AI
         */
         int castlingPossibility;
 
-        Square bestMoves_from[MAX_BESTMOVES];
-        Square bestMoves_to[MAX_BESTMOVES];
-        Piece bestMovesPromotion[MAX_BESTMOVES];
-
     public:
         // Constructor
 
@@ -90,9 +79,6 @@ namespace minichess_AI
         MCError Move(Square, Square, Piece);
         MCError NullMove();
         MCError MoveForce(Square from_square, Square to_square, Piece promotion_piece);
-        double tempEvaluator(Board b);
-        MCError tempLegalMoves(Square, Square[MAX_LEGALMOVES], int *);
-        double alphabeta(Board b, double alpha, double beta, int depth, int depthMax);
 
         // opeartors
 
