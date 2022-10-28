@@ -3110,6 +3110,22 @@ namespace minichess_AI
         return mcet::NoErr;
     }
 
+    bool Board::IsMated()
+    {
+        Square legalmoves[MAX_LEGALMOVES];
+        int no_moves;
+        for (int f = 0; f < 5; f++)
+        {
+            for (int r = 0; r < 6; r++)
+            {
+                LegalMoves(Square{(File)f, (Rank)r}, legalmoves, &no_moves);
+                if (no_moves != 0)
+                    return false;
+            }
+        }
+        return true;
+    }
+
     // check equality between Boards
     bool Board::operator==(const Board &b)
     {
