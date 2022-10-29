@@ -13,6 +13,7 @@ set(TARGET_source_file
 ./src/header/piece.cpp
 ./src/header/board.cpp
 ./src/header/commandline.cpp
+./src/header/minichessAI.cpp
 ./src/header/util/error.cpp
 ./src/header/util/util.cpp
 )

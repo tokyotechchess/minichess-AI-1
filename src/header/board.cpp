@@ -141,7 +141,7 @@ namespace minichess_AI
                 // king --- pawn -> here
                 if (!able)
                 {
-                    for (Rank r = square.rank + rdir;; r += rdir)
+                    for (Rank r = square.rank + rdir; RANK1 <= r && r <= RANK6; r += rdir)
                     {
                         tempp1 = board->GetSquare(Square{square.file, r});
                         if (tempp1 == roo || tempp1 == que)

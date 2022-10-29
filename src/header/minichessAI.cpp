@@ -111,7 +111,6 @@ namespace minichess_AI
         }
         else
         {
-
             for (File f = AFILE; f <= EFILE; f++)
             {
                 for (Rank r = RANK1; r <= RANK6; r++)
@@ -245,7 +244,7 @@ namespace minichess_AI
     double minichessAI::evaluate(Board b)
     {
         now_analyzed = b;
-        evaluation = alphabeta(b, -1000000, 1000000, 0, 6);
+        evaluation = alphabeta(b, -1000000, 1000000, 0, 7);
         return evaluation;
     }
 
